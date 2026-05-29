@@ -1,0 +1,1560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Business Branding — FastPic.AI</title>
+  <link rel="stylesheet" href="design-system.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <style>
+    /* ══════════════════════════════════════════
+       SETTINGS LAYOUT — 220px nav + content
+    ══════════════════════════════════════════ */
+    .settings-layout {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 0;
+      min-height: calc(100vh - 64px);
+    }
+
+    /* ── SETTINGS LEFT NAV ──────────────────── */
+    .settings-nav {
+      background: rgba(13,13,26,0.6);
+      border-right: 1px solid var(--border);
+      padding: 24px 12px;
+      position: sticky;
+      top: 64px;
+      height: calc(100vh - 64px);
+      overflow-y: auto;
+    }
+    .settings-nav::-webkit-scrollbar { width: 3px; }
+    .settings-nav::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 4px; }
+
+    .settings-nav-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      padding: 4px 10px;
+      margin-bottom: 6px;
+    }
+
+    .settings-nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 12px;
+      border-radius: var(--radius);
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: var(--transition);
+      text-decoration: none;
+      cursor: pointer;
+      margin-bottom: 2px;
+    }
+    .settings-nav-item:hover {
+      background: var(--bg-glass-hover);
+      color: var(--text-primary);
+    }
+    .settings-nav-item.active {
+      background: var(--primary-subtle);
+      color: var(--primary-light);
+      font-weight: 600;
+    }
+    .settings-nav-item .nav-item-icon {
+      width: 18px;
+      text-align: center;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+
+    /* ── SETTINGS CONTENT ───────────────────── */
+    .settings-content {
+      padding: 32px 36px;
+      overflow-y: auto;
+    }
+
+    /* ── SETTINGS PAGE HEADER ───────────────── */
+    .settings-page-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .settings-page-title {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.2;
+    }
+    .settings-page-subtitle {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-top: 5px;
+    }
+
+    /* ── MAIN CONTENT GRID ──────────────────── */
+    .settings-grid {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 28px;
+      align-items: start;
+    }
+
+    /* ── SETTINGS SECTION ───────────────────── */
+    .settings-section {
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-bottom: 20px;
+      backdrop-filter: blur(12px);
+      transition: var(--transition);
+    }
+    .settings-section:hover {
+      border-color: var(--border-strong);
+    }
+    .settings-section:last-child {
+      margin-bottom: 0;
+    }
+    .settings-section-title {
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .settings-section-title .section-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      background: var(--primary-subtle);
+      color: var(--primary-light);
+    }
+    .settings-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 18px 0;
+    }
+
+    /* ── FORM ROWS ───────────────────────────── */
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .form-row-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 14px;
+    }
+
+    /* ── TOGGLE WITH LABEL ───────────────────── */
+    .field-with-toggle {
+      display: flex;
+      align-items: flex-end;
+      gap: 12px;
+    }
+    .field-with-toggle .form-group {
+      flex: 1;
+    }
+    .toggle-chip {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 8px 12px;
+      cursor: pointer;
+      transition: var(--transition);
+      white-space: nowrap;
+      height: 40px;
+    }
+    .toggle-chip:hover {
+      border-color: var(--border-strong);
+      background: var(--bg-glass-hover);
+    }
+    .toggle-chip-label {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    /* ── SOCIAL MEDIA ROW ───────────────────── */
+    .social-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .social-row:last-child { border-bottom: none; }
+    .social-icon-wrap {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .social-input-wrap {
+      flex: 1;
+    }
+    .social-input {
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 8px 12px;
+      font-family: var(--font-body);
+      font-size: 0.82rem;
+      color: var(--text-primary);
+      transition: var(--transition);
+      outline: none;
+      width: 100%;
+    }
+    .social-input::placeholder { color: var(--text-tertiary); }
+    .social-input:focus {
+      border-color: var(--primary);
+      background: rgba(99,102,241,0.05);
+      box-shadow: 0 0 0 3px var(--primary-subtle);
+    }
+    .social-toggle-wrap {
+      flex-shrink: 0;
+    }
+    .toggle-mini {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+    .toggle-mini input { position: absolute; opacity: 0; width: 0; }
+    .toggle-mini-track {
+      width: 36px;
+      height: 20px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-full);
+      position: relative;
+      transition: var(--transition);
+    }
+    .toggle-mini-track::after {
+      content: '';
+      position: absolute;
+      top: 2px; left: 2px;
+      width: 14px; height: 14px;
+      background: var(--text-tertiary);
+      border-radius: 50%;
+      transition: var(--transition);
+    }
+    .toggle-mini input:checked + .toggle-mini-track {
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+    .toggle-mini input:checked + .toggle-mini-track::after {
+      left: 18px;
+      background: white;
+    }
+
+    /* ── COLOR PICKER ROW ───────────────────── */
+    .color-picker-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .color-swatch-input {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius);
+      border: 2px solid var(--border-strong);
+      cursor: pointer;
+      background: none;
+      padding: 2px;
+      overflow: hidden;
+      transition: var(--transition);
+    }
+    .color-swatch-input:hover {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-subtle);
+    }
+    .color-hex-input {
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 10px 14px;
+      font-family: var(--font-mono);
+      font-size: 0.875rem;
+      color: var(--text-primary);
+      transition: var(--transition);
+      outline: none;
+      width: 130px;
+    }
+    .color-hex-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-subtle);
+    }
+    .preset-colors {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .preset-dot {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: var(--transition);
+      border: 2px solid transparent;
+      position: relative;
+    }
+    .preset-dot:hover {
+      transform: scale(1.15);
+      border-color: rgba(255,255,255,0.4);
+    }
+    .preset-dot.selected {
+      border-color: white;
+      box-shadow: 0 0 0 2px var(--primary);
+    }
+    .preset-dot.selected::after {
+      content: '✓';
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      color: white;
+      font-weight: 700;
+    }
+
+    /* ── GALLERY TOGGLE ROW ─────────────────── */
+    .setting-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .setting-row:last-child { border-bottom: none; }
+    .setting-row-info {}
+    .setting-row-title {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+    .setting-row-desc {
+      font-size: 0.75rem;
+      color: var(--text-tertiary);
+      margin-top: 2px;
+    }
+
+    /* ─── RIGHT PREVIEW COLUMN ──────────────── */
+    .preview-column {
+      position: sticky;
+      top: calc(64px + 32px);
+    }
+    .preview-card {
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      margin-bottom: 16px;
+      backdrop-filter: blur(12px);
+      transition: var(--transition);
+    }
+    .preview-card:hover {
+      border-color: var(--border-strong);
+    }
+    .preview-card:last-child { margin-bottom: 0; }
+    .preview-card-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .preview-card-title i {
+      color: var(--primary-light);
+    }
+
+    /* ── LOGO UPLOAD ZONE ───────────────────── */
+    .logo-upload-zone {
+      border: 2px dashed var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition);
+      margin-bottom: 14px;
+      background: var(--bg-glass);
+      position: relative;
+      overflow: hidden;
+    }
+    .logo-upload-zone::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 50% at 50% 0%, var(--primary-subtle), transparent);
+      opacity: 0;
+      transition: var(--transition);
+    }
+    .logo-upload-zone:hover {
+      border-color: var(--primary);
+      background: rgba(99,102,241,0.04);
+    }
+    .logo-upload-zone:hover::before { opacity: 1; }
+    .logo-placeholder-ring {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6366F1, #22D3EE);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 12px;
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: white;
+      box-shadow: 0 8px 24px var(--primary-glow);
+      position: relative;
+      z-index: 1;
+    }
+    .logo-placeholder-name {
+      font-family: var(--font-display);
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      position: relative;
+      z-index: 1;
+    }
+    .logo-upload-hint {
+      font-size: 0.72rem;
+      color: var(--text-tertiary);
+      margin-top: 4px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── GALLERY MINI PREVIEW ───────────────── */
+    .gallery-preview-mock {
+      background: #0A0A16;
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .gallery-mock-header {
+      background: rgba(13,13,26,0.95);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .gallery-mock-logo {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #6366F1, #22D3EE);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      font-weight: 800;
+      font-family: var(--font-display);
+      color: white;
+      flex-shrink: 0;
+    }
+    .gallery-mock-studio {
+      font-family: var(--font-display);
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .gallery-mock-event {
+      font-size: 0.65rem;
+      color: var(--text-tertiary);
+      margin-top: 1px;
+    }
+    .gallery-mock-body {
+      padding: 10px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 3px;
+    }
+    .gallery-mock-photo {
+      aspect-ratio: 1;
+      border-radius: 4px;
+      object-fit: cover;
+      width: 100%;
+    }
+    .gallery-mock-photo-placeholder {
+      aspect-ratio: 1;
+      border-radius: 4px;
+      background: var(--bg-elevated);
+    }
+    .color-theme-preview {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px 12px;
+    }
+    .color-theme-dot {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .color-theme-label {
+      font-size: 0.7rem;
+      color: var(--text-tertiary);
+    }
+
+    /* ── PORTFOLIO LINK BADGE ───────────────── */
+    .portfolio-link-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 8px 12px;
+      margin-bottom: 12px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--primary-light);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .portfolio-link-badge:hover {
+      border-color: var(--primary);
+      background: var(--primary-subtle);
+    }
+    .portfolio-badge-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      background: var(--primary-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      color: var(--primary-light);
+      flex-shrink: 0;
+    }
+    .portfolio-link-text {
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /* ── SAVE FOOTER ────────────────────────── */
+    .save-footer {
+      margin-top: 24px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+    }
+    .save-timestamp {
+      font-size: 0.75rem;
+      color: var(--text-tertiary);
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .save-timestamp .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 6px var(--success);
+    }
+
+    /* ── SIDEBAR STYLES ─────────────────────── */
+    .sidebar-user-block {
+      padding: 12px 16px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .sidebar-user-inner {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px;
+      border-radius: var(--radius);
+      transition: var(--transition);
+      cursor: pointer;
+    }
+    .sidebar-user-inner:hover { background: var(--bg-glass-hover); }
+    .sidebar-user-name {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.2;
+    }
+    .sidebar-user-sub {
+      font-size: 0.7rem;
+      color: var(--text-tertiary);
+    }
+    .storage-block {
+      padding: 14px 16px;
+    }
+    .storage-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+    .storage-label span { color: var(--warning); font-weight: 600; }
+    .topbar-user {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 10px 4px 4px;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--border);
+      background: var(--bg-glass);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .topbar-user:hover { background: var(--bg-glass-hover); border-color: var(--border-strong); }
+    .topbar-user-name {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+    .notif-btn {
+      position: relative;
+      width: 38px; height: 38px;
+      border-radius: var(--radius);
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-secondary);
+      font-size: 1rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .notif-btn:hover { background: var(--bg-glass-hover); color: var(--text-primary); }
+    .notif-badge {
+      position: absolute;
+      top: -4px; right: -4px;
+      background: var(--danger);
+      color: white;
+      font-size: 0.6rem;
+      font-weight: 700;
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      border: 2px solid var(--bg-base);
+    }
+    .topbar-search {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 8px 14px;
+      min-width: 240px;
+    }
+    .topbar-search input {
+      background: none;
+      border: none;
+      outline: none;
+      color: var(--text-primary);
+      font-size: 0.875rem;
+      font-family: var(--font-body);
+      width: 100%;
+    }
+    .topbar-search input::placeholder { color: var(--text-tertiary); }
+
+    /* ── MICRO ANIMATIONS ───────────────────── */
+    @keyframes slideInRight {
+      from { opacity: 0; transform: translateX(20px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+    .preview-card {
+      animation: slideInRight 0.4s ease both;
+    }
+    .preview-card:nth-child(1) { animation-delay: 0.05s; }
+    .preview-card:nth-child(2) { animation-delay: 0.10s; }
+    .preview-card:nth-child(3) { animation-delay: 0.15s; }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .settings-section {
+      animation: fadeInUp 0.35s ease both;
+    }
+    .settings-section:nth-child(1) { animation-delay: 0.00s; }
+    .settings-section:nth-child(2) { animation-delay: 0.06s; }
+    .settings-section:nth-child(3) { animation-delay: 0.12s; }
+    .settings-section:nth-child(4) { animation-delay: 0.18s; }
+
+    /* ── COLOR SELECT ───────────────────────── */
+    .form-select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2364748B' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 36px !important;
+      cursor: pointer;
+    }
+
+    /* ── INPUT WITH ICON ────────────────────── */
+    .input-icon-wrap {
+      position: relative;
+    }
+    .input-icon-wrap .form-input {
+      padding-left: 36px;
+    }
+    .input-icon-wrap .input-prefix-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.85rem;
+      pointer-events: none;
+    }
+
+    /* ── PORTFOLIO TOGGLE ROW ───────────────── */
+    .portfolio-setting-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg-elevated);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      margin-bottom: 12px;
+    }
+    .portfolio-setting-row:last-of-type { margin-bottom: 0; }
+
+    /* ── FORM SELECT STYLE ──────────────────── */
+    select.form-select {
+      background-color: var(--bg-glass);
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 10px 36px 10px 14px;
+      font-family: var(--font-body);
+      font-size: 0.875rem;
+      transition: var(--transition);
+      outline: none;
+      width: 100%;
+    }
+    select.form-select:focus {
+      border-color: var(--primary);
+      background: rgba(99,102,241,0.05);
+      box-shadow: 0 0 0 3px var(--primary-subtle);
+    }
+    select.form-select option {
+      background: #111122;
+      color: var(--text-primary);
+    }
+
+    /* Font picker option styles */
+    option[value="inter"] { font-family: 'Inter', sans-serif; }
+    option[value="plus-jakarta"] { font-family: 'Plus Jakarta Sans', sans-serif; }
+
+    /* ── SCROLLBAR FOR CONTENT ──────────────── */
+    .dashboard-main::-webkit-scrollbar { width: 6px; }
+    .dashboard-main::-webkit-scrollbar-track { background: transparent; }
+    .dashboard-main::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 6px; }
+  </style>
+</head>
+
+<body>
+<div class="dashboard-layout">
+
+  <!-- ══════════════════ SIDEBAR ══════════════════ -->
+  <aside class="sidebar">
+
+    <!-- Brand -->
+    <div class="sidebar-brand">
+      <div class="sidebar-logo">FP</div>
+      <div>
+        <div class="sidebar-brand-name">FastPic.ai</div>
+        <div class="sidebar-brand-sub">Professional</div>
+      </div>
+    </div>
+
+    <!-- User Profile -->
+    <div class="sidebar-user-block">
+      <div class="sidebar-user-inner">
+        <div class="avatar avatar-md" style="background:linear-gradient(135deg,#6366F1,#22D3EE);color:white;">AK</div>
+        <div style="flex:1;min-width:0;">
+          <div class="sidebar-user-name">Akshay Mulani</div>
+          <div class="sidebar-user-sub">akshay@fastpic.ai</div>
+        </div>
+        <span class="badge badge-primary" style="font-size:0.62rem;padding:2px 7px;">Pro</span>
+      </div>
+    </div>
+
+    <!-- Nav -->
+    <nav class="sidebar-nav">
+
+      <!-- MAIN -->
+      <div class="nav-section-label">Main</div>
+      <a href="dashboard.html" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-house"></i></span>
+        Dashboard
+      </a>
+      <a href="events.html" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-folder-open"></i></span>
+        Events
+        <span class="nav-badge">47</span>
+      </a>
+      <a href="gallery.html" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-images"></i></span>
+        Gallery
+      </a>
+      <a href="face-search.html" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-user-group"></i></span>
+        Faces &amp; AI
+        <span class="nav-badge">2.8k</span>
+      </a>
+
+      <!-- TOOLS -->
+      <div class="nav-section-label">Tools</div>
+      <a href="search.html" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
+        Search
+      </a>
+      <a href="favorites.html" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-star"></i></span>
+        Favorites
+      </a>
+      <a href="downloads.html" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-download"></i></span>
+        Downloads
+      </a>
+
+      <!-- SETTINGS -->
+      <div class="nav-section-label">Settings</div>
+      <a href="settings-branding.html" class="nav-item active">
+        <span class="nav-icon"><i class="fa-solid fa-palette"></i></span>
+        Branding
+      </a>
+      <a href="settings-watermark.html" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-tag"></i></span>
+        Watermarks
+      </a>
+      <a href="settings-team.html" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-users"></i></span>
+        Team
+      </a>
+      <a href="settings-logs.html" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-scroll"></i></span>
+        Activity Logs
+      </a>
+      <a href="settings-billing.html" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-credit-card"></i></span>
+        Billing
+      </a>
+
+    </nav>
+
+    <!-- Storage + Upgrade -->
+    <div class="sidebar-footer" style="padding:0;">
+      <div class="storage-block">
+        <div class="storage-label">
+          <span style="color:var(--text-secondary)"><i class="fa-solid fa-hard-drive" style="margin-right:5px;"></i>Storage</span>
+          <span>340 / 500 GB</span>
+        </div>
+        <div class="progress-bar" style="margin-bottom:10px;">
+          <div class="progress-fill warning" style="width:68%;"></div>
+        </div>
+        <div style="font-size:0.7rem;color:var(--text-tertiary);margin-bottom:12px;">68% used · 160 GB remaining</div>
+        <a href="settings-billing.html" class="btn btn-primary btn-full btn-sm">
+          <i class="fa-solid fa-arrow-up"></i> Upgrade Plan
+        </a>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- ══════════════════ MAIN ══════════════════ -->
+  <div class="dashboard-main">
+
+    <!-- TOP BAR -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <div class="topbar-search">
+          <i class="fa-solid fa-magnifying-glass" style="color:var(--text-tertiary);font-size:0.85rem;"></i>
+          <input type="text" placeholder="Search settings..." />
+        </div>
+      </div>
+      <div class="topbar-right">
+        <button class="notif-btn" data-tooltip="Notifications">
+          <i class="fa-solid fa-bell"></i>
+          <span class="notif-badge">3</span>
+        </button>
+        <button class="btn btn-primary btn-sm">
+          <i class="fa-solid fa-cloud-arrow-up"></i>
+          Upload Photos
+        </button>
+        <div class="topbar-user">
+          <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#6366F1,#22D3EE);color:white;font-size:0.65rem;">AK</div>
+          <span class="topbar-user-name">Akshay</span>
+          <i class="fa-solid fa-chevron-down" style="font-size:0.65rem;color:var(--text-tertiary);"></i>
+        </div>
+      </div>
+    </header>
+
+    <!-- CONTENT -->
+    <main class="dashboard-content" style="max-width:unset;">
+
+      <!-- ── SETTINGS HEADER ────────────────── -->
+      <div class="settings-page-header">
+        <div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+            <a href="dashboard.html" style="font-size:0.78rem;color:var(--text-tertiary);transition:var(--transition);" onmouseover="this.style.color='var(--text-secondary)'" onmouseout="this.style.color='var(--text-tertiary)'">
+              <i class="fa-solid fa-house" style="margin-right:4px;"></i>Dashboard
+            </a>
+            <i class="fa-solid fa-chevron-right" style="font-size:0.6rem;color:var(--text-tertiary);"></i>
+            <span style="font-size:0.78rem;color:var(--text-secondary);">Settings</span>
+            <i class="fa-solid fa-chevron-right" style="font-size:0.6rem;color:var(--text-tertiary);"></i>
+            <span style="font-size:0.78rem;color:var(--primary-light);font-weight:600;">Business Branding</span>
+          </div>
+          <div class="settings-page-title">
+            <i class="fa-solid fa-building" style="color:var(--primary-light);margin-right:10px;font-size:1.2rem;"></i>
+            Business Branding
+          </div>
+          <div class="settings-page-subtitle">Customize how your studio appears across all galleries and client-facing pages</div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center;">
+          <span style="font-size:0.75rem;color:var(--text-tertiary);"><i class="fa-regular fa-clock" style="margin-right:4px;"></i>Auto-saved 2 min ago</span>
+          <button class="btn btn-secondary btn-sm"><i class="fa-solid fa-eye"></i> Preview</button>
+        </div>
+      </div>
+
+      <!-- ══════ SETTINGS LAYOUT: NAV + CONTENT ══════ -->
+      <div class="settings-layout">
+
+        <!-- ────── LEFT SETTINGS NAV ────── -->
+        <nav class="settings-nav">
+          <div class="settings-nav-label">Account</div>
+
+          <a href="#" class="settings-nav-item">
+            <span class="nav-item-icon"><i class="fa-solid fa-user"></i></span>
+            Your Profile
+          </a>
+
+          <a href="settings-branding.html" class="settings-nav-item active">
+            <span class="nav-item-icon"><i class="fa-solid fa-building"></i></span>
+            Business Branding
+          </a>
+
+          <a href="settings-watermark.html" class="settings-nav-item">
+            <span class="nav-item-icon"><i class="fa-solid fa-tag"></i></span>
+            Watermarks
+          </a>
+
+          <div class="settings-nav-label" style="margin-top:16px;">Billing</div>
+
+          <a href="settings-billing.html" class="settings-nav-item">
+            <span class="nav-item-icon"><i class="fa-solid fa-credit-card"></i></span>
+            Billing &amp; Storage
+          </a>
+
+          <div class="settings-nav-label" style="margin-top:16px;">Studio</div>
+
+          <a href="settings-team.html" class="settings-nav-item">
+            <span class="nav-item-icon"><i class="fa-solid fa-users"></i></span>
+            Team Management
+          </a>
+
+          <a href="settings-logs.html" class="settings-nav-item">
+            <span class="nav-item-icon"><i class="fa-solid fa-scroll"></i></span>
+            Activity Logs
+          </a>
+        </nav>
+
+        <!-- ────── SETTINGS CONTENT AREA ────── -->
+        <div class="settings-content">
+          <div class="settings-grid">
+
+            <!-- ════ LEFT FORM COLUMN ════ -->
+            <div class="settings-form-col">
+
+              <!-- ── Section 1: Business Identity ── -->
+              <div class="settings-section">
+                <div class="settings-section-title">
+                  <span class="section-icon"><i class="fa-solid fa-briefcase"></i></span>
+                  Business Identity
+                </div>
+
+                <div class="form-row" style="margin-bottom:14px;">
+                  <div class="form-group">
+                    <label class="form-label">Business Name</label>
+                    <input type="text" class="form-input" value="Delta Photography Studio" />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Business Tagline</label>
+                    <input type="text" class="form-input" value="Capturing moments that last forever" />
+                  </div>
+                </div>
+
+                <div class="form-row" style="margin-bottom:18px;">
+                  <div class="form-group">
+                    <label class="form-label">GST Number</label>
+                    <div class="input-icon-wrap">
+                      <i class="input-prefix-icon fa-solid fa-file-invoice" style="color:var(--text-tertiary);"></i>
+                      <input type="text" class="form-input" placeholder="e.g. 27AAPFU0939F1ZV" />
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">State (GST)</label>
+                    <select class="form-select">
+                      <option value="">Select State</option>
+                      <option value="mh" selected>Maharashtra</option>
+                      <option value="dl">Delhi</option>
+                      <option value="ka">Karnataka</option>
+                      <option value="tn">Tamil Nadu</option>
+                      <option value="gj">Gujarat</option>
+                      <option value="rj">Rajasthan</option>
+                      <option value="up">Uttar Pradesh</option>
+                      <option value="wb">West Bengal</option>
+                      <option value="ap">Andhra Pradesh</option>
+                      <option value="ts">Telangana</option>
+                      <option value="mp">Madhya Pradesh</option>
+                      <option value="pb">Punjab</option>
+                      <option value="hr">Haryana</option>
+                    </select>
+                  </div>
+                </div>
+
+                <button class="btn btn-primary btn-sm">
+                  <i class="fa-solid fa-floppy-disk"></i> Save Business Info
+                </button>
+              </div>
+
+              <!-- ── Section 2: Contact Details ── -->
+              <div class="settings-section">
+                <div class="settings-section-title">
+                  <span class="section-icon"><i class="fa-solid fa-address-card"></i></span>
+                  Contact Details
+                </div>
+
+                <!-- Business Phone -->
+                <div style="margin-bottom:14px;">
+                  <label class="form-label" style="margin-bottom:6px;display:block;">Business Phone</label>
+                  <div class="field-with-toggle">
+                    <div class="form-group" style="gap:0;">
+                      <div class="input-icon-wrap">
+                        <i class="input-prefix-icon fa-solid fa-phone" style="color:var(--text-tertiary);"></i>
+                        <input type="tel" class="form-input" value="+91 98765 43210" />
+                      </div>
+                    </div>
+                    <label class="toggle-chip">
+                      <label class="toggle" style="margin:0;">
+                        <input type="checkbox" checked />
+                        <span class="toggle-track"></span>
+                      </label>
+                      <span class="toggle-chip-label">Show in gallery</span>
+                    </label>
+                  </div>
+                </div>
+
+                <!-- Business Email -->
+                <div style="margin-bottom:14px;">
+                  <label class="form-label" style="margin-bottom:6px;display:block;">Business Email</label>
+                  <div class="field-with-toggle">
+                    <div class="form-group" style="gap:0;">
+                      <div class="input-icon-wrap">
+                        <i class="input-prefix-icon fa-solid fa-envelope" style="color:var(--text-tertiary);"></i>
+                        <input type="email" class="form-input" value="hello@deltaphotography.in" />
+                      </div>
+                    </div>
+                    <label class="toggle-chip">
+                      <label class="toggle" style="margin:0;">
+                        <input type="checkbox" checked />
+                        <span class="toggle-track"></span>
+                      </label>
+                      <span class="toggle-chip-label">Show in gallery</span>
+                    </label>
+                  </div>
+                </div>
+
+                <!-- Website URL -->
+                <div style="margin-bottom:4px;">
+                  <label class="form-label" style="margin-bottom:6px;display:block;">Website URL</label>
+                  <div class="field-with-toggle">
+                    <div class="form-group" style="gap:0;">
+                      <div class="input-icon-wrap">
+                        <i class="input-prefix-icon fa-solid fa-globe" style="color:var(--text-tertiary);"></i>
+                        <input type="url" class="form-input" value="https://deltaphotography.in" />
+                      </div>
+                    </div>
+                    <label class="toggle-chip">
+                      <label class="toggle" style="margin:0;">
+                        <input type="checkbox" />
+                        <span class="toggle-track"></span>
+                      </label>
+                      <span class="toggle-chip-label">Show in gallery</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ── Section 3: Social Media ── -->
+              <div class="settings-section">
+                <div class="settings-section-title">
+                  <span class="section-icon"><i class="fa-solid fa-share-nodes"></i></span>
+                  Social Media
+                </div>
+                <div style="font-size:0.75rem;color:var(--text-tertiary);margin-bottom:16px;margin-top:-6px;">
+                  Links marked as "Display" will appear in your portfolio and guest galleries
+                </div>
+
+                <!-- Instagram -->
+                <div class="social-row">
+                  <div class="social-icon-wrap" style="background:linear-gradient(135deg,#E1306C,#F77737);color:white;">
+                    <i class="fa-brands fa-instagram"></i>
+                  </div>
+                  <div class="social-input-wrap">
+                    <input type="url" class="social-input" placeholder="https://instagram.com/deltastudio" value="https://instagram.com/deltastudio" />
+                  </div>
+                  <div class="social-toggle-wrap" style="display:flex;align-items:center;gap:6px;">
+                    <label class="toggle-mini">
+                      <input type="checkbox" checked />
+                      <span class="toggle-mini-track"></span>
+                    </label>
+                    <span style="font-size:0.7rem;color:var(--text-tertiary);">Display</span>
+                  </div>
+                </div>
+
+                <!-- Facebook -->
+                <div class="social-row">
+                  <div class="social-icon-wrap" style="background:#1877F2;color:white;">
+                    <i class="fa-brands fa-facebook-f"></i>
+                  </div>
+                  <div class="social-input-wrap">
+                    <input type="url" class="social-input" placeholder="https://facebook.com/deltastudio" value="https://facebook.com/deltaphotostudio" />
+                  </div>
+                  <div class="social-toggle-wrap" style="display:flex;align-items:center;gap:6px;">
+                    <label class="toggle-mini">
+                      <input type="checkbox" checked />
+                      <span class="toggle-mini-track"></span>
+                    </label>
+                    <span style="font-size:0.7rem;color:var(--text-tertiary);">Display</span>
+                  </div>
+                </div>
+
+                <!-- WhatsApp -->
+                <div class="social-row">
+                  <div class="social-icon-wrap" style="background:#25D366;color:white;">
+                    <i class="fa-brands fa-whatsapp"></i>
+                  </div>
+                  <div class="social-input-wrap">
+                    <div style="position:relative;">
+                      <input type="tel" class="social-input" placeholder="+91 98765 43210 (incl. country code)" style="padding-left:12px;" />
+                    </div>
+                    <div style="font-size:0.68rem;color:var(--text-tertiary);margin-top:3px;"><i class="fa-solid fa-circle-info" style="margin-right:3px;"></i>Include country code e.g. +91</div>
+                  </div>
+                  <div class="social-toggle-wrap" style="display:flex;align-items:center;gap:6px;">
+                    <label class="toggle-mini">
+                      <input type="checkbox" checked />
+                      <span class="toggle-mini-track"></span>
+                    </label>
+                    <span style="font-size:0.7rem;color:var(--text-tertiary);">Display</span>
+                  </div>
+                </div>
+
+                <!-- YouTube -->
+                <div class="social-row">
+                  <div class="social-icon-wrap" style="background:#FF0000;color:white;">
+                    <i class="fa-brands fa-youtube"></i>
+                  </div>
+                  <div class="social-input-wrap">
+                    <input type="url" class="social-input" placeholder="https://youtube.com/@deltastudio" />
+                  </div>
+                  <div class="social-toggle-wrap" style="display:flex;align-items:center;gap:6px;">
+                    <label class="toggle-mini">
+                      <input type="checkbox" />
+                      <span class="toggle-mini-track"></span>
+                    </label>
+                    <span style="font-size:0.7rem;color:var(--text-tertiary);">Display</span>
+                  </div>
+                </div>
+
+                <!-- Google Reviews -->
+                <div class="social-row">
+                  <div class="social-icon-wrap" style="background:white;color:#4285F4;">
+                    <i class="fa-brands fa-google"></i>
+                  </div>
+                  <div class="social-input-wrap">
+                    <input type="url" class="social-input" placeholder="Google Reviews link" />
+                  </div>
+                  <div class="social-toggle-wrap" style="display:flex;align-items:center;gap:6px;">
+                    <label class="toggle-mini">
+                      <input type="checkbox" />
+                      <span class="toggle-mini-track"></span>
+                    </label>
+                    <span style="font-size:0.7rem;color:var(--text-tertiary);">Display</span>
+                  </div>
+                </div>
+
+                <!-- Location / Maps -->
+                <div class="social-row">
+                  <div class="social-icon-wrap" style="background:#34A853;color:white;">
+                    <i class="fa-solid fa-map-location-dot"></i>
+                  </div>
+                  <div class="social-input-wrap">
+                    <input type="url" class="social-input" placeholder="Google Maps link to your studio" value="https://maps.google.com/?q=Delta+Photography+Studio+Mumbai" />
+                  </div>
+                  <div class="social-toggle-wrap" style="display:flex;align-items:center;gap:6px;">
+                    <label class="toggle-mini">
+                      <input type="checkbox" checked />
+                      <span class="toggle-mini-track"></span>
+                    </label>
+                    <span style="font-size:0.7rem;color:var(--text-tertiary);">Display</span>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- ── Section 4: Gallery Appearance ── -->
+              <div class="settings-section">
+                <div class="settings-section-title">
+                  <span class="section-icon"><i class="fa-solid fa-swatchbook"></i></span>
+                  Gallery Appearance
+                </div>
+
+                <!-- Primary Color -->
+                <div class="form-group" style="margin-bottom:20px;">
+                  <label class="form-label">Primary Brand Color</label>
+                  <div class="color-picker-row">
+                    <input type="color" class="color-swatch-input" id="primaryColor" value="#6366F1" onchange="updateColor(this.value)" />
+                    <input type="text" class="color-hex-input" id="hexInput" value="#6366F1" oninput="syncColor(this.value)" placeholder="#6366F1" />
+                    <div class="preset-colors" id="presetColors">
+                      <div class="preset-dot selected" style="background:#6366F1;" data-color="#6366F1" onclick="selectPreset('#6366F1', this)"></div>
+                      <div class="preset-dot" style="background:#8B5CF6;" data-color="#8B5CF6" onclick="selectPreset('#8B5CF6', this)"></div>
+                      <div class="preset-dot" style="background:#EC4899;" data-color="#EC4899" onclick="selectPreset('#EC4899', this)"></div>
+                      <div class="preset-dot" style="background:#EF4444;" data-color="#EF4444" onclick="selectPreset('#EF4444', this)"></div>
+                      <div class="preset-dot" style="background:#F59E0B;" data-color="#F59E0B" onclick="selectPreset('#F59E0B', this)"></div>
+                      <div class="preset-dot" style="background:#10B981;" data-color="#10B981" onclick="selectPreset('#10B981', this)"></div>
+                      <div class="preset-dot" style="background:#3B82F6;" data-color="#3B82F6" onclick="selectPreset('#3B82F6', this)"></div>
+                      <div class="preset-dot" style="background:#14B8A6;" data-color="#14B8A6" onclick="selectPreset('#14B8A6', this)"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Gallery Font -->
+                <div class="form-group" style="margin-bottom:20px;">
+                  <label class="form-label">Gallery Font</label>
+                  <select class="form-select" style="max-width:300px;">
+                    <option value="inter" selected>Inter — Modern &amp; Clean</option>
+                    <option value="plus-jakarta">Plus Jakarta Sans — Premium</option>
+                    <option value="playfair">Playfair Display — Elegant</option>
+                    <option value="dm-sans">DM Sans — Minimal</option>
+                    <option value="poppins">Poppins — Friendly</option>
+                  </select>
+                  <div style="font-size:0.72rem;color:var(--text-tertiary);margin-top:6px;"><i class="fa-solid fa-circle-info" style="margin-right:3px;"></i>Applied to all guest gallery text</div>
+                </div>
+
+                <div class="settings-divider"></div>
+
+                <!-- Toggle Rows -->
+                <div class="setting-row">
+                  <div class="setting-row-info">
+                    <div class="setting-row-title">Show "Powered by FastPic"</div>
+                    <div class="setting-row-desc">Small attribution badge in gallery footer</div>
+                  </div>
+                  <label class="toggle">
+                    <input type="checkbox" checked />
+                    <span class="toggle-track"></span>
+                  </label>
+                </div>
+
+                <div class="setting-row">
+                  <div class="setting-row-info">
+                    <div class="setting-row-title">Show Studio Watermark <span class="badge badge-primary" style="font-size:0.6rem;margin-left:6px;">Global</span></div>
+                    <div class="setting-row-desc">Apply watermark to all galleries across events</div>
+                  </div>
+                  <label class="toggle">
+                    <input type="checkbox" checked />
+                    <span class="toggle-track"></span>
+                  </label>
+                </div>
+
+              </div>
+
+              <!-- ── SAVE FOOTER ── -->
+              <div class="save-footer">
+                <button class="btn btn-primary btn-full" style="padding:14px 28px;font-size:0.95rem;" onclick="saveAll(this)">
+                  <i class="fa-solid fa-floppy-disk"></i>
+                  Save All Changes
+                </button>
+                <div class="save-timestamp">
+                  <span class="dot"></span>
+                  Last saved: Today at 2:18 PM · All changes synced
+                </div>
+              </div>
+
+            </div><!-- /settings-form-col -->
+
+            <!-- ════ RIGHT PREVIEW COLUMN ════ -->
+            <div class="preview-column">
+
+              <!-- Card 1: Business Logo -->
+              <div class="preview-card">
+                <div class="preview-card-title">
+                  <i class="fa-solid fa-image"></i>
+                  Business Logo
+                </div>
+
+                <div class="logo-upload-zone" id="logoZone" onclick="triggerLogoUpload()">
+                  <div class="logo-placeholder-ring" id="logoRing">ΔP</div>
+                  <div class="logo-placeholder-name">Delta Photography Studio</div>
+                  <div class="logo-upload-hint">Click to upload · PNG, SVG, WebP · Max 2MB</div>
+                </div>
+                <input type="file" id="logoFileInput" accept="image/*" style="display:none;" onchange="previewLogo(this)" />
+
+                <button class="btn btn-secondary btn-full btn-sm" onclick="triggerLogoUpload()">
+                  <i class="fa-solid fa-cloud-arrow-up"></i> Upload Logo
+                </button>
+                <p style="font-size:0.7rem;color:var(--text-tertiary);margin-top:10px;text-align:center;line-height:1.5;">
+                  <i class="fa-solid fa-circle-info" style="margin-right:3px;"></i>
+                  Logo will appear in all guest galleries, portfolio, and client emails
+                </p>
+              </div>
+
+              <!-- Card 2: Gallery Preview -->
+              <div class="preview-card">
+                <div class="preview-card-title">
+                  <i class="fa-solid fa-eye"></i>
+                  Gallery Preview
+                </div>
+
+                <div class="gallery-preview-mock">
+                  <!-- Mock Header -->
+                  <div class="gallery-mock-header">
+                    <div class="gallery-mock-logo" id="previewLogoMini">ΔP</div>
+                    <div>
+                      <div class="gallery-mock-studio">Delta Photography Studio</div>
+                      <div class="gallery-mock-event"><i class="fa-regular fa-calendar" style="margin-right:3px;font-size:0.6rem;"></i>Sharma Wedding · May 25, 2026</div>
+                    </div>
+                    <div style="margin-left:auto;">
+                      <span class="badge badge-primary" style="font-size:0.58rem;padding:2px 6px;">Pro</span>
+                    </div>
+                  </div>
+                  <!-- Mock Photo Grid -->
+                  <div class="gallery-mock-body">
+                    <img class="gallery-mock-photo" src="https://images.unsplash.com/photo-1519741497674-611481863552?w=120&q=70" alt="" loading="lazy" />
+                    <img class="gallery-mock-photo" src="https://images.unsplash.com/photo-1529636798458-92182e662485?w=120&q=70" alt="" loading="lazy" />
+                    <img class="gallery-mock-photo" src="https://images.unsplash.com/photo-1606800052052-a08af7148866?w=120&q=70" alt="" loading="lazy" />
+                    <img class="gallery-mock-photo" src="https://images.unsplash.com/photo-1583939411023-14783179e581?w=120&q=70" alt="" loading="lazy" />
+                    <img class="gallery-mock-photo" src="https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=120&q=70" alt="" loading="lazy" />
+                    <div class="gallery-mock-photo-placeholder" style="background:var(--bg-glass);display:flex;align-items:center;justify-content:center;">
+                      <i class="fa-solid fa-plus" style="color:var(--text-tertiary);font-size:0.8rem;"></i>
+                    </div>
+                  </div>
+                  <!-- Color Theme Row -->
+                  <div class="color-theme-preview">
+                    <div class="color-theme-dot" id="previewColor1" style="background:#6366F1;"></div>
+                    <div class="color-theme-dot" style="background:var(--bg-elevated);border:1px solid var(--border);"></div>
+                    <div class="color-theme-dot" style="background:var(--bg-card);border:1px solid var(--border);"></div>
+                    <span class="color-theme-label" id="previewColorLabel">Brand: #6366F1 · Inter</span>
+                  </div>
+                </div>
+
+                <div style="margin-top:10px;font-size:0.7rem;color:var(--text-tertiary);text-align:center;">
+                  Live preview updates as you edit
+                </div>
+              </div>
+
+              <!-- Card 3: Portfolio Page -->
+              <div class="preview-card">
+                <div class="preview-card-title">
+                  <i class="fa-solid fa-globe"></i>
+                  Portfolio Page
+                </div>
+
+                <div class="portfolio-link-badge" onclick="copyPortfolioLink()">
+                  <div class="portfolio-badge-icon">
+                    <i class="fa-solid fa-link"></i>
+                  </div>
+                  <span class="portfolio-link-text">fastpic.ai/portfolio/delta-studio</span>
+                  <i class="fa-regular fa-copy" style="color:var(--text-tertiary);font-size:0.75rem;"></i>
+                </div>
+
+                <p style="font-size:0.78rem;color:var(--text-secondary);line-height:1.6;margin-bottom:14px;">
+                  Your public portfolio showcases your best work, client reviews, and studio info — all in one beautiful page.
+                </p>
+
+                <div class="portfolio-setting-row">
+                  <div>
+                    <div style="font-size:0.82rem;font-weight:600;color:var(--text-primary);">Enable Portfolio</div>
+                    <div style="font-size:0.7rem;color:var(--text-tertiary);">Make portfolio publicly accessible</div>
+                  </div>
+                  <label class="toggle">
+                    <input type="checkbox" checked />
+                    <span class="toggle-track"></span>
+                  </label>
+                </div>
+
+                <div style="margin-top:12px;display:flex;gap:8px;">
+                  <a href="#" class="btn btn-ghost btn-sm" style="flex:1;justify-content:center;border:1px solid var(--border);border-radius:var(--radius);">
+                    <i class="fa-solid fa-eye"></i> View Portfolio
+                  </a>
+                  <button class="btn btn-secondary btn-sm" style="flex:1;" onclick="copyPortfolioLink()">
+                    <i class="fa-solid fa-copy"></i> Copy Link
+                  </button>
+                </div>
+
+                <!-- Portfolio stats teaser -->
+                <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                  <div style="text-align:center;">
+                    <div style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--text-primary);">2.4k</div>
+                    <div style="font-size:0.67rem;color:var(--text-tertiary);">Portfolio Views</div>
+                  </div>
+                  <div style="text-align:center;">
+                    <div style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--success);">38</div>
+                    <div style="font-size:0.67rem;color:var(--text-tertiary);">Enquiries</div>
+                  </div>
+                </div>
+              </div>
+
+            </div><!-- /preview-column -->
+
+          </div><!-- /settings-grid -->
+        </div><!-- /settings-content -->
+
+      </div><!-- /settings-layout -->
+
+    </main>
+  </div><!-- /dashboard-main -->
+
+</div><!-- /dashboard-layout -->
+
+<script>
+  /* ── Color picker live sync ─────────────────────────── */
+  function updateColor(val) {
+    document.getElementById('hexInput').value = val;
+    applyColorToPreview(val);
+  }
+  function syncColor(val) {
+    if (/^#[0-9A-Fa-f]{6}$/.test(val)) {
+      document.getElementById('primaryColor').value = val;
+      applyColorToPreview(val);
+    }
+  }
+  function selectPreset(color, el) {
+    document.querySelectorAll('.preset-dot').forEach(d => d.classList.remove('selected'));
+    el.classList.add('selected');
+    document.getElementById('primaryColor').value = color;
+    document.getElementById('hexInput').value = color;
+    applyColorToPreview(color);
+  }
+  function applyColorToPreview(color) {
+    document.getElementById('previewColor1').style.background = color;
+    document.getElementById('previewColorLabel').textContent = `Brand: ${color} · Inter`;
+    document.getElementById('logoRing').style.background = `linear-gradient(135deg, ${color}, #22D3EE)`;
+    document.getElementById('previewLogoMini').style.background = `linear-gradient(135deg, ${color}, #22D3EE)`;
+  }
+
+  /* ── Logo upload preview ────────────────────────────── */
+  function triggerLogoUpload() {
+    document.getElementById('logoFileInput').click();
+  }
+  function previewLogo(input) {
+    if (input.files && input.files[0]) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const ring = document.getElementById('logoRing');
+        ring.style.backgroundImage = `url(${e.target.result})`;
+        ring.style.backgroundSize = 'cover';
+        ring.style.backgroundPosition = 'center';
+        ring.textContent = '';
+      };
+      reader.readAsDataURL(input.files[0]);
+    }
+  }
+
+  /* ── Copy portfolio link ────────────────────────────── */
+  function copyPortfolioLink() {
+    navigator.clipboard.writeText('https://fastpic.ai/portfolio/delta-studio').then(() => {
+      showToast('Portfolio link copied!');
+    });
+  }
+
+  /* ── Save all animation ─────────────────────────────── */
+  function saveAll(btn) {
+    const orig = btn.innerHTML;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving…';
+    btn.disabled = true;
+    setTimeout(() => {
+      btn.innerHTML = '<i class="fa-solid fa-check"></i> Saved!';
+      btn.style.background = 'linear-gradient(135deg, #10B981, #059669)';
+      showToast('All branding settings saved successfully!');
+      setTimeout(() => {
+        btn.innerHTML = orig;
+        btn.style.background = '';
+        btn.disabled = false;
+      }, 2200);
+    }, 1200);
+  }
+
+  /* ── Toast notification ─────────────────────────────── */
+  function showToast(msg) {
+    const toast = document.createElement('div');
+    toast.style.cssText = `
+      position:fixed;bottom:28px;right:28px;
+      background:var(--bg-elevated);
+      border:1px solid var(--border-strong);
+      border-radius:var(--radius);
+      padding:12px 20px;
+      font-size:0.85rem;
+      color:var(--text-primary);
+      display:flex;align-items:center;gap:10px;
+      box-shadow:var(--shadow-lg);
+      z-index:9998;
+      animation:slideToast 0.3s cubic-bezier(0.4,0,0.2,1) both;
+    `;
+    toast.innerHTML = `<i class="fa-solid fa-circle-check" style="color:var(--success);"></i>${msg}`;
+    document.head.insertAdjacentHTML('beforeend', `<style>@keyframes slideToast{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}</style>`);
+    document.body.appendChild(toast);
+    setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'opacity 0.3s'; setTimeout(() => toast.remove(), 300); }, 3000);
+  }
+
+  /* ── Logo zone drag-and-drop ────────────────────────── */
+  const zone = document.getElementById('logoZone');
+  zone.addEventListener('dragover', e => { e.preventDefault(); zone.style.borderColor = 'var(--primary)'; zone.style.background = 'rgba(99,102,241,0.06)'; });
+  zone.addEventListener('dragleave', () => { zone.style.borderColor = ''; zone.style.background = ''; });
+  zone.addEventListener('drop', e => {
+    e.preventDefault();
+    zone.style.borderColor = ''; zone.style.background = '';
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('image/')) {
+      const fakeInput = { files: [file] };
+      previewLogo({ files: [file], ...fakeInput });
+    }
+  });
+</script>
+
+</body>
+</html>

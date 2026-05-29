@@ -1,0 +1,1516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FastPic.ai — AI-Powered Photography Platform</title>
+  <link rel="stylesheet" href="design-system.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <style>
+    /* ─── PAGE-SPECIFIC OVERRIDES ─────────────────────────── */
+
+    /* ── Hero mockup image ─── */
+    .hero-mockup {
+      position: relative;
+      margin-top: 72px;
+      max-width: 960px;
+      margin-left: auto;
+      margin-right: auto;
+      animation: fadeInUp 0.9s ease 0.45s both;
+    }
+    .hero-mockup img {
+      width: 100%;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow:
+        0 40px 120px rgba(0,0,0,0.8),
+        0 0 0 1px rgba(255,255,255,0.06),
+        0 0 80px rgba(99,102,241,0.25);
+    }
+    .mockup-bar {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 36px;
+      background: rgba(20,20,40,0.95);
+      border-radius: 20px 20px 0 0;
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      gap: 7px;
+    }
+    .mockup-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+    }
+    .mockup-dot:nth-child(1){ background: #EF4444; }
+    .mockup-dot:nth-child(2){ background: #F59E0B; }
+    .mockup-dot:nth-child(3){ background: #10B981; }
+    .mockup-url {
+      margin-left: 12px;
+      background: rgba(255,255,255,0.07);
+      border-radius: 6px;
+      padding: 4px 16px;
+      font-size: 0.72rem;
+      color: var(--text-tertiary);
+      font-family: var(--font-mono);
+    }
+    .mockup-glow {
+      position: absolute;
+      inset: -2px;
+      border-radius: 22px;
+      background: linear-gradient(135deg, rgba(99,102,241,0.4), rgba(34,211,238,0.2), transparent 60%);
+      z-index: -1;
+      filter: blur(20px);
+    }
+
+    /* ── Stats Strip ─── */
+    .stats-strip {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      margin-top: 56px;
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      backdrop-filter: blur(12px);
+      max-width: 820px;
+      margin-left: auto;
+      margin-right: auto;
+      animation: fadeInUp 0.9s ease 0.55s both;
+    }
+    .stats-item {
+      flex: 1;
+      text-align: center;
+      padding: 28px 16px;
+      position: relative;
+    }
+    .stats-item + .stats-item::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 20%; bottom: 20%;
+      width: 1px;
+      background: var(--border);
+    }
+    .stats-item .sv {
+      font-family: var(--font-display);
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1.1;
+    }
+    .stats-item .sl {
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+    .sv .gradient-text { font-size: inherit; }
+
+    /* ── How It Works ─── */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      position: relative;
+    }
+    .steps-grid::before {
+      content: '';
+      position: absolute;
+      top: 36px; left: calc(16.66% + 28px); right: calc(16.66% + 28px);
+      height: 1px;
+      background: linear-gradient(90deg, var(--primary-subtle), var(--accent-subtle));
+      border-top: 1px dashed rgba(99,102,241,0.4);
+    }
+    .step-card {
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 36px 28px;
+      text-align: center;
+      position: relative;
+      transition: var(--transition-slow);
+    }
+    .step-card:hover {
+      border-color: var(--border-primary);
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-lg), var(--shadow-glow);
+    }
+    .step-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.25rem;
+      color: white;
+      box-shadow: 0 8px 24px var(--primary-glow);
+      margin: 0 auto 20px;
+    }
+    .step-icon {
+      font-size: 2rem;
+      margin-bottom: 16px;
+      display: block;
+    }
+    .step-title {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 10px;
+    }
+    .step-desc {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    /* ── Storage Tiers ─── */
+    .tier-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-bottom: 48px;
+    }
+    .tier-card {
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+      transition: var(--transition-slow);
+    }
+    .tier-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+    }
+    .tier-card.tier-featured {
+      border-color: var(--border-primary);
+      background: linear-gradient(160deg, rgba(99,102,241,0.12), var(--bg-glass));
+    }
+    .tier-label {
+      position: absolute;
+      top: 0; right: 0;
+      background: var(--primary-subtle);
+      border: 1px solid var(--border-primary);
+      border-radius: 0 var(--radius-xl) 0 var(--radius);
+      padding: 4px 12px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--primary-light);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .tier-num {
+      font-family: var(--font-display);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      margin-bottom: 8px;
+    }
+    .tier-name {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+    .tier-size {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--accent);
+      background: var(--accent-subtle);
+      border-radius: var(--radius-full);
+      padding: 3px 10px;
+      display: inline-block;
+      margin-bottom: 16px;
+    }
+    .tier-desc {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+    .tier-use {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--primary-light);
+      background: var(--primary-subtle);
+      border-radius: var(--radius-full);
+      padding: 5px 12px;
+    }
+    .tier-icon {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      display: block;
+    }
+    .storage-math {
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 32px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 32px;
+      backdrop-filter: blur(12px);
+      flex-wrap: wrap;
+    }
+    .math-item {
+      text-align: center;
+    }
+    .math-val {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--text-primary);
+    }
+    .math-label {
+      font-size: 0.75rem;
+      color: var(--text-tertiary);
+      margin-top: 2px;
+    }
+    .math-op {
+      font-size: 1.75rem;
+      font-weight: 300;
+      color: var(--text-tertiary);
+    }
+    .math-result {
+      background: var(--success-subtle);
+      border: 1px solid rgba(16,185,129,0.3);
+      border-radius: var(--radius-lg);
+      padding: 16px 24px;
+      text-align: center;
+    }
+    .math-result .math-val {
+      color: var(--success);
+    }
+
+    /* ── Testimonials ─── */
+    .testimonial-card {
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      transition: var(--transition-slow);
+      position: relative;
+      overflow: hidden;
+    }
+    .testimonial-card::before {
+      content: '"';
+      position: absolute;
+      top: 16px; right: 24px;
+      font-size: 5rem;
+      font-family: Georgia, serif;
+      color: var(--primary-subtle);
+      line-height: 1;
+      pointer-events: none;
+    }
+    .testimonial-card:hover {
+      border-color: var(--border-primary);
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+    }
+    .testimonial-stars {
+      color: var(--warning);
+      font-size: 0.875rem;
+      letter-spacing: 2px;
+    }
+    .testimonial-text {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      line-height: 1.8;
+      font-style: italic;
+    }
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-top: auto;
+    }
+    .testimonial-info .name {
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+    }
+    .testimonial-info .studio {
+      font-size: 0.78rem;
+      color: var(--text-tertiary);
+      margin-top: 2px;
+    }
+
+    /* ── FAQ Accordion ─── */
+    .faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+    .faq-item {
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      transition: var(--transition);
+    }
+    .faq-item.open {
+      border-color: var(--border-primary);
+    }
+    .faq-q {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 24px;
+      cursor: pointer;
+      user-select: none;
+      transition: var(--transition);
+    }
+    .faq-q:hover { background: var(--bg-glass-hover); }
+    .faq-q-text {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--text-primary);
+    }
+    .faq-icon {
+      font-size: 1.25rem;
+      color: var(--text-tertiary);
+      transition: transform 0.25s ease;
+      flex-shrink: 0;
+    }
+    .faq-item.open .faq-icon { transform: rotate(45deg); color: var(--primary-light); }
+    .faq-a {
+      display: none;
+      padding: 0 24px 20px;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      line-height: 1.8;
+      border-top: 1px solid var(--border);
+    }
+    .faq-item.open .faq-a { display: block; }
+
+    /* ── CTA Banner ─── */
+    .cta-banner {
+      background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 40%, #5B21B6 70%, var(--accent) 100%);
+      border-radius: var(--radius-xl);
+      padding: 80px 48px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-banner::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+    .cta-orb-1 {
+      position: absolute;
+      width: 300px; height: 300px;
+      top: -80px; left: -60px;
+      background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .cta-orb-2 {
+      position: absolute;
+      width: 250px; height: 250px;
+      bottom: -60px; right: -40px;
+      background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .cta-banner h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.75rem, 4vw, 2.8rem);
+      font-weight: 800;
+      color: white;
+      margin-bottom: 12px;
+      position: relative;
+    }
+    .cta-banner p {
+      color: rgba(255,255,255,0.75);
+      font-size: 1.05rem;
+      margin-bottom: 36px;
+      position: relative;
+    }
+    .cta-banner .btn-white {
+      background: white;
+      color: var(--primary-dark);
+      font-weight: 700;
+      padding: 15px 36px;
+      border-radius: var(--radius-lg);
+      font-size: 1rem;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      position: relative;
+    }
+    .cta-banner .btn-white:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+    }
+    .cta-banner .btn-ghost-white {
+      background: rgba(255,255,255,0.12);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.25);
+      padding: 15px 32px;
+      border-radius: var(--radius-lg);
+      font-size: 1rem;
+      font-weight: 600;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      position: relative;
+    }
+    .cta-banner .btn-ghost-white:hover {
+      background: rgba(255,255,255,0.2);
+    }
+
+    /* ── Footer ─── */
+    .footer {
+      background: var(--bg-surface);
+      border-top: 1px solid var(--border);
+      padding: 72px 0 32px;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.6fr 1fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 56px;
+    }
+    .footer-col-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      margin-bottom: 20px;
+    }
+    .footer-links {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .footer-link {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      transition: var(--transition);
+    }
+    .footer-link:hover { color: var(--text-primary); }
+    .footer-tagline {
+      font-size: 0.875rem;
+      color: var(--text-tertiary);
+      line-height: 1.7;
+      margin-top: 12px;
+      max-width: 280px;
+    }
+    .footer-social {
+      display: flex;
+      gap: 10px;
+      margin-top: 24px;
+    }
+    .social-btn {
+      width: 38px; height: 38px;
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      transition: var(--transition);
+    }
+    .social-btn:hover {
+      background: var(--primary-subtle);
+      border-color: var(--border-primary);
+      color: var(--primary-light);
+    }
+    .footer-bottom {
+      border-top: 1px solid var(--border);
+      padding-top: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .footer-copy {
+      font-size: 0.78rem;
+      color: var(--text-tertiary);
+    }
+    .footer-bottom-links {
+      display: flex;
+      gap: 20px;
+    }
+    .footer-bottom-link {
+      font-size: 0.78rem;
+      color: var(--text-tertiary);
+      transition: var(--transition);
+    }
+    .footer-bottom-link:hover { color: var(--text-secondary); }
+
+    /* ── Feature tags (list under feature cards) ─── */
+    .feature-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 16px;
+    }
+    .feature-tag {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      background: var(--bg-elevated);
+      color: var(--accent);
+      border: 1px solid var(--accent-subtle);
+      border-radius: 6px;
+      padding: 2px 8px;
+    }
+
+    /* ── Subtle section background alternation ─── */
+    .section-alt {
+      background: var(--bg-surface);
+      padding: 100px 0;
+    }
+
+    /* ── Floating gradient border on featured pricing card ─── */
+    .pricing-card.featured::after {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: var(--radius-xl);
+      background: linear-gradient(135deg, var(--primary), var(--accent), var(--primary));
+      z-index: -1;
+      opacity: 0.6;
+    }
+
+    /* ── Scroll reveal animation ─── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── Nav active state ─── */
+    .marketing-nav .nav-link.active {
+      color: var(--text-primary);
+      background: var(--bg-glass);
+    }
+
+    /* mobile layout hints */
+    @media (max-width: 900px) {
+      .steps-grid, .tier-cards { grid-template-columns: 1fr; }
+      .steps-grid::before { display: none; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .stats-strip { flex-direction: column; }
+      .stats-item + .stats-item::before { display: none; }
+    }
+    @media (max-width: 640px) {
+      .footer-grid { grid-template-columns: 1fr; }
+      .hero-cta { flex-direction: column; }
+      .storage-math { flex-direction: column; gap: 16px; }
+      .math-op { transform: rotate(90deg); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════
+     1. FIXED NAVBAR
+═══════════════════════════════════════════════════════════ -->
+<nav class="marketing-nav" id="mainNav">
+  <!-- Logo -->
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-icon">FP</div>
+    FastPic<span style="color:var(--accent)">.</span>ai
+  </a>
+
+  <!-- Nav Links -->
+  <div class="nav-links">
+    <a href="#features" class="nav-link">Features</a>
+    <a href="pricing.html" class="nav-link">Pricing</a>
+    <a href="#how-it-works" class="nav-link">How It Works</a>
+    <a href="#" class="nav-link">Docs</a>
+    <a href="gallery-entry.html" class="nav-link">Guest Gallery</a>
+  </div>
+
+  <!-- CTA Actions -->
+  <div class="nav-actions">
+    <a href="auth.html" class="btn btn-secondary btn-sm">Sign In</a>
+    <a href="auth.html" class="btn btn-primary btn-sm">Start Free Trial</a>
+  </div>
+</nav>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     2. HERO SECTION
+═══════════════════════════════════════════════════════════ -->
+<section class="hero" id="hero">
+  <!-- Animated orbs -->
+  <div class="hero-bg">
+    <div class="hero-orb hero-orb-1"></div>
+    <div class="hero-orb hero-orb-2"></div>
+    <div class="hero-orb hero-orb-3"></div>
+    <!-- Extra orb for depth -->
+    <div class="hero-orb" style="width:350px;height:350px;bottom:10%;right:10%;background:radial-gradient(circle,rgba(99,102,241,0.3) 0%,transparent 70%);animation:floatOrb2 9s ease-in-out infinite;opacity:0.25;"></div>
+  </div>
+
+  <div class="container" style="position:relative;z-index:1;">
+    <!-- Eyebrow badge -->
+    <div class="hero-eyebrow">
+      <span>✨</span>
+      AI-Powered Photography Platform
+    </div>
+
+    <!-- Main headline -->
+    <h1 class="hero-title font-display fw-800">
+      Your Photos. Organized by<br/>
+      AI. <span class="gradient-text">Delivered Instantly.</span>
+    </h1>
+
+    <!-- Subtitle -->
+    <p class="hero-sub">
+      Professional-grade storage, AI face recognition, and instant delivery for photographers who demand the best.
+    </p>
+
+    <!-- CTAs -->
+    <div class="hero-cta">
+      <a href="auth.html" class="btn btn-primary btn-lg">
+        Start Free Trial <i class="fa fa-arrow-right" style="font-size:0.85em;"></i>
+      </a>
+      <button class="btn btn-secondary btn-lg" onclick="document.getElementById('how-it-works').scrollIntoView({behavior:'smooth'})">
+        <i class="fa fa-play" style="font-size:0.8em;"></i> Watch Demo
+      </button>
+    </div>
+
+    <!-- Hero Mockup Image -->
+    <div class="hero-mockup">
+      <div class="mockup-glow"></div>
+      <div class="mockup-bar">
+        <div class="mockup-dot"></div>
+        <div class="mockup-dot"></div>
+        <div class="mockup-dot"></div>
+        <div class="mockup-url">app.fastpic.ai/dashboard</div>
+      </div>
+      <img
+        src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&q=80"
+        alt="FastPic.ai Dashboard"
+        style="padding-top:36px;"
+      />
+    </div>
+
+    <!-- Stats strip -->
+    <div class="stats-strip">
+      <div class="stats-item">
+        <div class="sv"><span class="gradient-text">50M+</span></div>
+        <div class="sl">Photos Processed</div>
+      </div>
+      <div class="stats-item">
+        <div class="sv">99.9<span style="font-size:1.1rem;color:var(--success);">%</span></div>
+        <div class="sl">Uptime SLA</div>
+      </div>
+      <div class="stats-item">
+        <div class="sv">&lt;<span class="gradient-text">100</span>ms</div>
+        <div class="sl">API Response</div>
+      </div>
+      <div class="stats-item">
+        <div class="sv"><span class="gradient-text">10TB+</span></div>
+        <div class="sl">Photos Stored</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     3. FEATURES GRID
+═══════════════════════════════════════════════════════════ -->
+<section class="section" id="features">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-eyebrow">Core Features</div>
+      <h2 class="section-title">
+        Everything you need.<br/>
+        <span class="gradient-text">Nothing you don't.</span>
+      </h2>
+      <p class="section-sub">
+        FastPic.ai is built from the ground up for professional photographers — every feature is purposeful, powerful, and fast.
+      </p>
+    </div>
+
+    <div class="grid-3" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+
+      <!-- Card 1: AI Face Recognition -->
+      <div class="feature-card reveal">
+        <div class="feature-icon" style="background:var(--primary-subtle);border-color:var(--border-primary);">
+          🧠
+        </div>
+        <div class="feature-title">AI Face Recognition</div>
+        <div class="feature-desc">
+          State-of-the-art RetinaFace detection combined with ArcFace embeddings for unparalleled accuracy. Match thousands of faces in seconds across your entire catalog.
+        </div>
+        <div class="feature-tags">
+          <span class="feature-tag">RetinaFace</span>
+          <span class="feature-tag">ArcFace</span>
+          <span class="feature-tag">512-dim vectors</span>
+        </div>
+      </div>
+
+      <!-- Card 2: 3-Tier Storage -->
+      <div class="feature-card reveal">
+        <div class="feature-icon" style="background:var(--accent-subtle);border-color:rgba(34,211,238,0.3);">
+          ⚡
+        </div>
+        <div class="feature-title">3-Tier Storage System</div>
+        <div class="feature-desc">
+          Intelligent multi-tier architecture: lightweight thumbnails for instant grids, optimized previews for gallery browsing, and lossless masters for final delivery.
+        </div>
+        <div class="feature-tags">
+          <span class="feature-tag">50KB Thumb</span>
+          <span class="feature-tag">500KB Preview</span>
+          <span class="feature-tag">25MB Master</span>
+          <span class="feature-tag">2.2% overhead</span>
+        </div>
+      </div>
+
+      <!-- Card 3: Secure Delivery -->
+      <div class="feature-card reveal">
+        <div class="feature-icon" style="background:var(--success-subtle);border-color:rgba(16,185,129,0.3);">
+          🔒
+        </div>
+        <div class="feature-title">Secure Delivery</div>
+        <div class="feature-desc">
+          Cryptographically signed URLs with configurable TTL ensure zero public exposure. Every download is authorized, logged, and time-limited at the edge.
+        </div>
+        <div class="feature-tags">
+          <span class="feature-tag">Signed URLs</span>
+          <span class="feature-tag">TTL control</span>
+          <span class="feature-tag">Zero public</span>
+        </div>
+      </div>
+
+      <!-- Card 4: Smart Watermarks -->
+      <div class="feature-card reveal">
+        <div class="feature-icon" style="background:var(--warning-subtle);border-color:rgba(245,158,11,0.3);">
+          🎨
+        </div>
+        <div class="feature-title">Smart Watermarks</div>
+        <div class="feature-desc">
+          Dual watermark engine with position presets, opacity control, and custom branding. Auto-applied to all preview-tier images — invisible until rendered, always protected.
+        </div>
+        <div class="feature-tags">
+          <span class="feature-tag">Dual engine</span>
+          <span class="feature-tag">Auto-apply</span>
+          <span class="feature-tag">Custom brand</span>
+        </div>
+      </div>
+
+      <!-- Card 5: Team & Roles -->
+      <div class="feature-card reveal">
+        <div class="feature-icon" style="background:rgba(139,92,246,0.15);border-color:rgba(139,92,246,0.3);">
+          👥
+        </div>
+        <div class="feature-title">Team &amp; Roles</div>
+        <div class="feature-desc">
+          Granular RBAC with five built-in roles: Owner, Admin, Manager, Editor, and Viewer. Assign per-event permissions and build the perfect collaborative workflow.
+        </div>
+        <div class="feature-tags">
+          <span class="feature-tag">Owner</span>
+          <span class="feature-tag">Admin</span>
+          <span class="feature-tag">Manager</span>
+          <span class="feature-tag">Editor</span>
+          <span class="feature-tag">Viewer</span>
+        </div>
+      </div>
+
+      <!-- Card 6: Event Management -->
+      <div class="feature-card reveal">
+        <div class="feature-icon" style="background:var(--danger-subtle);border-color:rgba(239,68,68,0.3);">
+          📊
+        </div>
+        <div class="feature-title">Event Management</div>
+        <div class="feature-desc">
+          Unlimited events with nested subfolders, guest upload portals, bulk operations, and rich metadata. Organize an entire wedding season without breaking a sweat.
+        </div>
+        <div class="feature-tags">
+          <span class="feature-tag">Unlimited events</span>
+          <span class="feature-tag">Guest uploads</span>
+          <span class="feature-tag">Bulk ops</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     4. HOW IT WORKS
+═══════════════════════════════════════════════════════════ -->
+<section class="section-alt" id="how-it-works">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-eyebrow">How It Works</div>
+      <h2 class="section-title">
+        Three steps to
+        <span class="gradient-text">professional delivery</span>
+      </h2>
+      <p class="section-sub">
+        From upload to client hands in minutes. No complex setup. No manual processing. Just AI that works.
+      </p>
+    </div>
+
+    <div class="steps-grid reveal">
+      <!-- Step 1 -->
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <span class="step-icon">📤</span>
+        <div class="step-title">Upload Your Photos</div>
+        <div class="step-desc">
+          Drag &amp; drop your RAW or JPEG files into any event folder. Our ingestion pipeline handles batch uploads up to 25MB per file with zero quality loss.
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="step-card" style="border-color:var(--border-primary);box-shadow:0 0 0 1px var(--border-primary),var(--shadow-glow);">
+        <div class="step-num">2</div>
+        <span class="step-icon">🤖</span>
+        <div class="step-title">AI Processes Everything</div>
+        <div class="step-desc">
+          Our AI engine automatically generates thumbnails, smart previews with watermarks, runs face recognition, and indexes metadata — all in the background while you sleep.
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <span class="step-icon">🚀</span>
+        <div class="step-title">Instant Delivery</div>
+        <div class="step-desc">
+          Share a secure guest gallery link. Clients find their photos in seconds using face search. Signed download links expire after your chosen window. You stay in control.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     5. STORAGE TIERS
+═══════════════════════════════════════════════════════════ -->
+<section class="section" id="storage">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-eyebrow">Storage Architecture</div>
+      <h2 class="section-title">
+        Intelligent 3-tier
+        <span class="gradient-text">vault system</span>
+      </h2>
+      <p class="section-sub">
+        Our proprietary storage math means you pay for almost nothing extra while your clients get blazing-fast loads.
+      </p>
+    </div>
+
+    <div class="tier-cards reveal">
+      <!-- Tier 1 -->
+      <div class="tier-card">
+        <span class="tier-num">Tier 01</span>
+        <div class="tier-name">Dashboard Thumb</div>
+        <span class="tier-size">AVIF / WebP · 20–50 KB</span>
+        <div class="tier-desc">
+          Ultra-compressed thumbnails generated via AVIF with WebP fallback. Optimized for sub-second grid loading across thousands of photos without sacrificing visual fidelity at small sizes.
+        </div>
+        <div class="tier-use">
+          <i class="fa fa-table-cells"></i>
+          Grid Loading
+        </div>
+        <div style="margin-top:20px;">
+          <div class="progress-bar">
+            <div class="progress-fill" style="width:8%;"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-top:6px;font-size:0.7rem;color:var(--text-tertiary);">
+            <span>~35 KB average</span>
+            <span>0.14% of original</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tier 2 -->
+      <div class="tier-card tier-featured">
+        <div class="tier-label">⭐ Default View</div>
+        <span class="tier-num">Tier 02</span>
+        <div class="tier-name">Smart Preview</div>
+        <span class="tier-size">WebP + Watermark · 200–500 KB</span>
+        <div class="tier-desc">
+          High-quality WebP previews at optimal resolution for gallery viewing. Dual watermark engine auto-brands every preview — protecting your work, elevating your studio.
+        </div>
+        <div class="tier-use">
+          <i class="fa fa-images"></i>
+          Gallery Viewing
+        </div>
+        <div style="margin-top:20px;">
+          <div class="progress-bar">
+            <div class="progress-fill" style="width:40%;"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-top:6px;font-size:0.7rem;color:var(--text-tertiary);">
+            <span>~350 KB average</span>
+            <span>1.4% of original</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tier 3 -->
+      <div class="tier-card">
+        <span class="tier-num">Tier 03</span>
+        <div class="tier-name">Master Vault</div>
+        <span class="tier-size">RAW / JPEG · Up to 25 MB</span>
+        <div class="tier-desc">
+          Your original files, untouched. Stored with AES-256 encryption, accessible only via time-limited signed URLs. Never publicly exposed, never compressed. Yours — always.
+        </div>
+        <div class="tier-use">
+          <i class="fa fa-lock"></i>
+          Secure Download Only
+        </div>
+        <div style="margin-top:20px;">
+          <div class="progress-bar">
+            <div class="progress-fill warning" style="width:100%;"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-top:6px;font-size:0.7rem;color:var(--text-tertiary);">
+            <span>Up to 25 MB</span>
+            <span>100% original</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Storage math -->
+    <div class="storage-math reveal">
+      <div class="math-item">
+        <div class="math-val" style="color:var(--text-primary);">25 MB</div>
+        <div class="math-label">Master (original)</div>
+      </div>
+      <div class="math-op">+</div>
+      <div class="math-item">
+        <div class="math-val" style="color:var(--accent);">0.55 MB</div>
+        <div class="math-label">Preview + Thumb</div>
+      </div>
+      <div class="math-op">=</div>
+      <div class="math-item">
+        <div class="math-val" style="color:var(--text-primary);">25.55 MB</div>
+        <div class="math-label">Total per photo</div>
+      </div>
+      <div class="math-op" style="font-size:1.4rem;">→</div>
+      <div class="math-result">
+        <div class="math-val">2.2%</div>
+        <div class="math-label">storage overhead only</div>
+        <div style="font-size:0.7rem;color:var(--success);margin-top:4px;font-weight:600;">🏆 Industry-leading efficiency</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     6. PRICING SECTION
+═══════════════════════════════════════════════════════════ -->
+<section class="section-alt" id="pricing">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-eyebrow">Pricing</div>
+      <h2 class="section-title">
+        Simple pricing.
+        <span class="gradient-text">No surprises.</span>
+      </h2>
+      <p class="section-sub">
+        Choose the plan that fits your studio size. Upgrade or downgrade any time. All plans include AI face recognition and the 3-tier storage system.
+      </p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:24px;" class="reveal">
+
+      <!-- Starter -->
+      <div class="pricing-card">
+        <div class="pricing-name">Starter</div>
+        <div class="pricing-storage">100 GB</div>
+        <div class="pricing-price">
+          <span>₹799</span> /month
+        </div>
+        <p style="font-size:0.8rem;color:var(--text-tertiary);margin-top:4px;">Perfect for solo photographers</p>
+        <ul class="pricing-features">
+          <li class="pricing-feature">
+            <div class="check"><i class="fa fa-check" style="font-size:0.6rem;"></i></div>
+            100 GB total storage
+          </li>
+          <li class="pricing-feature">
+            <div class="check"><i class="fa fa-check" style="font-size:0.6rem;"></i></div>
+            AI Face Recognition
+          </li>
+          <li class="pricing-feature">
+            <div class="check"><i class="fa fa-check" style="font-size:0.6rem;"></i></div>
+            3-Tier storage system
+          </li>
+          <li class="pricing-feature">
+            <div class="check"><i class="fa fa-check" style="font-size:0.6rem;"></i></div>
+            Up to 5 events
+          </li>
+          <li class="pricing-feature">
+            <div class="check"><i class="fa fa-check" style="font-size:0.6rem;"></i></div>
+            Guest gallery delivery
+          </li>
+          <li class="pricing-feature">
+            <div class="check"><i class="fa fa-check" style="font-size:0.6rem;"></i></div>
+            Basic watermarking
+          </li>
+        </ul>
+        <a href="auth.html" class="btn btn-secondary btn-full" style="margin-top:28px;">Get Started</a>
+      </div>
+
+      <!-- Professional — Most Popular -->
+      <div class="pricing-card featured">
+        <div class="pricing-badge">⭐ Most Popular</div>
+        <div class="pricing-name">Professional</div>
+        <div class="pricing-storage">500 GB</div>
+        <div class="pricing-price">
+          <span>₹2,499</span> /month
+        </div>
+        <p style="font-size:0.8rem;color:rgba(255,255,255,0.5);margin-top:4px;">For growing photography studios</p>
+        <ul class="pricing-features">
+          <li class="pricing-feature">
+            <div class="check"><i class="fa fa-check" style="font-size:0.6rem;"></i></div>
+            500 GB total storage
+          </li>
+          <li class="pricing-feature">
+            <div class="check"><i class="fa fa-check" style="font-size:0.6rem;"></i></div>
+            AI Face Recognition + bulk
+          </li>
+          <li class="pricing-feature">
+            <div class="check"><i class="fa fa-check" style="font-size:0.6rem;"></i></div>
+            Unlimited events
+          </li>
+          <li class="pricing-feature">
+            <div class="check"><i class="fa fa-check" style="font-size:0.6rem;"></i></div>
+            Team roles (5 users)
+          </li>
+          <li class="pricing-feature">
+            <div class="check"><i class="fa fa-check" style="font-size:0.6rem;"></i></div>
+            Dual watermark engine
+          </li>
+          <li class="pricing-feature">
+            <div class="check"><i class="fa fa-check" style="font-size:0.6rem;"></i></div>
+            Priority support
+          </li>
+          <li class="pricing-feature">
+            <div class="check"><i class="fa fa-check" style="font-size:0.6rem;"></i></div>
+            Custom domain
+          </li>
+        </ul>
+        <a href="auth.html" class="btn btn-primary btn-full" style="margin-top:28px;">Start Free Trial</a>
+      </div>
+
+      <!-- Studio -->
+      <div class="pricing-card">
+        <div class="pricing-name">Studio</div>
+        <div class="pricing-storage">1 TB</div>
+        <div class="pricing-price">
+          <span>₹3,999</span> /month
+        </div>
+        <p style="font-size:0.8rem;color:var(--text-tertiary);margin-top:4px;">For established studios</p>
+        <ul class="pricing-features">
+          <li class="pricing-feature">
+            <div class="check"><i class="fa fa-check" style="font-size:0.6rem;"></i></div>
+            1 TB total storage
+          </li>
+          <li class="pricing-feature">
+            <div class="check"><i class="fa fa-check" style="font-size:0.6rem;"></i></div>
+            Unlimited AI recognition
+          </li>
+          <li class="pricing-feature">
+            <div class="check"><i class="fa fa-check" style="font-size:0.6rem;"></i></div>
+            Unlimited events
+          </li>
+          <li class="pricing-feature">
+            <div class="check"><i class="fa fa-check" style="font-size:0.6rem;"></i></div>
+            Team roles (20 users)
+          </li>
+          <li class="pricing-feature">
+            <div class="check"><i class="fa fa-check" style="font-size:0.6rem;"></i></div>
+            White-label branding
+          </li>
+          <li class="pricing-feature">
+            <div class="check"><i class="fa fa-check" style="font-size:0.6rem;"></i></div>
+            Advanced analytics
+          </li>
+          <li class="pricing-feature">
+            <div class="check"><i class="fa fa-check" style="font-size:0.6rem;"></i></div>
+            Dedicated onboarding
+          </li>
+        </ul>
+        <a href="auth.html" class="btn btn-secondary btn-full" style="margin-top:28px;">Get Started</a>
+      </div>
+
+      <!-- Enterprise -->
+      <div class="pricing-card" style="background:linear-gradient(160deg,rgba(34,211,238,0.07),var(--bg-glass));border-color:rgba(34,211,238,0.25);">
+        <div class="pricing-name">Enterprise</div>
+        <div class="pricing-storage" style="font-size:2rem;">Custom</div>
+        <div class="pricing-price">
+          <span style="font-size:1.3rem;">Talk to us</span>
+        </div>
+        <p style="font-size:0.8rem;color:var(--text-tertiary);margin-top:4px;">For agencies &amp; large enterprises</p>
+        <ul class="pricing-features">
+          <li class="pricing-feature">
+            <div class="check" style="background:var(--accent-subtle);color:var(--accent);"><i class="fa fa-check" style="font-size:0.6rem;"></i></div>
+            Unlimited storage
+          </li>
+          <li class="pricing-feature">
+            <div class="check" style="background:var(--accent-subtle);color:var(--accent);"><i class="fa fa-check" style="font-size:0.6rem;"></i></div>
+            Custom AI model fine-tuning
+          </li>
+          <li class="pricing-feature">
+            <div class="check" style="background:var(--accent-subtle);color:var(--accent);"><i class="fa fa-check" style="font-size:0.6rem;"></i></div>
+            Unlimited team members
+          </li>
+          <li class="pricing-feature">
+            <div class="check" style="background:var(--accent-subtle);color:var(--accent);"><i class="fa fa-check" style="font-size:0.6rem;"></i></div>
+            On-premise deployment
+          </li>
+          <li class="pricing-feature">
+            <div class="check" style="background:var(--accent-subtle);color:var(--accent);"><i class="fa fa-check" style="font-size:0.6rem;"></i></div>
+            99.99% SLA
+          </li>
+          <li class="pricing-feature">
+            <div class="check" style="background:var(--accent-subtle);color:var(--accent);"><i class="fa fa-check" style="font-size:0.6rem;"></i></div>
+            24/7 dedicated support
+          </li>
+        </ul>
+        <a href="auth.html" class="btn btn-full" style="margin-top:28px;background:var(--accent-subtle);color:var(--accent);border:1px solid rgba(34,211,238,0.3);">Contact Sales</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     7. TESTIMONIALS
+═══════════════════════════════════════════════════════════ -->
+<section class="section" id="testimonials">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-eyebrow">Testimonials</div>
+      <h2 class="section-title">
+        Loved by
+        <span class="gradient-text">professional photographers</span>
+      </h2>
+      <p class="section-sub">
+        Don't take our word for it. Here's what wedding photographers who switched to FastPic.ai have to say.
+      </p>
+    </div>
+
+    <div class="grid-3" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr));" class="reveal">
+
+      <!-- Testimonial 1 -->
+      <div class="testimonial-card reveal">
+        <div class="testimonial-stars">★★★★★</div>
+        <div class="testimonial-text">
+          "FastPic.ai completely transformed how we deliver to clients. The face search alone saves me 4–5 hours per event. Clients find their photos in seconds — they're absolutely blown away every time."
+        </div>
+        <div class="testimonial-author">
+          <div class="avatar avatar-md" style="background:linear-gradient(135deg,var(--primary),var(--accent));">PR</div>
+          <div class="testimonial-info">
+            <div class="name">Priya Rathore</div>
+            <div class="studio">Luminara Wedding Studios · Mumbai</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Testimonial 2 -->
+      <div class="testimonial-card reveal" style="border-color:var(--border-primary);box-shadow:0 0 40px rgba(99,102,241,0.12);">
+        <div class="testimonial-stars">★★★★★</div>
+        <div class="testimonial-text">
+          "The 3-tier storage system is genius. I upload my RAWs, walk away, and by morning everything's processed, watermarked, and ready to share. The 2.2% overhead claim is real — I've checked the math."
+        </div>
+        <div class="testimonial-author">
+          <div class="avatar avatar-md" style="background:linear-gradient(135deg,#A78BFA,var(--primary));">AK</div>
+          <div class="testimonial-info">
+            <div class="name">Arjun Krishnamurthy</div>
+            <div class="studio">Golden Hour Photography · Bangalore</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Testimonial 3 -->
+      <div class="testimonial-card reveal">
+        <div class="testimonial-stars">★★★★★</div>
+        <div class="testimonial-text">
+          "We manage 20+ events a month. FastPic.ai's team roles and event management made onboarding my second shooter so smooth. The signed URL delivery means I never worry about unauthorized downloads."
+        </div>
+        <div class="testimonial-author">
+          <div class="avatar avatar-md" style="background:linear-gradient(135deg,var(--accent),#10B981);">SM</div>
+          <div class="testimonial-info">
+            <div class="name">Sneha Malhotra</div>
+            <div class="studio">Frame Stories Co. · Delhi NCR</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     8. FAQ
+═══════════════════════════════════════════════════════════ -->
+<section class="section-alt" id="faq">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-eyebrow">FAQ</div>
+      <h2 class="section-title">
+        Questions?
+        <span class="gradient-text">We've got answers.</span>
+      </h2>
+    </div>
+
+    <div class="faq-list reveal">
+
+      <!-- Q1 -->
+      <div class="faq-item">
+        <div class="faq-q">
+          <span class="faq-q-text">How does AI face recognition work without internet access?</span>
+          <span class="faq-icon"><i class="fa fa-plus"></i></span>
+        </div>
+        <div class="faq-a">
+          FastPic.ai runs its RetinaFace detection and ArcFace embedding models server-side on our GPU infrastructure. Your photos are processed securely in our private cloud — no third-party AI APIs, no data leaves our servers. 512-dimensional face vectors are stored alongside your photos and used for lightning-fast similarity search.
+        </div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="faq-item">
+        <div class="faq-q">
+          <span class="faq-q-text">What happens to my photos if I cancel my subscription?</span>
+          <span class="faq-icon"><i class="fa fa-plus"></i></span>
+        </div>
+        <div class="faq-a">
+          We give you a 30-day grace period after cancellation during which all your photos remain fully accessible and downloadable. You can export your entire library at any time. After 30 days, your data is permanently deleted from our servers following GDPR-compliant procedures. We will never hold your work hostage.
+        </div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="faq-item">
+        <div class="faq-q">
+          <span class="faq-q-text">Can guests download original master files?</span>
+          <span class="faq-icon"><i class="fa fa-plus"></i></span>
+        </div>
+        <div class="faq-a">
+          No — by default, guests can only view watermarked Smart Previews via the guest gallery. You control whether to enable original file downloads on a per-event basis. When enabled, each download generates a unique time-limited signed URL that expires after your configured window (15 min to 7 days), ensuring zero permanent public exposure.
+        </div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="faq-item">
+        <div class="faq-q">
+          <span class="faq-q-text">What file formats are supported for upload?</span>
+          <span class="faq-icon"><i class="fa fa-plus"></i></span>
+        </div>
+        <div class="faq-a">
+          We support all major photographic formats: JPEG, HEIC, PNG, WebP, AVIF, and RAW files including CR2, CR3 (Canon), NEF (Nikon), ARW (Sony), DNG (Adobe), ORF (Olympus), and RW2 (Panasonic). RAW files are stored as-is in the Master Vault tier while derivatives are generated from embedded JPEG previews.
+        </div>
+      </div>
+
+      <!-- Q5 -->
+      <div class="faq-item">
+        <div class="faq-q">
+          <span class="faq-q-text">How fast is the AI processing pipeline?</span>
+          <span class="faq-icon"><i class="fa fa-plus"></i></span>
+        </div>
+        <div class="faq-a">
+          Our GPU-accelerated pipeline processes an average of 1,200 photos per minute for thumbnail and preview generation, and approximately 800 photos per minute for face detection + embedding extraction. For a typical 1,000-photo wedding shoot, you can expect full processing (all 3 tiers + AI indexing) to complete in under 2 minutes.
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     9. CTA BANNER
+═══════════════════════════════════════════════════════════ -->
+<section class="section" style="padding:80px 0;">
+  <div class="container">
+    <div class="cta-banner reveal">
+      <div class="cta-orb-1"></div>
+      <div class="cta-orb-2"></div>
+      <h2>Ready to transform your<br/>photography business?</h2>
+      <p>Join 3,000+ professional photographers already using FastPic.ai.<br/>No credit card required. Cancel anytime.</p>
+      <div style="display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;">
+        <a href="auth.html" class="btn-white">
+          <i class="fa fa-rocket"></i>
+          Start Free Trial
+        </a>
+        <a href="gallery-entry.html" class="btn-ghost-white">
+          <i class="fa fa-eye"></i>
+          See Live Demo
+        </a>
+      </div>
+      <p style="font-size:0.75rem;color:rgba(255,255,255,0.45);margin-top:20px;margin-bottom:0;">
+        14-day free trial · No credit card · Cancel anytime
+      </p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     10. FOOTER
+═══════════════════════════════════════════════════════════ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+
+      <!-- Col 1: Brand -->
+      <div>
+        <a href="index.html" class="nav-logo" style="margin-bottom:12px;display:inline-flex;">
+          <div class="nav-logo-icon">FP</div>
+          FastPic<span style="color:var(--accent)">.</span>ai
+        </a>
+        <p class="footer-tagline">
+          The AI-powered photography platform built for professionals who care about speed, security, and delivering a flawless client experience.
+        </p>
+        <div class="footer-social">
+          <a href="#" class="social-btn" data-tooltip="Twitter / X"><i class="fab fa-x-twitter"></i></a>
+          <a href="#" class="social-btn" data-tooltip="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="social-btn" data-tooltip="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+          <a href="#" class="social-btn" data-tooltip="YouTube"><i class="fab fa-youtube"></i></a>
+          <a href="#" class="social-btn" data-tooltip="GitHub"><i class="fab fa-github"></i></a>
+        </div>
+      </div>
+
+      <!-- Col 2: Product -->
+      <div>
+        <div class="footer-col-title">Product</div>
+        <ul class="footer-links">
+          <li><a href="#features" class="footer-link">Features</a></li>
+          <li><a href="pricing.html" class="footer-link">Pricing</a></li>
+          <li><a href="#storage" class="footer-link">Storage Tiers</a></li>
+          <li><a href="#" class="footer-link">API Docs</a></li>
+          <li><a href="#" class="footer-link">Changelog</a></li>
+          <li><a href="gallery-entry.html" class="footer-link">Guest Gallery</a></li>
+        </ul>
+      </div>
+
+      <!-- Col 3: Company -->
+      <div>
+        <div class="footer-col-title">Company</div>
+        <ul class="footer-links">
+          <li><a href="#" class="footer-link">About Us</a></li>
+          <li><a href="#" class="footer-link">Blog</a></li>
+          <li><a href="#" class="footer-link">Careers</a></li>
+          <li><a href="#" class="footer-link">Press Kit</a></li>
+          <li><a href="#" class="footer-link">Contact</a></li>
+        </ul>
+      </div>
+
+      <!-- Col 4: Support & Legal -->
+      <div>
+        <div class="footer-col-title">Support</div>
+        <ul class="footer-links">
+          <li><a href="#" class="footer-link">Help Center</a></li>
+          <li><a href="#" class="footer-link">Status Page</a></li>
+          <li><a href="#" class="footer-link">Community</a></li>
+        </ul>
+        <div class="footer-col-title" style="margin-top:24px;">Legal</div>
+        <ul class="footer-links">
+          <li><a href="#" class="footer-link">Privacy Policy</a></li>
+          <li><a href="#" class="footer-link">Terms of Service</a></li>
+          <li><a href="#" class="footer-link">Cookie Policy</a></li>
+          <li><a href="#" class="footer-link">GDPR</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Footer Bottom Bar -->
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2025 FastPic.ai. All rights reserved.</div>
+      <div class="footer-bottom-links">
+        <a href="#" class="footer-bottom-link">Privacy</a>
+        <a href="#" class="footer-bottom-link">Terms</a>
+        <a href="#" class="footer-bottom-link">Cookies</a>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <div style="width:8px;height:8px;border-radius:50%;background:var(--success);box-shadow:0 0 8px var(--success);"></div>
+        <span style="font-size:0.72rem;color:var(--text-tertiary);">All systems operational</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════════════════════════════ -->
+<script>
+  // Navbar scroll effect
+  window.addEventListener('scroll', () => {
+    document.querySelector('.marketing-nav').classList.toggle('scrolled', window.scrollY > 20);
+  });
+
+  // FAQ accordion
+  document.querySelectorAll('.faq-q').forEach(q => {
+    q.addEventListener('click', () => {
+      const item = q.parentElement;
+      // Close other open items
+      document.querySelectorAll('.faq-item.open').forEach(open => {
+        if (open !== item) open.classList.remove('open');
+      });
+      item.classList.toggle('open');
+    });
+  });
+
+  // Scroll reveal animation (IntersectionObserver)
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        // Stagger children if inside a grid
+        entry.target.style.transitionDelay = `${(i % 6) * 0.08}s`;
+        entry.target.classList.add('visible');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+  // Active nav link on scroll
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-link[href^="#"]');
+  const sectionObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(link => {
+          link.classList.toggle('active', link.getAttribute('href') === '#' + entry.target.id);
+        });
+      }
+    });
+  }, { threshold: 0.5 });
+  sections.forEach(section => sectionObserver.observe(section));
+</script>
+
+</body>
+</html>

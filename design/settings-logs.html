@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Activity Audit Log — FastPic.AI</title>
+  <link rel="stylesheet" href="design-system.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <style>
+    /* ── TOP BAR COMPONENTS ── */
+    .notif-btn {
+      position: relative;
+      width: 38px; height: 38px;
+      border-radius: var(--radius);
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-secondary);
+      font-size: 1rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .notif-btn:hover { background: var(--bg-glass-hover); color: var(--text-primary); }
+    .notif-badge {
+      position: absolute; top: -4px; right: -4px;
+      background: var(--danger); color: white;
+      font-size: 0.6rem; font-weight: 700;
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      border: 2px solid var(--bg-base);
+    }
+    .topbar-user {
+      display: flex; align-items: center; gap: 8px;
+      padding: 4px 10px 4px 4px;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--border);
+      background: var(--bg-glass);
+      cursor: pointer; transition: var(--transition);
+    }
+    .topbar-user:hover { background: var(--bg-glass-hover); border-color: var(--border-strong); }
+    .topbar-user-name { font-size: 0.8rem; font-weight: 500; color: var(--text-secondary); }
+
+    /* ── SIDEBAR USER ── */
+    .sidebar-user-block { padding: 12px 16px 16px; border-bottom: 1px solid var(--border); }
+    .sidebar-user-inner {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px; border-radius: var(--radius);
+      transition: var(--transition); cursor: pointer;
+    }
+    .sidebar-user-inner:hover { background: var(--bg-glass-hover); }
+    .sidebar-user-name { font-size: 0.85rem; font-weight: 600; color: var(--text-primary); line-height: 1.2; }
+    .sidebar-user-sub  { font-size: 0.7rem; color: var(--text-tertiary); }
+    .storage-block { padding: 14px 16px; }
+    .storage-label {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 8px;
+    }
+    .storage-label span { color: var(--warning); font-weight: 600; }
+
+    /* ── SETTINGS SECTION LABEL ── */
+    .settings-section-label {
+      font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--text-tertiary);
+      padding: 4px 12px; margin-bottom: 4px; margin-top: 12px;
+    }
+
+    /* ── CARD HEADERS ── */
+    .card-hdr {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .card-hdr-left { display: flex; align-items: center; gap: 12px; }
+    .card-hdr-icon {
+      width: 38px; height: 38px;
+      border-radius: var(--radius);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+    }
+    .card-hdr-title {
+      font-family: var(--font-display); font-size: 1rem;
+      font-weight: 700; color: var(--text-primary);
+    }
+    .card-hdr-sub { font-size: 0.75rem; color: var(--text-tertiary); margin-top: 1px; }
+
+    /* ── FILTER ROW ── */
+    .filter-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+    .filter-row .form-input,
+    .filter-row .form-select {
+      flex: 1;
+      min-width: 130px;
+      max-width: 200px;
+      padding: 9px 12px;
+      font-size: 0.82rem;
+    }
+    .filter-search {
+      flex: 2 !important;
+      max-width: 280px !important;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 9px 12px;
+    }
+    .filter-search input {
+      background: none;
+      border: none;
+      outline: none;
+      color: var(--text-primary);
+      font-size: 0.82rem;
+      font-family: var(--font-body);
+      flex: 1;
+    }
+    .filter-search input::placeholder { color: var(--text-tertiary); }
+    .filter-search:focus-within {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-subtle);
+    }
+    .filter-date-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .filter-date-group .form-input { max-width: 155px !important; }
+    .filter-date-sep { font-size: 0.78rem; color: var(--text-tertiary); white-space: nowrap; }
+
+    /* ── STATS STRIP ── */
+    .stats-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .log-stat-card {
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 18px 20px;
+      position: relative;
+      overflow: hidden;
+      transition: var(--transition);
+    }
+    .log-stat-card:hover {
+      border-color: var(--border-strong);
+      background: var(--bg-glass-hover);
+    }
+    .log-stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 3px; height: 100%;
+      border-radius: 0 2px 2px 0;
+    }
+    .log-stat-card.indigo::before { background: var(--primary); }
+    .log-stat-card.cyan::before   { background: var(--accent); }
+    .log-stat-card.green::before  { background: var(--success); }
+
+    .log-stat-val {
+      font-family: var(--font-display);
+      font-size: 1.65rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .log-stat-lbl {
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+    }
+    .type-breakdown, .user-breakdown {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .breakdown-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.75rem;
+    }
+    .breakdown-row-left { display: flex; align-items: center; gap: 6px; color: var(--text-secondary); }
+    .breakdown-row-count { font-weight: 600; color: var(--text-primary); }
+    .mini-bar {
+      flex: 1;
+      height: 3px;
+      background: var(--bg-elevated);
+      border-radius: 2px;
+      margin: 0 8px;
+      overflow: hidden;
+    }
+    .mini-bar-fill { height: 100%; border-radius: 2px; }
+
+    /* ── ACTIVITY TABLE ── */
+    .log-table-wrap {
+      overflow-x: auto;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+    }
+    .log-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 800px;
+    }
+    .log-table thead tr {
+      background: var(--bg-elevated);
+    }
+    .log-table thead th {
+      padding: 12px 16px;
+      text-align: left;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    .log-table tbody tr {
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      transition: var(--transition);
+    }
+    .log-table tbody tr:last-child { border-bottom: none; }
+    .log-table tbody tr:hover { background: var(--bg-glass-hover); }
+    .log-table td {
+      padding: 13px 16px;
+      font-size: 0.84rem;
+      color: var(--text-secondary);
+      vertical-align: middle;
+    }
+
+    /* Action type badges */
+    .action-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .action-upload   { background: rgba(34,211,238,0.12); color: #22D3EE; border: 1px solid rgba(34,211,238,0.3); }
+    .action-share    { background: rgba(99,102,241,0.14); color: #818CF8; border: 1px solid rgba(99,102,241,0.3); }
+    .action-download { background: var(--success-subtle); color: var(--success); border: 1px solid rgba(16,185,129,0.3); }
+    .action-settings { background: rgba(148,163,184,0.1); color: #94A3B8; border: 1px solid rgba(148,163,184,0.25); }
+    .action-delete   { background: var(--danger-subtle); color: var(--danger); border: 1px solid rgba(239,68,68,0.3); }
+    .action-team     { background: var(--warning-subtle); color: var(--warning); border: 1px solid rgba(245,158,11,0.3); }
+    .action-billing  { background: rgba(168,85,247,0.12); color: #c084fc; border: 1px solid rgba(168,85,247,0.3); }
+
+    /* User Cell */
+    .user-cell {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* IP cell */
+    .ip-cell {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-tertiary);
+    }
+
+    /* Time cell */
+    .time-cell {
+      font-size: 0.78rem;
+      color: var(--text-tertiary);
+      white-space: nowrap;
+    }
+
+    /* Details cell */
+    .details-cell {
+      max-width: 200px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: var(--text-primary);
+      font-size: 0.82rem;
+    }
+
+    /* Event name cell */
+    .event-cell {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+    .event-none { color: var(--text-tertiary); opacity: 0.5; }
+
+    /* ── PAGINATION ── */
+    .pagination {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 20px 0 4px;
+    }
+    .page-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border-radius: var(--radius);
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .page-btn:hover { background: var(--bg-glass-hover); color: var(--text-primary); border-color: var(--border-strong); }
+    .page-btn.active {
+      background: var(--primary-subtle);
+      color: var(--primary-light);
+      border-color: var(--border-primary);
+      font-weight: 700;
+    }
+    .page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* ── AUDIT NOTICE ── */
+    .audit-notice {
+      background: rgba(148,163,184,0.05);
+      border: 1px solid rgba(148,163,184,0.2);
+      border-radius: var(--radius-lg);
+      padding: 18px 20px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      margin-top: 24px;
+    }
+    .audit-notice-icon {
+      width: 36px; height: 36px;
+      background: rgba(148,163,184,0.1);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      color: #94A3B8;
+      font-size: 0.95rem;
+      flex-shrink: 0;
+    }
+    .audit-notice-title {
+      font-weight: 700;
+      font-size: 0.875rem;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+    .audit-notice-body {
+      font-size: 0.8rem;
+      color: var(--text-tertiary);
+      line-height: 1.6;
+    }
+
+    /* hidden row */
+    .log-row-hidden { display: none !important; }
+  </style>
+</head>
+<body>
+<div class="dashboard-layout">
+
+  <!-- ══════════════════ SIDEBAR ══════════════════ -->
+  <aside class="sidebar">
+
+    <!-- Brand -->
+    <div class="sidebar-brand">
+      <div class="sidebar-logo">FP</div>
+      <div>
+        <div class="sidebar-brand-name">FastPic.ai</div>
+        <div class="sidebar-brand-sub">Professional</div>
+      </div>
+    </div>
+
+    <!-- User Profile -->
+    <div class="sidebar-user-block">
+      <div class="sidebar-user-inner">
+        <div class="avatar avatar-md" style="background:linear-gradient(135deg,#6366F1,#22D3EE);color:white;">AK</div>
+        <div style="flex:1;min-width:0;">
+          <div class="sidebar-user-name">Akshay Mulani</div>
+          <div class="sidebar-user-sub">akshay@fastpic.ai</div>
+        </div>
+        <span class="badge badge-primary" style="font-size:0.62rem;padding:2px 7px;">Pro</span>
+      </div>
+    </div>
+
+    <!-- Nav -->
+    <nav class="sidebar-nav">
+
+      <div class="nav-section-label">Main</div>
+      <a href="dashboard.html" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-house"></i></span>
+        Dashboard
+      </a>
+      <a href="events.html" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-folder-open"></i></span>
+        Events
+        <span class="nav-badge">47</span>
+      </a>
+      <a href="event-gallery.html" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-images"></i></span>
+        Gallery
+      </a>
+      <a href="face-search.html" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-user-group"></i></span>
+        Faces &amp; AI
+        <span class="nav-badge">2.8k</span>
+      </a>
+
+      <div class="nav-section-label">Tools</div>
+      <a href="#" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
+        Search
+      </a>
+      <a href="#" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-star"></i></span>
+        Favorites
+      </a>
+      <a href="#" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-download"></i></span>
+        Downloads
+      </a>
+
+      <div class="nav-section-label">Settings</div>
+      <a href="settings-branding.html" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-palette"></i></span>
+        Branding
+      </a>
+      <a href="settings-watermark.html" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-tag"></i></span>
+        Watermarks
+      </a>
+      <a href="settings-team.html" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-users"></i></span>
+        Team
+      </a>
+      <a href="settings-logs.html" class="nav-item active">
+        <span class="nav-icon"><i class="fa-solid fa-scroll"></i></span>
+        Activity Logs
+      </a>
+      <a href="settings-billing.html" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-credit-card"></i></span>
+        Billing
+      </a>
+
+    </nav>
+
+    <!-- Storage + Upgrade -->
+    <div class="sidebar-footer" style="padding:0;">
+      <div class="storage-block">
+        <div class="storage-label">
+          <span style="color:var(--text-secondary)"><i class="fa-solid fa-hard-drive" style="margin-right:5px;"></i>Storage</span>
+          <span>340 / 500 GB</span>
+        </div>
+        <div class="progress-bar" style="margin-bottom:10px;">
+          <div class="progress-fill warning" style="width:68%;"></div>
+        </div>
+        <div style="font-size:0.7rem;color:var(--text-tertiary);margin-bottom:12px;">68% used · 160 GB remaining</div>
+        <a href="settings-billing.html" class="btn btn-primary btn-full btn-sm">
+          <i class="fa-solid fa-arrow-up"></i> Upgrade Plan
+        </a>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- ══════════════════ MAIN ══════════════════ -->
+  <div class="dashboard-main">
+
+    <!-- TOP BAR -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <div class="topbar-search">
+          <i class="fa-solid fa-magnifying-glass" style="color:var(--text-tertiary);font-size:0.85rem;"></i>
+          <input type="text" placeholder="Search logs, users, events..." />
+          <kbd style="font-size:0.65rem;color:var(--text-tertiary);background:var(--bg-elevated);border:1px solid var(--border);border-radius:4px;padding:2px 6px;font-family:var(--font-mono);">⌘K</kbd>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <button class="notif-btn" data-tooltip="Notifications">
+          <i class="fa-solid fa-bell"></i>
+          <span class="notif-badge">3</span>
+        </button>
+        <div class="topbar-user">
+          <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#6366F1,#22D3EE);color:white;font-size:0.65rem;">AK</div>
+          <span class="topbar-user-name">Akshay</span>
+          <i class="fa-solid fa-chevron-down" style="font-size:0.65rem;color:var(--text-tertiary);"></i>
+        </div>
+      </div>
+    </header>
+
+    <!-- CONTENT -->
+    <main class="dashboard-content">
+
+      <!-- PAGE HEADER -->
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">📜 Activity Audit Log</h1>
+          <p class="page-subtitle">Immutable record of all studio actions.</p>
+        </div>
+        <button class="btn btn-secondary" onclick="exportCSV()">
+          <i class="fa-solid fa-file-csv"></i>
+          Export CSV
+        </button>
+      </div>
+
+      <!-- Settings Layout -->
+      <div class="settings-layout">
+
+        <!-- Settings Sidebar -->
+        <aside class="settings-sidebar">
+          <div class="settings-section-label">Account</div>
+          <a href="#" class="settings-nav-item">
+            <i class="fa-solid fa-user" style="width:16px;text-align:center;"></i> Profile
+          </a>
+          <a href="#" class="settings-nav-item">
+            <i class="fa-solid fa-shield-halved" style="width:16px;text-align:center;"></i> Security
+          </a>
+          <a href="#" class="settings-nav-item">
+            <i class="fa-solid fa-bell" style="width:16px;text-align:center;"></i> Notifications
+          </a>
+
+          <div class="settings-section-label" style="margin-top:16px;">Studio</div>
+          <a href="settings-branding.html" class="settings-nav-item">
+            <i class="fa-solid fa-palette" style="width:16px;text-align:center;"></i> Branding
+          </a>
+          <a href="settings-watermark.html" class="settings-nav-item">
+            <i class="fa-solid fa-tag" style="width:16px;text-align:center;"></i> Watermarks
+          </a>
+          <a href="settings-team.html" class="settings-nav-item">
+            <i class="fa-solid fa-users" style="width:16px;text-align:center;"></i> Team Management
+          </a>
+          <a href="settings-logs.html" class="settings-nav-item active">
+            <i class="fa-solid fa-scroll" style="width:16px;text-align:center;"></i> Activity Logs
+          </a>
+
+          <div class="settings-section-label" style="margin-top:16px;">Billing</div>
+          <a href="settings-billing.html" class="settings-nav-item">
+            <i class="fa-solid fa-credit-card" style="width:16px;text-align:center;"></i> Plan &amp; Billing
+          </a>
+          <a href="#" class="settings-nav-item">
+            <i class="fa-solid fa-file-invoice" style="width:16px;text-align:center;"></i> Invoices
+          </a>
+        </aside>
+
+        <!-- Settings Content -->
+        <div class="settings-content" style="display:flex;flex-direction:column;gap:0;">
+
+          <!-- ── FILTER ROW ── -->
+          <div class="filter-row" id="filterRow">
+            <div class="filter-date-group">
+              <input type="date" class="form-input" id="filterFrom" style="max-width:160px;" title="From date" />
+              <span class="filter-date-sep">to</span>
+              <input type="date" class="form-input" id="filterTo" style="max-width:160px;" title="To date" />
+            </div>
+
+            <select class="form-select" id="filterAction" style="min-width:150px;max-width:175px;">
+              <option value="">All Actions</option>
+              <option value="upload">Upload</option>
+              <option value="delete">Delete</option>
+              <option value="download">Download</option>
+              <option value="share">Share</option>
+              <option value="settings">Settings</option>
+              <option value="team">Team</option>
+              <option value="billing">Billing</option>
+            </select>
+
+            <select class="form-select" id="filterUser" style="min-width:130px;max-width:160px;">
+              <option value="">All Users</option>
+              <option value="akshay">Akshay</option>
+              <option value="priya">Priya</option>
+              <option value="rahul">Rahul</option>
+              <option value="deepa">Deepa</option>
+            </select>
+
+            <div class="filter-search">
+              <i class="fa-solid fa-magnifying-glass" style="color:var(--text-tertiary);font-size:0.8rem;"></i>
+              <input type="text" id="filterSearch" placeholder="Search logs..." />
+            </div>
+
+            <button class="btn btn-secondary btn-sm" onclick="clearFilters()" style="white-space:nowrap;">
+              <i class="fa-solid fa-xmark"></i> Clear
+            </button>
+          </div>
+
+          <!-- ── STATS STRIP ── -->
+          <div class="stats-strip" style="margin-bottom:24px;">
+
+            <!-- Total This Month -->
+            <div class="log-stat-card indigo">
+              <div class="log-stat-val">1,284</div>
+              <div class="log-stat-lbl">Total Actions This Month</div>
+              <div style="display:flex;align-items:center;gap:6px;font-size:0.75rem;color:var(--success);">
+                <i class="fa-solid fa-arrow-trend-up"></i>
+                <span>+18% vs last month</span>
+              </div>
+            </div>
+
+            <!-- By Type -->
+            <div class="log-stat-card cyan">
+              <div class="log-stat-lbl" style="margin-bottom:10px;">By Action Type</div>
+              <div class="type-breakdown">
+                <div class="breakdown-row">
+                  <div class="breakdown-row-left">
+                    <span style="width:8px;height:8px;border-radius:2px;background:#22D3EE;display:inline-block;"></span>
+                    Upload
+                  </div>
+                  <div class="mini-bar"><div class="mini-bar-fill" style="background:#22D3EE;width:72%;"></div></div>
+                  <span class="breakdown-row-count">524</span>
+                </div>
+                <div class="breakdown-row">
+                  <div class="breakdown-row-left">
+                    <span style="width:8px;height:8px;border-radius:2px;background:#818CF8;display:inline-block;"></span>
+                    Share
+                  </div>
+                  <div class="mini-bar"><div class="mini-bar-fill" style="background:#818CF8;width:48%;"></div></div>
+                  <span class="breakdown-row-count">312</span>
+                </div>
+                <div class="breakdown-row">
+                  <div class="breakdown-row-left">
+                    <span style="width:8px;height:8px;border-radius:2px;background:#10B981;display:inline-block;"></span>
+                    Download
+                  </div>
+                  <div class="mini-bar"><div class="mini-bar-fill" style="background:#10B981;width:35%;"></div></div>
+                  <span class="breakdown-row-count">234</span>
+                </div>
+                <div class="breakdown-row">
+                  <div class="breakdown-row-left">
+                    <span style="width:8px;height:8px;border-radius:2px;background:#EF4444;display:inline-block;"></span>
+                    Delete
+                  </div>
+                  <div class="mini-bar"><div class="mini-bar-fill" style="background:#EF4444;width:20%;"></div></div>
+                  <span class="breakdown-row-count">214</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- By User -->
+            <div class="log-stat-card green">
+              <div class="log-stat-lbl" style="margin-bottom:10px;">By User</div>
+              <div class="user-breakdown">
+                <div class="breakdown-row">
+                  <div class="breakdown-row-left">
+                    <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#6366F1,#22D3EE);color:white;width:20px;height:20px;font-size:0.55rem;">AK</div>
+                    Akshay
+                  </div>
+                  <div class="mini-bar"><div class="mini-bar-fill" style="background:var(--primary-light);width:80%;"></div></div>
+                  <span class="breakdown-row-count">892</span>
+                </div>
+                <div class="breakdown-row">
+                  <div class="breakdown-row-left">
+                    <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#EF4444,#F97316);color:white;width:20px;height:20px;font-size:0.55rem;">PS</div>
+                    Priya
+                  </div>
+                  <div class="mini-bar"><div class="mini-bar-fill" style="background:#FB923C;width:40%;"></div></div>
+                  <span class="breakdown-row-count">248</span>
+                </div>
+                <div class="breakdown-row">
+                  <div class="breakdown-row-left">
+                    <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#22D3EE,#6366F1);color:white;width:20px;height:20px;font-size:0.55rem;">RV</div>
+                    Rahul
+                  </div>
+                  <div class="mini-bar"><div class="mini-bar-fill" style="background:#22D3EE;width:18%;"></div></div>
+                  <span class="breakdown-row-count">98</span>
+                </div>
+                <div class="breakdown-row">
+                  <div class="breakdown-row-left">
+                    <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#10B981,#22D3EE);color:white;width:20px;height:20px;font-size:0.55rem;">DP</div>
+                    Deepa
+                  </div>
+                  <div class="mini-bar"><div class="mini-bar-fill" style="background:#10B981;width:8%;"></div></div>
+                  <span class="breakdown-row-count">46</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- ── ACTIVITY TABLE ── -->
+          <div class="card" style="padding:0;overflow:hidden;">
+            <div style="padding:20px 24px 0;">
+              <div class="card-hdr">
+                <div class="card-hdr-left">
+                  <div class="card-hdr-icon" style="background:rgba(99,102,241,0.12);color:var(--primary-light);">
+                    <i class="fa-solid fa-list-check"></i>
+                  </div>
+                  <div>
+                    <div class="card-hdr-title">Audit Log Entries</div>
+                    <div class="card-hdr-sub">Showing 20 of 1,284 entries this month</div>
+                  </div>
+                </div>
+                <span class="badge badge-primary" style="font-size:0.7rem;">
+                  <i class="fa-solid fa-lock" style="font-size:0.6rem;"></i>
+                  Immutable
+                </span>
+              </div>
+            </div>
+
+            <div class="log-table-wrap" style="border:none;border-radius:0;">
+              <table class="log-table" id="logTable">
+                <thead>
+                  <tr>
+                    <th>Action</th>
+                    <th>User</th>
+                    <th>Details</th>
+                    <th>Event / File</th>
+                    <th>IP Address</th>
+                    <th>Time</th>
+                  </tr>
+                </thead>
+                <tbody id="logBody">
+
+                  <!-- Row 1: Upload -->
+                  <tr data-action="upload" data-user="akshay">
+                    <td><span class="action-badge action-upload"><i class="fa-solid fa-cloud-arrow-up" style="font-size:0.65rem;"></i> Upload</span></td>
+                    <td>
+                      <div class="user-cell">
+                        <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#6366F1,#22D3EE);color:white;font-size:0.6rem;">AK</div>
+                        <span style="color:var(--text-primary);font-weight:500;">Akshay</span>
+                      </div>
+                    </td>
+                    <td class="details-cell">reception_042.RAW · 24.1 MB</td>
+                    <td class="event-cell">Sharma Wedding</td>
+                    <td class="ip-cell">192.168.1.1</td>
+                    <td class="time-cell">2 min ago</td>
+                  </tr>
+
+                  <!-- Row 2: Share -->
+                  <tr data-action="share" data-user="priya">
+                    <td><span class="action-badge action-share"><i class="fa-solid fa-share-nodes" style="font-size:0.65rem;"></i> Share</span></td>
+                    <td>
+                      <div class="user-cell">
+                        <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#EF4444,#F97316);color:white;font-size:0.6rem;">PS</div>
+                        <span style="color:var(--text-primary);font-weight:500;">Priya</span>
+                      </div>
+                    </td>
+                    <td class="details-cell">Gallery link created</td>
+                    <td class="event-cell">Sharma Wedding</td>
+                    <td class="ip-cell">192.168.1.45</td>
+                    <td class="time-cell">5 min ago</td>
+                  </tr>
+
+                  <!-- Row 3: Download -->
+                  <tr data-action="download" data-user="rahul">
+                    <td><span class="action-badge action-download"><i class="fa-solid fa-download" style="font-size:0.65rem;"></i> Download</span></td>
+                    <td>
+                      <div class="user-cell">
+                        <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#22D3EE,#6366F1);color:white;font-size:0.6rem;">RV</div>
+                        <span style="color:var(--text-primary);font-weight:500;">Rahul</span>
+                      </div>
+                    </td>
+                    <td class="details-cell">Bulk download · 24 photos</td>
+                    <td class="event-cell">Tech Conf 2026</td>
+                    <td class="ip-cell">10.0.0.3</td>
+                    <td class="time-cell">12 min ago</td>
+                  </tr>
+
+                  <!-- Row 4: Settings -->
+                  <tr data-action="settings" data-user="akshay">
+                    <td><span class="action-badge action-settings"><i class="fa-solid fa-gear" style="font-size:0.65rem;"></i> Settings</span></td>
+                    <td>
+                      <div class="user-cell">
+                        <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#6366F1,#22D3EE);color:white;font-size:0.6rem;">AK</div>
+                        <span style="color:var(--text-primary);font-weight:500;">Akshay</span>
+                      </div>
+                    </td>
+                    <td class="details-cell">Watermark 1 updated</td>
+                    <td class="event-cell event-none">—</td>
+                    <td class="ip-cell">192.168.1.1</td>
+                    <td class="time-cell">25 min ago</td>
+                  </tr>
+
+                  <!-- Row 5: Delete -->
+                  <tr data-action="delete" data-user="akshay">
+                    <td><span class="action-badge action-delete"><i class="fa-solid fa-trash" style="font-size:0.65rem;"></i> Delete</span></td>
+                    <td>
+                      <div class="user-cell">
+                        <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#6366F1,#22D3EE);color:white;font-size:0.6rem;">AK</div>
+                        <span style="color:var(--text-primary);font-weight:500;">Akshay</span>
+                      </div>
+                    </td>
+                    <td class="details-cell">portrait_003.jpg → Trash</td>
+                    <td class="event-cell">Sharma Wedding</td>
+                    <td class="ip-cell">192.168.1.1</td>
+                    <td class="time-cell">1 hr ago</td>
+                  </tr>
+
+                  <!-- Row 6: Team -->
+                  <tr data-action="team" data-user="akshay">
+                    <td><span class="action-badge action-team"><i class="fa-solid fa-user-plus" style="font-size:0.65rem;"></i> Team</span></td>
+                    <td>
+                      <div class="user-cell">
+                        <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#6366F1,#22D3EE);color:white;font-size:0.6rem;">AK</div>
+                        <span style="color:var(--text-primary);font-weight:500;">Akshay</span>
+                      </div>
+                    </td>
+                    <td class="details-cell">Invited priya@delta.com as Admin</td>
+                    <td class="event-cell event-none">—</td>
+                    <td class="ip-cell">192.168.1.1</td>
+                    <td class="time-cell">2 hr ago</td>
+                  </tr>
+
+                  <!-- Row 7: Billing -->
+                  <tr data-action="billing" data-user="akshay">
+                    <td><span class="action-badge action-billing"><i class="fa-solid fa-credit-card" style="font-size:0.65rem;"></i> Billing</span></td>
+                    <td>
+                      <div class="user-cell">
+                        <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#6366F1,#22D3EE);color:white;font-size:0.6rem;">AK</div>
+                        <span style="color:var(--text-primary);font-weight:500;">Akshay</span>
+                      </div>
+                    </td>
+                    <td class="details-cell">Upgraded 100 GB → 500 GB</td>
+                    <td class="event-cell event-none">—</td>
+                    <td class="ip-cell">192.168.1.1</td>
+                    <td class="time-cell">3 hr ago</td>
+                  </tr>
+
+                  <!-- Row 8: Upload (Deepa) -->
+                  <tr data-action="upload" data-user="deepa">
+                    <td><span class="action-badge action-upload"><i class="fa-solid fa-cloud-arrow-up" style="font-size:0.65rem;"></i> Upload</span></td>
+                    <td>
+                      <div class="user-cell">
+                        <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#10B981,#22D3EE);color:white;font-size:0.6rem;">DP</div>
+                        <span style="color:var(--text-primary);font-weight:500;">Deepa</span>
+                      </div>
+                    </td>
+                    <td class="details-cell">guest_upload_012.jpg</td>
+                    <td class="event-cell">Sharma Wedding</td>
+                    <td class="ip-cell">103.21.x.x</td>
+                    <td class="time-cell">4 hr ago</td>
+                  </tr>
+
+                  <!-- Row 9: Share (Priya) -->
+                  <tr data-action="share" data-user="priya">
+                    <td><span class="action-badge action-share"><i class="fa-solid fa-share-nodes" style="font-size:0.65rem;"></i> Share</span></td>
+                    <td>
+                      <div class="user-cell">
+                        <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#EF4444,#F97316);color:white;font-size:0.6rem;">PS</div>
+                        <span style="color:var(--text-primary);font-weight:500;">Priya</span>
+                      </div>
+                    </td>
+                    <td class="details-cell">QR code generated</td>
+                    <td class="event-cell">Tech Conf 2026</td>
+                    <td class="ip-cell">192.168.1.45</td>
+                    <td class="time-cell">5 hr ago</td>
+                  </tr>
+
+                  <!-- Row 10: Download (Akshay) -->
+                  <tr data-action="download" data-user="akshay">
+                    <td><span class="action-badge action-download"><i class="fa-solid fa-download" style="font-size:0.65rem;"></i> Download</span></td>
+                    <td>
+                      <div class="user-cell">
+                        <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#6366F1,#22D3EE);color:white;font-size:0.6rem;">AK</div>
+                        <span style="color:var(--text-primary);font-weight:500;">Akshay</span>
+                      </div>
+                    </td>
+                    <td class="details-cell">Original: portrait_001.jpg</td>
+                    <td class="event-cell">Kapoor Family</td>
+                    <td class="ip-cell">192.168.1.1</td>
+                    <td class="time-cell">6 hr ago</td>
+                  </tr>
+
+                  <!-- Row 11: Upload -->
+                  <tr data-action="upload" data-user="akshay">
+                    <td><span class="action-badge action-upload"><i class="fa-solid fa-cloud-arrow-up" style="font-size:0.65rem;"></i> Upload</span></td>
+                    <td>
+                      <div class="user-cell">
+                        <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#6366F1,#22D3EE);color:white;font-size:0.6rem;">AK</div>
+                        <span style="color:var(--text-primary);font-weight:500;">Akshay</span>
+                      </div>
+                    </td>
+                    <td class="details-cell">ceremony_batch_01.zip · 2.1 GB</td>
+                    <td class="event-cell">Sharma Wedding</td>
+                    <td class="ip-cell">192.168.1.1</td>
+                    <td class="time-cell">7 hr ago</td>
+                  </tr>
+
+                  <!-- Row 12: Settings -->
+                  <tr data-action="settings" data-user="priya">
+                    <td><span class="action-badge action-settings"><i class="fa-solid fa-gear" style="font-size:0.65rem;"></i> Settings</span></td>
+                    <td>
+                      <div class="user-cell">
+                        <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#EF4444,#F97316);color:white;font-size:0.6rem;">PS</div>
+                        <span style="color:var(--text-primary);font-weight:500;">Priya</span>
+                      </div>
+                    </td>
+                    <td class="details-cell">Gallery PIN reset</td>
+                    <td class="event-cell">Tech Conf 2026</td>
+                    <td class="ip-cell">192.168.1.45</td>
+                    <td class="time-cell">8 hr ago</td>
+                  </tr>
+
+                  <!-- Row 13: Delete -->
+                  <tr data-action="delete" data-user="rahul">
+                    <td><span class="action-badge action-delete"><i class="fa-solid fa-trash" style="font-size:0.65rem;"></i> Delete</span></td>
+                    <td>
+                      <div class="user-cell">
+                        <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#22D3EE,#6366F1);color:white;font-size:0.6rem;">RV</div>
+                        <span style="color:var(--text-primary);font-weight:500;">Rahul</span>
+                      </div>
+                    </td>
+                    <td class="details-cell">Deleted empty folder: Draft</td>
+                    <td class="event-cell">Kapoor Family</td>
+                    <td class="ip-cell">10.0.0.3</td>
+                    <td class="time-cell">9 hr ago</td>
+                  </tr>
+
+                  <!-- Row 14: Share -->
+                  <tr data-action="share" data-user="akshay">
+                    <td><span class="action-badge action-share"><i class="fa-solid fa-share-nodes" style="font-size:0.65rem;"></i> Share</span></td>
+                    <td>
+                      <div class="user-cell">
+                        <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#6366F1,#22D3EE);color:white;font-size:0.6rem;">AK</div>
+                        <span style="color:var(--text-primary);font-weight:500;">Akshay</span>
+                      </div>
+                    </td>
+                    <td class="details-cell">WhatsApp share link sent</td>
+                    <td class="event-cell">Sharma Wedding</td>
+                    <td class="ip-cell">192.168.1.1</td>
+                    <td class="time-cell">10 hr ago</td>
+                  </tr>
+
+                  <!-- Row 15: Upload -->
+                  <tr data-action="upload" data-user="deepa">
+                    <td><span class="action-badge action-upload"><i class="fa-solid fa-cloud-arrow-up" style="font-size:0.65rem;"></i> Upload</span></td>
+                    <td>
+                      <div class="user-cell">
+                        <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#10B981,#22D3EE);color:white;font-size:0.6rem;">DP</div>
+                        <span style="color:var(--text-primary);font-weight:500;">Deepa</span>
+                      </div>
+                    </td>
+                    <td class="details-cell">mehendi_photos_034.jpg</td>
+                    <td class="event-cell">Sharma Wedding</td>
+                    <td class="ip-cell">103.21.x.x</td>
+                    <td class="time-cell">Yesterday</td>
+                  </tr>
+
+                  <!-- Row 16: Billing -->
+                  <tr data-action="billing" data-user="akshay">
+                    <td><span class="action-badge action-billing"><i class="fa-solid fa-credit-card" style="font-size:0.65rem;"></i> Billing</span></td>
+                    <td>
+                      <div class="user-cell">
+                        <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#6366F1,#22D3EE);color:white;font-size:0.6rem;">AK</div>
+                        <span style="color:var(--text-primary);font-weight:500;">Akshay</span>
+                      </div>
+                    </td>
+                    <td class="details-cell">Invoice #INV-2026-05 downloaded</td>
+                    <td class="event-cell event-none">—</td>
+                    <td class="ip-cell">192.168.1.1</td>
+                    <td class="time-cell">Yesterday</td>
+                  </tr>
+
+                  <!-- Row 17: Team -->
+                  <tr data-action="team" data-user="akshay">
+                    <td><span class="action-badge action-team"><i class="fa-solid fa-user-minus" style="font-size:0.65rem;"></i> Team</span></td>
+                    <td>
+                      <div class="user-cell">
+                        <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#6366F1,#22D3EE);color:white;font-size:0.6rem;">AK</div>
+                        <span style="color:var(--text-primary);font-weight:500;">Akshay</span>
+                      </div>
+                    </td>
+                    <td class="details-cell">Changed role: Rahul → Manager</td>
+                    <td class="event-cell event-none">—</td>
+                    <td class="ip-cell">192.168.1.1</td>
+                    <td class="time-cell">2 days ago</td>
+                  </tr>
+
+                  <!-- Row 18: Download -->
+                  <tr data-action="download" data-user="priya">
+                    <td><span class="action-badge action-download"><i class="fa-solid fa-download" style="font-size:0.65rem;"></i> Download</span></td>
+                    <td>
+                      <div class="user-cell">
+                        <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#EF4444,#F97316);color:white;font-size:0.6rem;">PS</div>
+                        <span style="color:var(--text-primary);font-weight:500;">Priya</span>
+                      </div>
+                    </td>
+                    <td class="details-cell">Bulk export · 85 photos (ZIP)</td>
+                    <td class="event-cell">Kapoor Family</td>
+                    <td class="ip-cell">192.168.1.45</td>
+                    <td class="time-cell">2 days ago</td>
+                  </tr>
+
+                  <!-- Row 19: Upload -->
+                  <tr data-action="upload" data-user="rahul">
+                    <td><span class="action-badge action-upload"><i class="fa-solid fa-cloud-arrow-up" style="font-size:0.65rem;"></i> Upload</span></td>
+                    <td>
+                      <div class="user-cell">
+                        <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#22D3EE,#6366F1);color:white;font-size:0.6rem;">RV</div>
+                        <span style="color:var(--text-primary);font-weight:500;">Rahul</span>
+                      </div>
+                    </td>
+                    <td class="details-cell">conference_keynote_007.jpg</td>
+                    <td class="event-cell">Tech Conf 2026</td>
+                    <td class="ip-cell">10.0.0.3</td>
+                    <td class="time-cell">3 days ago</td>
+                  </tr>
+
+                  <!-- Row 20: Delete -->
+                  <tr data-action="delete" data-user="akshay">
+                    <td><span class="action-badge action-delete"><i class="fa-solid fa-trash" style="font-size:0.65rem;"></i> Delete</span></td>
+                    <td>
+                      <div class="user-cell">
+                        <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#6366F1,#22D3EE);color:white;font-size:0.6rem;">AK</div>
+                        <span style="color:var(--text-primary);font-weight:500;">Akshay</span>
+                      </div>
+                    </td>
+                    <td class="details-cell">Permanently deleted: event_test_draft</td>
+                    <td class="event-cell event-none">—</td>
+                    <td class="ip-cell">192.168.1.1</td>
+                    <td class="time-cell">4 days ago</td>
+                  </tr>
+
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Pagination -->
+            <div style="padding:0 24px 20px;">
+              <div class="pagination">
+                <button class="page-btn" id="prevBtn" onclick="changePage(-1)" disabled>
+                  <i class="fa-solid fa-chevron-left"></i> Previous
+                </button>
+                <button class="page-btn active" onclick="setPage(1)">1</button>
+                <button class="page-btn" onclick="setPage(2)">2</button>
+                <button class="page-btn" onclick="setPage(3)">3</button>
+                <button class="page-btn" id="nextBtn" onclick="changePage(1)">
+                  Next <i class="fa-solid fa-chevron-right"></i>
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- ── AUDIT NOTICE ── -->
+          <div class="audit-notice">
+            <div class="audit-notice-icon">
+              <i class="fa-solid fa-lock"></i>
+            </div>
+            <div>
+              <div class="audit-notice-title">Immutable Audit Record</div>
+              <div class="audit-notice-body">
+                All activity log entries are cryptographically signed and immutable — they cannot be edited, deleted,
+                or tampered with by any user, including studio owners. Logs are retained for <strong>7 years</strong>
+                in compliance with data protection regulations. For forensic export or legal hold requests,
+                contact <a href="mailto:compliance@fastpic.ai" style="color:var(--primary-light);">compliance@fastpic.ai</a>.
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <!-- end settings-content -->
+
+      </div>
+      <!-- end settings-layout -->
+
+    </main>
+  </div>
+</div>
+
+
+<script>
+  /* ── LIVE FILTER ── */
+  const filterAction = document.getElementById('filterAction');
+  const filterUser   = document.getElementById('filterUser');
+  const filterSearch = document.getElementById('filterSearch');
+  const rows = document.querySelectorAll('#logBody tr');
+
+  function applyFilters() {
+    const action = filterAction.value.toLowerCase();
+    const user   = filterUser.value.toLowerCase();
+    const search = filterSearch.value.toLowerCase();
+
+    rows.forEach(row => {
+      const rowAction = row.dataset.action || '';
+      const rowUser   = row.dataset.user   || '';
+      const rowText   = row.textContent.toLowerCase();
+
+      const matchAction = !action || rowAction === action;
+      const matchUser   = !user   || rowUser   === user;
+      const matchSearch = !search || rowText.includes(search);
+
+      row.classList.toggle('log-row-hidden', !(matchAction && matchUser && matchSearch));
+    });
+  }
+
+  filterAction.addEventListener('change', applyFilters);
+  filterUser.addEventListener('change', applyFilters);
+  filterSearch.addEventListener('input', applyFilters);
+
+  function clearFilters() {
+    filterAction.value = '';
+    filterUser.value   = '';
+    filterSearch.value = '';
+    document.getElementById('filterFrom').value = '';
+    document.getElementById('filterTo').value   = '';
+    applyFilters();
+  }
+
+  /* ── PAGINATION (cosmetic) ── */
+  let currentPage = 1;
+  const pageBtns  = document.querySelectorAll('.page-btn[onclick^="setPage"]');
+
+  function setPage(n) {
+    currentPage = n;
+    pageBtns.forEach((btn, i) => btn.classList.toggle('active', i + 1 === n));
+    document.getElementById('prevBtn').disabled = (n === 1);
+    document.getElementById('nextBtn').disabled = (n === 3);
+  }
+  function changePage(delta) { setPage(Math.max(1, Math.min(3, currentPage + delta)); }
+
+  /* ── EXPORT CSV ── */
+  function exportCSV() {
+    const headers = ['Action','User','Details','Event/File','IP','Time'];
+    const csvRows = [headers.join(',')];
+    rows.forEach(row => {
+      const cells = Array.from(row.querySelectorAll('td')).map(td => `"${td.textContent.trim().replace(/"/g,'""')}"`);
+      csvRows.push(cells.join(','));
+    });
+    const blob = new Blob([csvRows.join('\n')], { type: 'text/csv' });
+    const url  = URL.createObjectURL(blob);
+    const a    = Object.assign(document.createElement('a'), { href: url, download: 'fastpic-audit-log.csv' });
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+</script>
+
+</body>
+</html>

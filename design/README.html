@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FastPic.AI — Design Prototype Navigator</title>
+  <link rel="stylesheet" href="design-system.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body { padding: 40px 0; }
+    .nav-header {
+      text-align: center;
+      padding: 40px 24px 60px;
+      position: relative;
+      overflow: hidden;
+    }
+    .nav-header-bg {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(99,102,241,0.2), transparent);
+    }
+    .nav-logo-big {
+      width: 64px; height: 64px;
+      background: linear-gradient(135deg, #6366F1, #22D3EE);
+      border-radius: 18px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 800; font-size: 1.5rem;
+      color: white;
+      margin: 0 auto 20px;
+      box-shadow: 0 8px 32px rgba(99,102,241,0.4);
+      position: relative; z-index: 2;
+    }
+    .flow-diagram {
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 32px;
+      margin-bottom: 48px;
+      overflow-x: auto;
+    }
+    .flow {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      font-size: 0.8rem;
+    }
+    .flow-node {
+      background: var(--primary-subtle);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius);
+      padding: 6px 14px;
+      color: var(--primary-light);
+      font-weight: 600;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: var(--transition);
+      text-decoration: none;
+    }
+    .flow-node:hover {
+      background: var(--primary);
+      color: white;
+    }
+    .flow-arrow {
+      color: var(--text-tertiary);
+      font-size: 1rem;
+    }
+    .page-section { margin-bottom: 40px; }
+    .section-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      margin-bottom: 16px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .section-label::before, .section-label::after {
+      content: ''; flex: 1; height: 1px; background: var(--border);
+    }
+    .pages-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+    .page-card {
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      text-decoration: none;
+      transition: var(--transition);
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      position: relative;
+      overflow: hidden;
+    }
+    .page-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 60% 60% at 100% 0%, var(--primary-subtle), transparent);
+      opacity: 0;
+      transition: var(--transition);
+    }
+    .page-card:hover {
+      border-color: var(--border-primary);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-lg);
+    }
+    .page-card:hover::before { opacity: 1; }
+    .page-icon {
+      width: 48px; height: 48px;
+      background: var(--primary-subtle);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem;
+      flex-shrink: 0;
+      position: relative; z-index: 1;
+    }
+    .page-info { flex: 1; position: relative; z-index: 1; }
+    .page-name {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+    .page-desc {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin-bottom: 8px;
+    }
+    .page-file {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--accent);
+      background: var(--accent-subtle);
+      padding: 2px 8px;
+      border-radius: 4px;
+      display: inline-block;
+    }
+    .page-arrow {
+      position: absolute;
+      top: 50%;
+      right: 20px;
+      transform: translateY(-50%);
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      transition: var(--transition);
+      z-index: 1;
+    }
+    .page-card:hover .page-arrow {
+      color: var(--primary-light);
+      transform: translateY(-50%) translateX(3px);
+    }
+
+    .connection-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: var(--text-tertiary);
+    }
+    .connection-badge::before {
+      content: '\2192';
+      font-size: 0.65rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="nav-header">
+  <div class="nav-header-bg"></div>
+  <div class="nav-logo-big">FP</div>
+  <span class="badge badge-primary mb-8">Design Prototype</span>
+  <h1 class="font-display text-4xl fw-800 text-primary mt-8 mb-16">FastPic.AI</h1>
+  <p class="text-secondary" style="font-size:1rem;max-width:500px;margin:0 auto;">
+    Complete 15-page design prototype. Click any page below to open it.
+    All pages are fully connected with inter-page navigation.
+  </p>
+</div>
+
+<div class="container" style="max-width:1100px;">
+
+  <!-- FLOW DIAGRAM -->
+  <div class="flow-diagram">
+    <div class="section-label">Navigation Flow</div>
+    <div class="flow" style="margin-bottom:16px;">
+      <a href="index.html" class="flow-node">🏠 Landing</a>
+      <span class="flow-arrow">→</span>
+      <a href="pricing.html" class="flow-node">💰 Pricing</a>
+      <span class="flow-arrow">|</span>
+      <a href="auth.html" class="flow-node">🔐 Auth</a>
+      <span class="flow-arrow">→</span>
+      <a href="dashboard.html" class="flow-node">📊 Dashboard</a>
+      <span class="flow-arrow">→</span>
+      <a href="events.html" class="flow-node">📁 Events</a>
+      <span class="flow-arrow">→</span>
+      <a href="event-gallery.html" class="flow-node">🖼️ Gallery</a>
+      <span class="flow-arrow">→</span>
+      <a href="photo-viewer.html" class="flow-node">📷 Photo Viewer</a>
+    </div>
+    <div class="flow" style="margin-bottom:16px;">
+      <a href="gallery-entry.html" class="flow-node">🔗 Gallery Entry</a>
+      <span class="flow-arrow">→</span>
+      <a href="guest-gallery.html" class="flow-node">👥 Guest Gallery</a>
+      <span class="flow-arrow"> </span>
+      <a href="face-search.html" class="flow-node">🧠 AI Faces</a>
+    </div>
+    <div class="flow">
+      <a href="settings-branding.html" class="flow-node">🎨 Branding</a>
+      <span class="flow-arrow">|</span>
+      <a href="settings-watermark.html" class="flow-node">🏷️ Watermarks</a>
+      <span class="flow-arrow">|</span>
+      <a href="settings-team.html" class="flow-node">👤 Team</a>
+      <span class="flow-arrow">|</span>
+      <a href="settings-logs.html" class="flow-node">📜 Logs</a>
+      <span class="flow-arrow">|</span>
+      <a href="settings-billing.html" class="flow-node">💳 Billing</a>
+    </div>
+  </div>
+
+  <!-- MARKETING PAGES -->
+  <div class="page-section">
+    <div class="section-label">Marketing Site</div>
+    <div class="pages-grid">
+      <a href="index.html" class="page-card">
+        <div class="page-icon">🏠</div>
+        <div class="page-info">
+          <div class="page-name">Landing Page</div>
+          <div class="page-desc">Hero, Features, How It Works, Storage Tiers, Pricing, Testimonials, FAQ, CTA</div>
+          <span class="page-file">index.html</span>
+        </div>
+        <i class="fa fa-arrow-right page-arrow"></i>
+      </a>
+      <a href="pricing.html" class="page-card">
+        <div class="page-icon">💰</div>
+        <div class="page-info">
+          <div class="page-name">Pricing Page</div>
+          <div class="page-desc">Plan comparison, storage calculator, feature table, monthly/annual toggle</div>
+          <span class="page-file">pricing.html</span>
+        </div>
+        <i class="fa fa-arrow-right page-arrow"></i>
+      </a>
+    </div>
+  </div>
+
+  <!-- AUTH -->
+  <div class="page-section">
+    <div class="section-label">Authentication</div>
+    <div class="pages-grid">
+      <a href="auth.html" class="page-card">
+        <div class="page-icon">🔐</div>
+        <div class="page-info">
+          <div class="page-name">Login / Register</div>
+          <div class="page-desc">Split-screen auth with animated orbs, Google OAuth, password strength, tab switching</div>
+          <span class="page-file">auth.html</span>
+        </div>
+        <i class="fa fa-arrow-right page-arrow"></i>
+      </a>
+    </div>
+  </div>
+
+  <!-- PHOTOGRAPHER DASHBOARD -->
+  <div class="page-section">
+    <div class="section-label">Photographer Dashboard</div>
+    <div class="pages-grid">
+      <a href="dashboard.html" class="page-card">
+        <div class="page-icon">📊</div>
+        <div class="page-info">
+          <div class="page-name">Dashboard Home</div>
+          <div class="page-desc">Stats overview, recent events, upload activity, AI processing queue</div>
+          <span class="page-file">dashboard.html</span>
+        </div>
+        <i class="fa fa-arrow-right page-arrow"></i>
+      </a>
+      <a href="events.html" class="page-card">
+        <div class="page-icon">📁</div>
+        <div class="page-info">
+          <div class="page-name">Events / Groups</div>
+          <div class="page-desc">Event cards grid, filter/sort/search, create event modal, storage summary</div>
+          <span class="page-file">events.html</span>
+        </div>
+        <i class="fa fa-arrow-right page-arrow"></i>
+      </a>
+      <a href="event-gallery.html" class="page-card">
+        <div class="page-icon">🖼️</div>
+        <div class="page-info">
+          <div class="page-name">Event Gallery</div>
+          <div class="page-desc">Folder management, photo grid, multi-select, AI faces, upload FAB, share modal</div>
+          <span class="page-file">event-gallery.html</span>
+        </div>
+        <i class="fa fa-arrow-right page-arrow"></i>
+      </a>
+      <a href="photo-viewer.html" class="page-card">
+        <div class="page-icon">📷</div>
+        <div class="page-info">
+          <div class="page-name">Photo Viewer</div>
+          <div class="page-desc">Cinematic fullscreen viewer, face overlays, EXIF data, tiered download, keyboard nav</div>
+          <span class="page-file">photo-viewer.html</span>
+        </div>
+        <i class="fa fa-arrow-right page-arrow"></i>
+      </a>
+      <a href="face-search.html" class="page-card">
+        <div class="page-icon">🧠</div>
+        <div class="page-info">
+          <div class="page-name">AI Face Intelligence</div>
+          <div class="page-desc">Selfie upload search, face cards grid, people panel, AI pipeline visualization</div>
+          <span class="page-file">face-search.html</span>
+        </div>
+        <i class="fa fa-arrow-right page-arrow"></i>
+      </a>
+    </div>
+  </div>
+
+  <!-- SETTINGS -->
+  <div class="page-section">
+    <div class="section-label">Studio Settings</div>
+    <div class="pages-grid">
+      <a href="settings-branding.html" class="page-card">
+        <div class="page-icon">🎨</div>
+        <div class="page-info">
+          <div class="page-name">Business Branding</div>
+          <div class="page-desc">Studio identity, logo upload, social links, gallery appearance, portfolio page</div>
+          <span class="page-file">settings-branding.html</span>
+        </div>
+        <i class="fa fa-arrow-right page-arrow"></i>
+      </a>
+      <a href="settings-watermark.html" class="page-card">
+        <div class="page-icon">🏷️</div>
+        <div class="page-info">
+          <div class="page-name">Watermark Engine</div>
+          <div class="page-desc">Dual watermark config, 3×3 position grid, opacity/size sliders, live preview</div>
+          <span class="page-file">settings-watermark.html</span>
+        </div>
+        <i class="fa fa-arrow-right page-arrow"></i>
+      </a>
+      <a href="settings-team.html" class="page-card">
+        <div class="page-icon">👥</div>
+        <div class="page-info">
+          <div class="page-name">Team Management</div>
+          <div class="page-desc">Role permissions matrix, team members table, invite/change role modals</div>
+          <span class="page-file">settings-team.html</span>
+        </div>
+        <i class="fa fa-arrow-right page-arrow"></i>
+      </a>
+      <a href="settings-logs.html" class="page-card">
+        <div class="page-icon">📜</div>
+        <div class="page-info">
+          <div class="page-name">Activity Audit Log</div>
+          <div class="page-desc">Immutable action log, filters by type/user/date, color-coded badges, CSV export</div>
+          <span class="page-file">settings-logs.html</span>
+        </div>
+        <i class="fa fa-arrow-right page-arrow"></i>
+      </a>
+      <a href="settings-billing.html" class="page-card">
+        <div class="page-icon">💳</div>
+        <div class="page-info">
+          <div class="page-name">Billing & Storage</div>
+          <div class="page-desc">Plan comparison, SVG storage ring, billing history, payment method, danger zone</div>
+          <span class="page-file">settings-billing.html</span>
+        </div>
+        <i class="fa fa-arrow-right page-arrow"></i>
+      </a>
+    </div>
+  </div>
+
+  <!-- GUEST / CLIENT VIEWS -->
+  <div class="page-section">
+    <div class="section-label">Guest & Client Views (Public)</div>
+    <div class="pages-grid">
+      <a href="gallery-entry.html" class="page-card">
+        <div class="page-icon">🔗</div>
+        <div class="page-info">
+          <div class="page-name">Gallery Entry</div>
+          <div class="page-desc">3-option access: AI selfie match, browse all, PIN entry with animated 6-digit input</div>
+          <span class="page-file">gallery-entry.html</span>
+        </div>
+        <i class="fa fa-arrow-right page-arrow"></i>
+      </a>
+      <a href="guest-gallery.html" class="page-card">
+        <div class="page-icon">📸</div>
+        <div class="page-info">
+          <div class="page-name">Guest Gallery View</div>
+          <div class="page-desc">Client-facing gallery with favorites, lightbox, folder view, guest uploads, watermarks</div>
+          <span class="page-file">guest-gallery.html</span>
+        </div>
+        <i class="fa fa-arrow-right page-arrow"></i>
+      </a>
+    </div>
+  </div>
+
+  <!-- DESIGN SYSTEM -->
+  <div class="card" style="margin-bottom:48px;">
+    <div class="flex items-center gap-16 mb-16">
+      <div style="width:48px;height:48px;background:var(--primary-subtle);border:1px solid var(--border-primary);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;">🎨</div>
+      <div>
+        <div class="font-display fw-700 text-lg">Design System</div>
+        <div class="text-secondary text-sm">Shared CSS tokens, components, and utilities used across all pages</div>
+      </div>
+      <div style="margin-left:auto;">
+        <span class="page-file">design-system.css</span>
+      </div>
+    </div>
+    <div class="divider mb-16"></div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;">
+      <span class="badge badge-primary">Dark Theme Tokens</span>
+      <span class="badge badge-cyan">Glass Morphism Cards</span>
+      <span class="badge badge-success">Premium Buttons</span>
+      <span class="badge badge-warning">Form Components</span>
+      <span class="badge badge-primary">Sidebar & Topbar</span>
+      <span class="badge badge-cyan">Photo Grid</span>
+      <span class="badge badge-success">Stat Cards</span>
+      <span class="badge badge-warning">Modal System</span>
+      <span class="badge badge-primary">Pricing Cards</span>
+      <span class="badge badge-cyan">Upload Zones</span>
+      <span class="badge badge-success">Toggle Switches</span>
+      <span class="badge badge-warning">Progress Bars</span>
+      <span class="badge badge-primary">Avatars & Badges</span>
+      <span class="badge badge-cyan">Tables</span>
+    </div>
+  </div>
+
+  <!-- TECH SPEC SUMMARY -->
+  <div class="grid-3 mb-48">
+    <div class="card text-center">
+      <div class="text-3xl mb-8">15</div>
+      <div class="fw-600 text-primary">Pages Designed</div>
+      <div class="text-secondary text-sm mt-4">Full prototype coverage</div>
+    </div>
+    <div class="card text-center">
+      <div class="text-3xl mb-8 gradient-text">∞</div>
+      <div class="fw-600 text-primary">Inter-page Links</div>
+      <div class="text-secondary text-sm mt-4">Complete navigation flow</div>
+    </div>
+    <div class="card text-center">
+      <div class="text-3xl mb-8">0</div>
+      <div class="fw-600 text-primary">Dependencies</div>
+      <div class="text-secondary text-sm mt-4">Pure HTML/CSS/JS only</div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

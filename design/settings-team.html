@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Team Management — FastPic.AI</title>
+  <link rel="stylesheet" href="design-system.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <style>
+    /* ── PAGE-SPECIFIC: NOTIFICATIONS ── */
+    .notif-btn {
+      position: relative;
+      width: 38px; height: 38px;
+      border-radius: var(--radius);
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-secondary);
+      font-size: 1rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .notif-btn:hover { background: var(--bg-glass-hover); color: var(--text-primary); }
+    .notif-badge {
+      position: absolute; top: -4px; right: -4px;
+      background: var(--danger); color: white;
+      font-size: 0.6rem; font-weight: 700;
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      border: 2px solid var(--bg-base);
+    }
+    .topbar-user {
+      display: flex; align-items: center; gap: 8px;
+      padding: 4px 10px 4px 4px;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--border);
+      background: var(--bg-glass);
+      cursor: pointer; transition: var(--transition);
+    }
+    .topbar-user:hover { background: var(--bg-glass-hover); border-color: var(--border-strong); }
+    .topbar-user-name { font-size: 0.8rem; font-weight: 500; color: var(--text-secondary); }
+
+    /* ── SIDEBAR USER ── */
+    .sidebar-user-block { padding: 12px 16px 16px; border-bottom: 1px solid var(--border); }
+    .sidebar-user-inner {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px; border-radius: var(--radius);
+      transition: var(--transition); cursor: pointer;
+    }
+    .sidebar-user-inner:hover { background: var(--bg-glass-hover); }
+    .sidebar-user-name { font-size: 0.85rem; font-weight: 600; color: var(--text-primary); line-height: 1.2; }
+    .sidebar-user-sub  { font-size: 0.7rem; color: var(--text-tertiary); }
+    .storage-block { padding: 14px 16px; }
+    .storage-label {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 8px;
+    }
+    .storage-label span { color: var(--warning); font-weight: 600; }
+
+    /* ── ROLE BADGES ── */
+    .role-owner   { background: linear-gradient(135deg, rgba(99,102,241,.25), rgba(34,211,238,.2)); color: #a5b4fc; border: 1px solid rgba(99,102,241,.4); }
+    .role-admin   { background: rgba(239,68,68,.15); color: #fca5a5; border: 1px solid rgba(239,68,68,.35); }
+    .role-manager { background: rgba(245,158,11,.15); color: #fcd34d; border: 1px solid rgba(245,158,11,.35); }
+    .role-editor  { background: rgba(34,211,238,.15); color: #67e8f9; border: 1px solid rgba(34,211,238,.35); }
+    .role-uploader{ background: rgba(16,185,129,.15); color: #6ee7b7; border: 1px solid rgba(16,185,129,.35); }
+    .role-viewer  { background: rgba(148,163,184,.1); color: #94a3b8; border: 1px solid rgba(148,163,184,.25); }
+
+    /* ── PERMISSIONS TABLE ── */
+    .perm-table { width: 100%; border-collapse: collapse; }
+    .perm-table thead tr { background: var(--bg-elevated); }
+    .perm-table thead th {
+      padding: 12px 14px;
+      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.06em;
+      text-transform: uppercase; color: var(--text-tertiary);
+      border-bottom: 1px solid var(--border);
+      text-align: center;
+    }
+    .perm-table thead th:first-child { text-align: left; min-width: 180px; }
+    .perm-table tbody tr { border-bottom: 1px solid rgba(255,255,255,.04); transition: var(--transition); }
+    .perm-table tbody tr:last-child { border-bottom: none; }
+    .perm-table tbody tr:hover { background: var(--bg-glass-hover); }
+    .perm-table td { padding: 11px 14px; font-size: 0.85rem; text-align: center; color: var(--text-tertiary); }
+    .perm-table td:first-child { text-align: left; color: var(--text-secondary); font-weight: 500; }
+    .perm-check { color: var(--success); font-size: 1rem; }
+    .perm-dash  { color: var(--text-tertiary); opacity: 0.4; font-size: 0.9rem; }
+
+    /* ── TEAM TABLE ── */
+    .team-table { width: 100%; border-collapse: collapse; }
+    .team-table thead tr { background: var(--bg-elevated); }
+    .team-table thead th {
+      padding: 12px 16px; text-align: left;
+      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.06em;
+      text-transform: uppercase; color: var(--text-tertiary);
+      border-bottom: 1px solid var(--border);
+    }
+    .team-table tbody tr {
+      border-bottom: 1px solid rgba(255,255,255,.04);
+      transition: var(--transition);
+    }
+    .team-table tbody tr:last-child { border-bottom: none; }
+    .team-table tbody tr:hover { background: var(--bg-glass-hover); }
+    .team-table td { padding: 14px 16px; vertical-align: middle; font-size: 0.875rem; color: var(--text-secondary); }
+
+    /* Status dots */
+    .status-active  { color: var(--success); }
+    .status-inactive{ color: var(--text-tertiary); }
+    .status-pending { color: var(--warning); }
+
+    /* Action buttons in table */
+    .tbl-btn {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 5px 10px; border-radius: var(--radius-sm);
+      font-size: 0.75rem; font-weight: 500;
+      transition: var(--transition); cursor: pointer; border: none;
+      font-family: var(--font-body);
+    }
+    .tbl-btn-secondary {
+      background: var(--bg-glass); color: var(--text-secondary);
+      border: 1px solid var(--border);
+    }
+    .tbl-btn-secondary:hover { background: var(--primary-subtle); color: var(--primary-light); border-color: var(--border-primary); }
+    .tbl-btn-danger {
+      background: var(--danger-subtle); color: var(--danger);
+      border: 1px solid rgba(239,68,68,.25);
+    }
+    .tbl-btn-danger:hover { background: rgba(239,68,68,.22); }
+    .tbl-btn-warning {
+      background: var(--warning-subtle); color: var(--warning);
+      border: 1px solid rgba(245,158,11,.25);
+    }
+    .tbl-btn-warning:hover { background: rgba(245,158,11,.22); }
+
+    /* ── MEMBER CELL ── */
+    .member-cell { display: flex; align-items: center; gap: 12px; }
+    .member-info { display: flex; flex-direction: column; gap: 2px; }
+    .member-name { font-weight: 600; color: var(--text-primary); font-size: 0.875rem; }
+    .member-email { font-size: 0.75rem; color: var(--text-tertiary); }
+
+    /* ── CARD HEADERS ── */
+    .card-hdr {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .card-hdr-left { display: flex; align-items: center; gap: 12px; }
+    .card-hdr-icon {
+      width: 38px; height: 38px;
+      border-radius: var(--radius);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+    }
+    .card-hdr-title {
+      font-family: var(--font-display); font-size: 1rem;
+      font-weight: 700; color: var(--text-primary);
+    }
+    .card-hdr-sub { font-size: 0.75rem; color: var(--text-tertiary); margin-top: 1px; }
+
+    /* ── NATIVE DIALOG (modal) ── */
+    dialog {
+      border: none;
+      padding: 0;
+      background: transparent;
+      outline: none;
+      max-width: 540px;
+      width: 90vw;
+
+      /* Entry/exit transitions */
+      opacity: 0;
+      transform: scale(0.93) translateY(12px);
+      transition-property: opacity, transform, display, overlay;
+      transition-duration: 0.28s;
+      transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+      transition-behavior: allow-discrete;
+    }
+    dialog[open] {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+    @starting-style {
+      dialog[open] {
+        opacity: 0;
+        transform: scale(0.93) translateY(12px);
+      }
+    }
+    dialog::backdrop {
+      background: rgba(0, 0, 0, 0);
+      backdrop-filter: blur(0px);
+      transition:
+        display 0.28s allow-discrete,
+        overlay 0.28s allow-discrete,
+        background-color 0.28s ease-out,
+        backdrop-filter 0.28s ease-out;
+    }
+    dialog[open]::backdrop {
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(8px);
+    }
+    @starting-style {
+      dialog[open]::backdrop {
+        background: rgba(0, 0, 0, 0);
+        backdrop-filter: blur(0px);
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      dialog { transform: none; transition-duration: 0.1s; }
+      @starting-style { dialog[open] { transform: none; } }
+    }
+
+    .modal-inner {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-xl);
+      padding: 32px;
+      box-shadow: var(--shadow-lg), 0 0 60px rgba(99,102,241,0.12);
+    }
+
+    /* ── ROLE RADIO OPTIONS ── */
+    .role-option {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 12px 14px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: var(--transition);
+      margin-bottom: 8px;
+    }
+    .role-option:hover { border-color: var(--border-strong); background: var(--bg-glass); }
+    .role-option.selected { border-color: var(--primary); background: var(--primary-subtle); }
+    .role-option input[type="radio"] { margin-top: 2px; accent-color: var(--primary); flex-shrink: 0; }
+    .role-option-body { flex: 1; }
+    .role-option-name { font-weight: 600; color: var(--text-primary); font-size: 0.875rem; display: flex; align-items: center; gap: 8px; }
+    .role-option-desc { font-size: 0.78rem; color: var(--text-tertiary); margin-top: 3px; line-height: 1.5; }
+
+    /* ── ACTIVITY FEED ── */
+    .activity-item {
+      display: flex; align-items: center; gap: 14px;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(255,255,255,.05);
+    }
+    .activity-item:last-child { border-bottom: none; }
+    .activity-icon {
+      width: 36px; height: 36px;
+      border-radius: var(--radius);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.85rem; flex-shrink: 0;
+    }
+    .activity-desc { flex: 1; font-size: 0.875rem; color: var(--text-secondary); }
+    .activity-desc strong { color: var(--text-primary); }
+    .activity-time { font-size: 0.75rem; color: var(--text-tertiary); white-space: nowrap; }
+    .activity-stat {
+      font-size: 0.78rem; font-weight: 600;
+      padding: 3px 10px; border-radius: var(--radius-full);
+    }
+
+    /* ── INVITE ROLE DESCRIPTION ── */
+    .role-desc-box {
+      background: var(--primary-subtle);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius);
+      padding: 10px 14px;
+      font-size: 0.8rem;
+      color: var(--primary-light);
+      line-height: 1.5;
+      margin-top: 8px;
+      transition: var(--transition);
+    }
+
+    /* ── REMOVE CONFIRM SNACK ── */
+    .remove-confirm {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
+      background: var(--bg-elevated); border: 1px solid var(--border-strong);
+      border-radius: var(--radius-lg); padding: 16px 20px;
+      box-shadow: var(--shadow-lg); z-index: 2000;
+      display: flex; align-items: center; gap: 16px;
+      font-size: 0.875rem; color: var(--text-primary);
+      min-width: 340px;
+      transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+    }
+    .remove-confirm.show { transform: translateX(-50%) translateY(0); }
+
+    /* ── SECTION NAV LABEL ── */
+    .settings-section-label {
+      font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--text-tertiary);
+      padding: 4px 12px; margin-bottom: 4px; margin-top: 12px;
+    }
+  </style>
+</head>
+
+<body>
+<div class="dashboard-layout">
+
+  <!-- ══════════════════ SIDEBAR ══════════════════ -->
+  <aside class="sidebar">
+
+    <!-- Brand -->
+    <div class="sidebar-brand">
+      <div class="sidebar-logo">FP</div>
+      <div>
+        <div class="sidebar-brand-name">FastPic.ai</div>
+        <div class="sidebar-brand-sub">Professional</div>
+      </div>
+    </div>
+
+    <!-- User Profile -->
+    <div class="sidebar-user-block">
+      <div class="sidebar-user-inner">
+        <div class="avatar avatar-md" style="background:linear-gradient(135deg,#6366F1,#22D3EE);color:white;">AK</div>
+        <div style="flex:1;min-width:0;">
+          <div class="sidebar-user-name">Akshay Mulani</div>
+          <div class="sidebar-user-sub">akshay@fastpic.ai</div>
+        </div>
+        <span class="badge badge-primary" style="font-size:0.62rem;padding:2px 7px;">Pro</span>
+      </div>
+    </div>
+
+    <!-- Nav -->
+    <nav class="sidebar-nav">
+
+      <div class="nav-section-label">Main</div>
+      <a href="dashboard.html" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-house"></i></span>
+        Dashboard
+      </a>
+      <a href="events.html" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-folder-open"></i></span>
+        Events
+        <span class="nav-badge">47</span>
+      </a>
+      <a href="#" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-images"></i></span>
+        Gallery
+      </a>
+      <a href="#" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-user-group"></i></span>
+        Faces &amp; AI
+        <span class="nav-badge">2.8k</span>
+      </a>
+
+      <div class="nav-section-label">Tools</div>
+      <a href="#" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
+        Search
+      </a>
+      <a href="#" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-star"></i></span>
+        Favorites
+      </a>
+      <a href="#" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-download"></i></span>
+        Downloads
+      </a>
+
+      <div class="nav-section-label">Settings</div>
+      <a href="#" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-palette"></i></span>
+        Branding
+      </a>
+      <a href="#" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-tag"></i></span>
+        Watermarks
+      </a>
+      <a href="settings-team.html" class="nav-item active">
+        <span class="nav-icon"><i class="fa-solid fa-users"></i></span>
+        Team
+      </a>
+      <a href="#" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-scroll"></i></span>
+        Activity Logs
+      </a>
+      <a href="#" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-credit-card"></i></span>
+        Billing
+      </a>
+
+    </nav>
+
+    <!-- Storage + Upgrade -->
+    <div class="sidebar-footer" style="padding:0;">
+      <div class="storage-block">
+        <div class="storage-label">
+          <span style="color:var(--text-secondary)"><i class="fa-solid fa-hard-drive" style="margin-right:5px;"></i>Storage</span>
+          <span>340 / 500 GB</span>
+        </div>
+        <div class="progress-bar" style="margin-bottom:10px;">
+          <div class="progress-fill warning" style="width:68%;"></div>
+        </div>
+        <div style="font-size:0.7rem;color:var(--text-tertiary);margin-bottom:12px;">68% used · 160 GB remaining</div>
+        <a href="#" class="btn btn-primary btn-full btn-sm">
+          <i class="fa-solid fa-arrow-up"></i> Upgrade Plan
+        </a>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- ══════════════════ MAIN ══════════════════ -->
+  <div class="dashboard-main">
+
+    <!-- TOP BAR -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <div class="topbar-search">
+          <i class="fa-solid fa-magnifying-glass" style="color:var(--text-tertiary);font-size:0.85rem;"></i>
+          <input type="text" placeholder="Search team members, roles..." />
+          <kbd style="font-size:0.65rem;color:var(--text-tertiary);background:var(--bg-elevated);border:1px solid var(--border);border-radius:4px;padding:2px 6px;font-family:var(--font-mono);">⌘K</kbd>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <button class="notif-btn" data-tooltip="Notifications">
+          <i class="fa-solid fa-bell"></i>
+          <span class="notif-badge">3</span>
+        </button>
+        <div class="topbar-user">
+          <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#6366F1,#22D3EE);color:white;font-size:0.65rem;">AK</div>
+          <span class="topbar-user-name">Akshay</span>
+          <i class="fa-solid fa-chevron-down" style="font-size:0.65rem;color:var(--text-tertiary);"></i>
+        </div>
+      </div>
+    </header>
+
+    <!-- CONTENT -->
+    <main class="dashboard-content">
+
+      <!-- ── PAGE HEADER ── -->
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">👥 Team Management</h1>
+          <p class="page-subtitle">Invite team members and control access permissions for your studio.</p>
+        </div>
+        <button class="btn btn-primary" onclick="openInviteModal()">
+          <i class="fa-solid fa-user-plus"></i>
+          Invite Member
+        </button>
+      </div>
+
+      <!-- Settings sub-nav + content -->
+      <div class="settings-layout">
+
+        <!-- Settings Sidebar -->
+        <aside class="settings-sidebar">
+          <div class="settings-section-label">Account</div>
+          <a href="#" class="settings-nav-item">
+            <i class="fa-solid fa-user" style="width:16px;text-align:center;"></i> Profile
+          </a>
+          <a href="#" class="settings-nav-item">
+            <i class="fa-solid fa-shield-halved" style="width:16px;text-align:center;"></i> Security
+          </a>
+          <a href="#" class="settings-nav-item">
+            <i class="fa-solid fa-bell" style="width:16px;text-align:center;"></i> Notifications
+          </a>
+
+          <div class="settings-section-label" style="margin-top:16px;">Studio</div>
+          <a href="#" class="settings-nav-item">
+            <i class="fa-solid fa-palette" style="width:16px;text-align:center;"></i> Branding
+          </a>
+          <a href="#" class="settings-nav-item">
+            <i class="fa-solid fa-tag" style="width:16px;text-align:center;"></i> Watermarks
+          </a>
+          <a href="settings-team.html" class="settings-nav-item active">
+            <i class="fa-solid fa-users" style="width:16px;text-align:center;"></i> Team Management
+          </a>
+          <a href="#" class="settings-nav-item">
+            <i class="fa-solid fa-scroll" style="width:16px;text-align:center;"></i> Activity Logs
+          </a>
+
+          <div class="settings-section-label" style="margin-top:16px;">Billing</div>
+          <a href="#" class="settings-nav-item">
+            <i class="fa-solid fa-credit-card" style="width:16px;text-align:center;"></i> Plan &amp; Billing
+          </a>
+          <a href="#" class="settings-nav-item">
+            <i class="fa-solid fa-file-invoice" style="width:16px;text-align:center;"></i> Invoices
+          </a>
+        </aside>
+
+        <!-- Settings Content -->
+        <div class="settings-content" style="display:flex;flex-direction:column;gap:28px;">
+
+          <!-- ── ROLE PERMISSIONS TABLE ── -->
+          <div class="card" style="padding:0;overflow:hidden;">
+            <div style="padding:20px 24px 0;">
+              <div class="card-hdr">
+                <div class="card-hdr-left">
+                  <div class="card-hdr-icon" style="background:var(--primary-subtle);color:var(--primary-light);">
+                    <i class="fa-solid fa-shield-halved"></i>
+                  </div>
+                  <div>
+                    <div class="card-hdr-title">Access Roles &amp; Permissions</div>
+                    <div class="card-hdr-sub">What each role can do in your studio</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div style="overflow-x:auto;">
+              <table class="perm-table">
+                <thead>
+                  <tr>
+                    <th>Permission</th>
+                    <th><span class="badge role-owner" style="font-size:0.68rem;">Owner</span></th>
+                    <th><span class="badge role-admin" style="font-size:0.68rem;">Admin</span></th>
+                    <th><span class="badge role-manager" style="font-size:0.68rem;">Manager</span></th>
+                    <th><span class="badge role-editor" style="font-size:0.68rem;">Editor</span></th>
+                    <th><span class="badge role-uploader" style="font-size:0.68rem;">Uploader</span></th>
+                    <th><span class="badge role-viewer" style="font-size:0.68rem;">Viewer</span></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><i class="fa-solid fa-cloud-arrow-up" style="margin-right:8px;color:var(--text-tertiary);font-size:0.8rem;"></i>Upload Photos</td>
+                    <td><i class="fa-solid fa-check perm-check"></i></td>
+                    <td><i class="fa-solid fa-check perm-check"></i></td>
+                    <td><i class="fa-solid fa-check perm-check"></i></td>
+                    <td><i class="fa-solid fa-check perm-check"></i></td>
+                    <td><i class="fa-solid fa-check perm-check"></i></td>
+                    <td><span class="perm-dash">—</span></td>
+                  </tr>
+                  <tr>
+                    <td><i class="fa-solid fa-trash" style="margin-right:8px;color:var(--text-tertiary);font-size:0.8rem;"></i>Delete Photos</td>
+                    <td><i class="fa-solid fa-check perm-check"></i></td>
+                    <td><i class="fa-solid fa-check perm-check"></i></td>
+                    <td><i class="fa-solid fa-check perm-check"></i></td>
+                    <td><i class="fa-solid fa-check perm-check"></i></td>
+                    <td><span class="perm-dash">—</span></td>
+                    <td><span class="perm-dash">—</span></td>
+                  </tr>
+                  <tr>
+                    <td><i class="fa-solid fa-folder-plus" style="margin-right:8px;color:var(--text-tertiary);font-size:0.8rem;"></i>Create Events</td>
+                    <td><i class="fa-solid fa-check perm-check"></i></td>
+                    <td><i class="fa-solid fa-check perm-check"></i></td>
+                    <td><i class="fa-solid fa-check perm-check"></i></td>
+                    <td><span class="perm-dash">—</span></td>
+                    <td><span class="perm-dash">—</span></td>
+                    <td><span class="perm-dash">—</span></td>
+                  </tr>
+                  <tr>
+                    <td><i class="fa-solid fa-users-gear" style="margin-right:8px;color:var(--text-tertiary);font-size:0.8rem;"></i>Manage Team</td>
+                    <td><i class="fa-solid fa-check perm-check"></i></td>
+                    <td><i class="fa-solid fa-check perm-check"></i></td>
+                    <td><span class="perm-dash">—</span></td>
+                    <td><span class="perm-dash">—</span></td>
+                    <td><span class="perm-dash">—</span></td>
+                    <td><span class="perm-dash">—</span></td>
+                  </tr>
+                  <tr>
+                    <td><i class="fa-solid fa-credit-card" style="margin-right:8px;color:var(--text-tertiary);font-size:0.8rem;"></i>Billing Access</td>
+                    <td><i class="fa-solid fa-check perm-check"></i></td>
+                    <td><span class="perm-dash">—</span></td>
+                    <td><span class="perm-dash">—</span></td>
+                    <td><span class="perm-dash">—</span></td>
+                    <td><span class="perm-dash">—</span></td>
+                    <td><span class="perm-dash">—</span></td>
+                  </tr>
+                  <tr>
+                    <td><i class="fa-solid fa-share-nodes" style="margin-right:8px;color:var(--text-tertiary);font-size:0.8rem;"></i>Share Gallery</td>
+                    <td><i class="fa-solid fa-check perm-check"></i></td>
+                    <td><i class="fa-solid fa-check perm-check"></i></td>
+                    <td><i class="fa-solid fa-check perm-check"></i></td>
+                    <td><i class="fa-solid fa-check perm-check"></i></td>
+                    <td><span class="perm-dash">—</span></td>
+                    <td><span class="perm-dash">—</span></td>
+                  </tr>
+                  <tr>
+                    <td><i class="fa-solid fa-file-arrow-down" style="margin-right:8px;color:var(--text-tertiary);font-size:0.8rem;"></i>Download Original</td>
+                    <td><i class="fa-solid fa-check perm-check"></i></td>
+                    <td><i class="fa-solid fa-check perm-check"></i></td>
+                    <td><span class="perm-dash">—</span></td>
+                    <td><span class="perm-dash">—</span></td>
+                    <td><span class="perm-dash">—</span></td>
+                    <td><span class="perm-dash">—</span></td>
+                  </tr>
+                  <tr>
+                    <td><i class="fa-solid fa-rectangle-list" style="margin-right:8px;color:var(--text-tertiary);font-size:0.8rem;"></i>View Activity Logs</td>
+                    <td><i class="fa-solid fa-check perm-check"></i></td>
+                    <td><i class="fa-solid fa-check perm-check"></i></td>
+                    <td><i class="fa-solid fa-check perm-check"></i></td>
+                    <td><span class="perm-dash">—</span></td>
+                    <td><span class="perm-dash">—</span></td>
+                    <td><span class="perm-dash">—</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- ── CURRENT TEAM TABLE ── -->
+          <div class="card" style="padding:0;overflow:hidden;">
+            <div style="padding:20px 24px 0;">
+              <div class="card-hdr">
+                <div class="card-hdr-left">
+                  <div class="card-hdr-icon" style="background:var(--accent-subtle);color:var(--accent);">
+                    <i class="fa-solid fa-users"></i>
+                  </div>
+                  <div>
+                    <div class="card-hdr-title">Current Team</div>
+                    <div class="card-hdr-sub">5 members · 1 pending invite</div>
+                  </div>
+                </div>
+                <span class="badge badge-primary" style="font-size:0.72rem;">Studio Plan · 10 seats</span>
+              </div>
+            </div>
+            <div style="overflow-x:auto;">
+              <table class="team-table">
+                <thead>
+                  <tr>
+                    <th>Member</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th>Last Active</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+
+                  <!-- Row 1: Owner (Akshay) -->
+                  <tr>
+                    <td>
+                      <div class="member-cell">
+                        <div class="avatar avatar-md" style="background:linear-gradient(135deg,#6366F1,#22D3EE);color:white;">AK</div>
+                        <div class="member-info">
+                          <span class="member-name">Akshay Mulani</span>
+                          <span class="member-email">akshay@fastpic.ai</span>
+                        </div>
+                        <span class="badge" style="font-size:0.62rem;padding:2px 7px;margin-left:6px;background:var(--primary-subtle);color:var(--primary-light);border:1px solid var(--border-primary);">You</span>
+                      </div>
+                    </td>
+                    <td>
+                      <span class="badge role-owner" style="font-size:0.72rem;">
+                        <i class="fa-solid fa-crown" style="font-size:0.6rem;"></i> Owner
+                      </span>
+                    </td>
+                    <td>
+                      <div class="flex items-center gap-8">
+                        <div class="pulse-dot"></div>
+                        <span class="status-active" style="font-size:0.82rem;font-weight:500;">Active</span>
+                      </div>
+                    </td>
+                    <td style="font-size:0.82rem;color:var(--success);">Now</td>
+                    <td>
+                      <span style="font-size:0.78rem;color:var(--text-tertiary);font-style:italic;">Account owner</span>
+                    </td>
+                  </tr>
+
+                  <!-- Row 2: Priya Sharma - Admin -->
+                  <tr>
+                    <td>
+                      <div class="member-cell">
+                        <div class="avatar avatar-md" style="background:linear-gradient(135deg,#EF4444,#F97316);color:white;">PS</div>
+                        <div class="member-info">
+                          <span class="member-name">Priya Sharma</span>
+                          <span class="member-email">priya@sharma.studio</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <span class="badge role-admin" style="font-size:0.72rem;">
+                        <i class="fa-solid fa-user-shield" style="font-size:0.6rem;"></i> Admin
+                      </span>
+                    </td>
+                    <td>
+                      <div class="flex items-center gap-8">
+                        <div class="pulse-dot"></div>
+                        <span class="status-active" style="font-size:0.82rem;font-weight:500;">Active</span>
+                      </div>
+                    </td>
+                    <td style="font-size:0.82rem;">2 hours ago</td>
+                    <td>
+                      <div class="flex gap-8">
+                        <button class="tbl-btn tbl-btn-secondary" onclick="openChangeRoleModal('Priya Sharma', 'admin')">
+                          <i class="fa-solid fa-user-gear"></i> Change Role
+                        </button>
+                        <button class="tbl-btn tbl-btn-danger" onclick="showRemoveConfirm('Priya Sharma')">
+                          <i class="fa-solid fa-user-minus"></i> Remove
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+
+                  <!-- Row 3: Rahul Verma - Editor -->
+                  <tr>
+                    <td>
+                      <div class="member-cell">
+                        <div class="avatar avatar-md" style="background:linear-gradient(135deg,#22D3EE,#6366F1);color:white;">RV</div>
+                        <div class="member-info">
+                          <span class="member-name">Rahul Verma</span>
+                          <span class="member-email">rahul.v@gmail.com</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <span class="badge role-editor" style="font-size:0.72rem;">
+                        <i class="fa-solid fa-pen-to-square" style="font-size:0.6rem;"></i> Editor
+                      </span>
+                    </td>
+                    <td>
+                      <div class="flex items-center gap-8">
+                        <div class="pulse-dot"></div>
+                        <span class="status-active" style="font-size:0.82rem;font-weight:500;">Active</span>
+                      </div>
+                    </td>
+                    <td style="font-size:0.82rem;">Yesterday</td>
+                    <td>
+                      <div class="flex gap-8">
+                        <button class="tbl-btn tbl-btn-secondary" onclick="openChangeRoleModal('Rahul Verma', 'editor')">
+                          <i class="fa-solid fa-user-gear"></i> Change Role
+                        </button>
+                        <button class="tbl-btn tbl-btn-danger" onclick="showRemoveConfirm('Rahul Verma')">
+                          <i class="fa-solid fa-user-minus"></i> Remove
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+
+                  <!-- Row 4: Deepa Patel - Uploader (Inactive) -->
+                  <tr>
+                    <td>
+                      <div class="member-cell">
+                        <div class="avatar avatar-md" style="background:linear-gradient(135deg,#10B981,#22D3EE);color:white;">DP</div>
+                        <div class="member-info">
+                          <span class="member-name">Deepa Patel</span>
+                          <span class="member-email">deepa.patel@studio.in</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <span class="badge role-uploader" style="font-size:0.72rem;">
+                        <i class="fa-solid fa-cloud-arrow-up" style="font-size:0.6rem;"></i> Uploader
+                      </span>
+                    </td>
+                    <td>
+                      <div class="flex items-center gap-8">
+                        <div style="width:8px;height:8px;border-radius:50%;background:var(--text-tertiary);opacity:0.5;flex-shrink:0;"></div>
+                        <span class="status-inactive" style="font-size:0.82rem;font-weight:500;">Inactive</span>
+                      </div>
+                    </td>
+                    <td style="font-size:0.82rem;">5 days ago</td>
+                    <td>
+                      <div class="flex gap-8">
+                        <button class="tbl-btn tbl-btn-secondary" onclick="openChangeRoleModal('Deepa Patel', 'uploader')">
+                          <i class="fa-solid fa-user-gear"></i> Change Role
+                        </button>
+                        <button class="tbl-btn tbl-btn-warning" onclick="showToast('Invite resent to Deepa Patel')">
+                          <i class="fa-solid fa-paper-plane"></i> Resend Invite
+                        </button>
+                        <button class="tbl-btn tbl-btn-danger" onclick="showRemoveConfirm('Deepa Patel')">
+                          <i class="fa-solid fa-user-minus"></i> Remove
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+
+                  <!-- Row 5: Pending invite -->
+                  <tr style="opacity:0.8;">
+                    <td>
+                      <div class="member-cell">
+                        <div class="avatar avatar-md" style="background:var(--bg-elevated);color:var(--text-tertiary);border:1px dashed var(--border-strong);">
+                          <i class="fa-regular fa-envelope" style="font-size:0.9rem;"></i>
+                        </div>
+                        <div class="member-info">
+                          <span class="member-name" style="color:var(--text-secondary);">invite@gmail.com</span>
+                          <span class="member-email">Pending invitation</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <span class="badge role-viewer" style="font-size:0.72rem;">
+                        <i class="fa-regular fa-eye" style="font-size:0.6rem;"></i> Viewer
+                      </span>
+                    </td>
+                    <td>
+                      <div class="flex items-center gap-8">
+                        <span style="font-size:1rem;">⏳</span>
+                        <span class="status-pending" style="font-size:0.82rem;font-weight:500;">Pending</span>
+                      </div>
+                    </td>
+                    <td style="font-size:0.82rem;color:var(--text-tertiary);">Invited 3d ago</td>
+                    <td>
+                      <div class="flex gap-8">
+                        <button class="tbl-btn tbl-btn-secondary" onclick="showToast('Invite resent to invite@gmail.com')">
+                          <i class="fa-solid fa-paper-plane"></i> Resend
+                        </button>
+                        <button class="tbl-btn tbl-btn-danger" onclick="showRemoveConfirm('invite@gmail.com')">
+                          <i class="fa-solid fa-xmark"></i> Cancel
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- ── TEAM ACTIVITY ── -->
+          <div class="card" style="padding:24px;">
+            <div class="card-hdr">
+              <div class="card-hdr-left">
+                <div class="card-hdr-icon" style="background:var(--success-subtle);color:var(--success);">
+                  <i class="fa-solid fa-chart-gantt"></i>
+                </div>
+                <div>
+                  <div class="card-hdr-title">Team Activity</div>
+                  <div class="card-hdr-sub">Last 7 days</div>
+                </div>
+              </div>
+              <a href="#" class="btn btn-secondary btn-sm">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i> Full Logs
+              </a>
+            </div>
+
+            <div>
+
+              <!-- Activity: Priya uploaded -->
+              <div class="activity-item">
+                <div class="activity-icon" style="background:var(--primary-subtle);color:var(--primary-light);">
+                  <i class="fa-solid fa-cloud-arrow-up"></i>
+                </div>
+                <div class="activity-desc">
+                  <strong>Priya Sharma</strong> uploaded photos to <strong>Sharma Wedding</strong>
+                </div>
+                <span class="activity-stat" style="background:var(--primary-subtle);color:var(--primary-light);">234 photos</span>
+                <span class="activity-time">2h ago</span>
+              </div>
+
+              <!-- Activity: Rahul deleted -->
+              <div class="activity-item">
+                <div class="activity-icon" style="background:var(--danger-subtle);color:var(--danger);">
+                  <i class="fa-solid fa-trash"></i>
+                </div>
+                <div class="activity-desc">
+                  <strong>Rahul Verma</strong> deleted photos from <strong>Tech Conference 2026</strong>
+                </div>
+                <span class="activity-stat" style="background:var(--danger-subtle);color:var(--danger);">12 photos</span>
+                <span class="activity-time">Yesterday</span>
+              </div>
+
+              <!-- Activity: Priya shared gallery -->
+              <div class="activity-item">
+                <div class="activity-icon" style="background:var(--accent-subtle);color:var(--accent);">
+                  <i class="fa-solid fa-share-nodes"></i>
+                </div>
+                <div class="activity-desc">
+                  <strong>Priya Sharma</strong> shared gallery link for <strong>Pre-wedding Shoot</strong>
+                </div>
+                <span class="activity-stat" style="background:var(--accent-subtle);color:var(--accent);">Shared</span>
+                <span class="activity-time">2 days ago</span>
+              </div>
+
+              <!-- Activity: Deepa inactive -->
+              <div class="activity-item" style="opacity:0.7;">
+                <div class="activity-icon" style="background:var(--bg-elevated);color:var(--text-tertiary);">
+                  <i class="fa-solid fa-user-clock"></i>
+                </div>
+                <div class="activity-desc">
+                  <strong>Deepa Patel</strong> hasn't logged in — last seen 5 days ago
+                </div>
+                <span class="activity-stat" style="background:rgba(100,116,139,.1);color:var(--text-tertiary);">Inactive</span>
+                <span class="activity-time">5 days ago</span>
+              </div>
+
+            </div>
+          </div>
+
+        </div><!-- /settings-content -->
+      </div><!-- /settings-layout -->
+
+    </main>
+  </div><!-- /dashboard-main -->
+</div><!-- /dashboard-layout -->
+
+
+<!-- ══════════════════════════════════════════
+     INVITE MEMBER MODAL
+══════════════════════════════════════════ -->
+<dialog id="inviteModal" aria-labelledby="inviteModalTitle" closedby="any">
+  <div class="modal-inner">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="inviteModalTitle">
+          <i class="fa-solid fa-user-plus" style="color:var(--primary-light);margin-right:10px;font-size:1.1rem;"></i>
+          Invite Team Member
+        </div>
+        <div style="font-size:0.8rem;color:var(--text-tertiary);margin-top:4px;">They'll receive an email with a magic link to join your studio.</div>
+      </div>
+      <button class="modal-close" onclick="document.getElementById('inviteModal').close()" aria-label="Close">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:18px;">
+
+      <!-- Email -->
+      <div class="form-group">
+        <label class="form-label" for="inviteEmail">
+          <i class="fa-regular fa-envelope" style="margin-right:5px;"></i>Email Address <span style="color:var(--danger);">*</span>
+        </label>
+        <input type="email" id="inviteEmail" class="form-input" placeholder="colleague@example.com" />
+      </div>
+
+      <!-- Role Select -->
+      <div class="form-group">
+        <label class="form-label" for="inviteRole">
+          <i class="fa-solid fa-user-shield" style="margin-right:5px;"></i>Assign Role <span style="color:var(--danger);">*</span>
+        </label>
+        <select id="inviteRole" class="form-select form-input" onchange="updateRoleDesc(this.value)" style="cursor:pointer;">
+          <option value="owner">Owner</option>
+          <option value="admin">Admin</option>
+          <option value="manager" selected>Manager</option>
+          <option value="editor">Editor</option>
+          <option value="uploader">Uploader</option>
+          <option value="viewer">Viewer</option>
+        </select>
+        <div class="role-desc-box" id="inviteRoleDesc">
+          <i class="fa-solid fa-circle-info" style="margin-right:6px;"></i>
+          Manager can create events and manage uploads, but cannot manage team or access billing.
+        </div>
+      </div>
+
+      <!-- Personal Message -->
+      <div class="form-group">
+        <label class="form-label" for="inviteMsg">
+          <i class="fa-regular fa-comment" style="margin-right:5px;"></i>Personal Message <span style="color:var(--text-tertiary);">(optional)</span>
+        </label>
+        <textarea id="inviteMsg" class="form-input form-textarea" placeholder="Add a personal message..." style="min-height:80px;"></textarea>
+      </div>
+
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="document.getElementById('inviteModal').close()">Cancel</button>
+      <button class="btn btn-primary" onclick="handleSendInvite()">
+        <i class="fa-solid fa-paper-plane"></i> Send Invite
+      </button>
+    </div>
+  </div>
+</dialog>
+
+
+<!-- ══════════════════════════════════════════
+     CHANGE ROLE MODAL
+══════════════════════════════════════════ -->
+<dialog id="changeRoleModal" aria-labelledby="changeRoleTitle" closedby="any">
+  <div class="modal-inner" style="max-height:90vh;overflow-y:auto;">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="changeRoleTitle">
+          <i class="fa-solid fa-user-gear" style="color:var(--accent);margin-right:10px;font-size:1.1rem;"></i>
+          Change Role for <span id="changeRoleName" style="color:var(--accent);">Member</span>
+        </div>
+        <div style="font-size:0.8rem;color:var(--text-tertiary);margin-top:4px;">Select a new permission level for this team member.</div>
+      </div>
+      <button class="modal-close" onclick="document.getElementById('changeRoleModal').close()" aria-label="Close">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <div id="roleRadioGroup" style="margin-top:4px;">
+
+      <label class="role-option" data-role="admin">
+        <input type="radio" name="changeRole" value="admin" />
+        <div class="role-option-body">
+          <div class="role-option-name">
+            <span class="badge role-admin" style="font-size:0.68rem;"><i class="fa-solid fa-user-shield" style="font-size:0.6rem;"></i> Admin</span>
+          </div>
+          <div class="role-option-desc">Can manage events, team members, and uploads. Cannot access billing settings.</div>
+        </div>
+      </label>
+
+      <label class="role-option" data-role="manager">
+        <input type="radio" name="changeRole" value="manager" />
+        <div class="role-option-body">
+          <div class="role-option-name">
+            <span class="badge role-manager" style="font-size:0.68rem;"><i class="fa-solid fa-user-tie" style="font-size:0.6rem;"></i> Manager</span>
+          </div>
+          <div class="role-option-desc">Can create events and manage photo uploads. Cannot manage team members or billing.</div>
+        </div>
+      </label>
+
+      <label class="role-option" data-role="editor">
+        <input type="radio" name="changeRole" value="editor" />
+        <div class="role-option-body">
+          <div class="role-option-name">
+            <span class="badge role-editor" style="font-size:0.68rem;"><i class="fa-solid fa-pen-to-square" style="font-size:0.6rem;"></i> Editor</span>
+          </div>
+          <div class="role-option-desc">Can upload, delete, and share photos within assigned events. Read-only team access.</div>
+        </div>
+      </label>
+
+      <label class="role-option" data-role="uploader">
+        <input type="radio" name="changeRole" value="uploader" />
+        <div class="role-option-body">
+          <div class="role-option-name">
+            <span class="badge role-uploader" style="font-size:0.68rem;"><i class="fa-solid fa-cloud-arrow-up" style="font-size:0.6rem;"></i> Uploader</span>
+          </div>
+          <div class="role-option-desc">Can upload photos to existing events only. Cannot delete, share, or manage anything.</div>
+        </div>
+      </label>
+
+      <label class="role-option" data-role="viewer">
+        <input type="radio" name="changeRole" value="viewer" />
+        <div class="role-option-body">
+          <div class="role-option-name">
+            <span class="badge role-viewer" style="font-size:0.68rem;"><i class="fa-regular fa-eye" style="font-size:0.6rem;"></i> Viewer</span>
+          </div>
+          <div class="role-option-desc">Can only browse and view galleries. No upload, edit, or management permissions.</div>
+        </div>
+      </label>
+
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="document.getElementById('changeRoleModal').close()">Cancel</button>
+      <button class="btn btn-primary" onclick="handleChangeRole()">
+        <i class="fa-solid fa-check"></i> Confirm Role Change
+      </button>
+    </div>
+  </div>
+</dialog>
+
+
+<!-- ══════════════════════════════════════════
+     REMOVE CONFIRM SNACKBAR
+══════════════════════════════════════════ -->
+<div class="remove-confirm" id="removeConfirm">
+  <div style="flex:1;">
+    <div style="font-weight:600;color:var(--text-primary);margin-bottom:2px;">Remove <span id="removeName">Member</span>?</div>
+    <div style="font-size:0.78rem;color:var(--text-tertiary);">They will lose access to all events and galleries immediately.</div>
+  </div>
+  <button class="tbl-btn tbl-btn-secondary" onclick="dismissRemove()">
+    Cancel
+  </button>
+  <button class="tbl-btn tbl-btn-danger" onclick="confirmRemove()">
+    <i class="fa-solid fa-user-minus"></i> Remove
+  </button>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     TOAST NOTIFICATION
+══════════════════════════════════════════ -->
+<div id="toast" style="
+  position:fixed; bottom:24px; right:24px;
+  background:var(--bg-elevated); border:1px solid var(--border-strong);
+  border-radius:var(--radius-lg); padding:14px 20px;
+  box-shadow:var(--shadow-lg); z-index:3000;
+  display:flex; align-items:center; gap:12px;
+  font-size:0.875rem; color:var(--text-primary);
+  transform:translateX(120%); transition:transform 0.3s cubic-bezier(0.4,0,0.2,1);
+  max-width:320px;
+">
+  <div style="width:32px;height:32px;border-radius:var(--radius);background:var(--success-subtle);color:var(--success);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+    <i class="fa-solid fa-check"></i>
+  </div>
+  <span id="toastMsg">Done!</span>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════════ -->
+<script>
+  /* ── Role descriptions ── */
+  const roleDescriptions = {
+    owner:    'Owner has full control over everything including billing, team management, and all studio settings.',
+    admin:    'Admin can manage events and team members but cannot access billing or account-level settings.',
+    manager:  'Manager can create events and manage photo uploads. Cannot manage team members or billing.',
+    editor:   'Editor can upload, delete, and share photos within events. Read-only access to team.',
+    uploader: 'Uploader can only add photos to existing events. Cannot delete, share, or manage anything.',
+    viewer:   'Viewer can only browse and view galleries. No upload, edit, or management permissions.'
+  };
+
+  /* ── Invite Modal ── */
+  function openInviteModal() {
+    updateRoleDesc(document.getElementById('inviteRole').value);
+    document.getElementById('inviteModal').showModal();
+  }
+
+  function updateRoleDesc(role) {
+    const box = document.getElementById('inviteRoleDesc');
+    box.innerHTML = `<i class="fa-solid fa-circle-info" style="margin-right:6px;"></i>${roleDescriptions[role] || ''}`;
+  }
+
+  function handleSendInvite() {
+    const email = document.getElementById('inviteEmail').value.trim();
+    if (!email) {
+      document.getElementById('inviteEmail').focus();
+      return;
+    }
+    document.getElementById('inviteModal').close();
+    showToast(`Invite sent to ${email}`);
+    document.getElementById('inviteEmail').value = '';
+    document.getElementById('inviteMsg').value = '';
+  }
+
+  /* ── Change Role Modal ── */
+  let currentMemberName = '';
+  let currentMemberRole = '';
+
+  function openChangeRoleModal(name, currentRole) {
+    currentMemberName = name;
+    currentMemberRole = currentRole;
+    document.getElementById('changeRoleName').textContent = name;
+
+    // Reset & select current role
+    const options = document.querySelectorAll('.role-option');
+    options.forEach(opt => {
+      opt.classList.remove('selected');
+      const input = opt.querySelector('input[type="radio"]');
+      if (input.value === currentRole) {
+        input.checked = true;
+        opt.classList.add('selected');
+      } else {
+        input.checked = false;
+      }
+    });
+
+    document.getElementById('changeRoleModal').showModal();
+  }
+
+  // Highlight selected radio option
+  document.querySelectorAll('.role-option input[type="radio"]').forEach(radio => {
+    radio.addEventListener('change', function() {
+      document.querySelectorAll('.role-option').forEach(opt => opt.classList.remove('selected'));
+      this.closest('.role-option').classList.add('selected');
+    });
+  });
+
+  function handleChangeRole() {
+    const selected = document.querySelector('input[name="changeRole"]:checked');
+    if (!selected) return;
+    document.getElementById('changeRoleModal').close();
+    showToast(`${currentMemberName}'s role changed to ${selected.value.charAt(0).toUpperCase() + selected.value.slice(1)}`);
+  }
+
+  /* ── Remove Confirm Snackbar ── */
+  let removeTarget = '';
+  let removeTimeout = null;
+
+  function showRemoveConfirm(name) {
+    removeTarget = name;
+    document.getElementById('removeName').textContent = name;
+    const bar = document.getElementById('removeConfirm');
+    bar.classList.add('show');
+    clearTimeout(removeTimeout);
+    removeTimeout = setTimeout(dismissRemove, 6000);
+  }
+
+  function dismissRemove() {
+    document.getElementById('removeConfirm').classList.remove('show');
+    clearTimeout(removeTimeout);
+  }
+
+  function confirmRemove() {
+    dismissRemove();
+    showToast(`${removeTarget} has been removed`);
+  }
+
+  /* ── Toast ── */
+  let toastTimeout = null;
+  function showToast(msg) {
+    const toast = document.getElementById('toast');
+    document.getElementById('toastMsg').textContent = msg;
+    toast.style.transform = 'translateX(0)';
+    clearTimeout(toastTimeout);
+    toastTimeout = setTimeout(() => {
+      toast.style.transform = 'translateX(120%)';
+    }, 3200);
+  }
+
+  /* ── Light-dismiss fallback for dialog (Safari / older browsers) ── */
+  document.querySelectorAll('dialog').forEach(dialog => {
+    if (!('closedBy' in HTMLDialogElement.prototype)) {
+      dialog.addEventListener('click', (event) => {
+        if (event.target !== dialog) return;
+        const rect = dialog.getBoundingClientRect();
+        const isContent = (
+          rect.top <= event.clientY && event.clientY <= rect.top + rect.height &&
+          rect.left <= event.clientX && event.clientX <= rect.left + rect.width
+        );
+        if (!isContent) dialog.close();
+      });
+    }
+  });
+</script>
+
+</body>
+</html>

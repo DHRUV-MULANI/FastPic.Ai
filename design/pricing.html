@@ -1,0 +1,1771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pricing — FastPic.ai</title>
+  <link rel="stylesheet" href="design-system.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <style>
+    /* ─── PAGE ROOT ────────────────────────────────────────── */
+    body { overflow-x: hidden; }
+
+    /* ─── PRICING HERO ─────────────────────────────────────── */
+    .pricing-hero {
+      padding: 148px 0 80px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .pricing-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 900px 500px at 50% -80px, rgba(99,102,241,0.18) 0%, transparent 70%),
+        radial-gradient(ellipse 600px 400px at 20% 60%, rgba(34,211,238,0.08) 0%, transparent 70%),
+        radial-gradient(ellipse 500px 400px at 80% 50%, rgba(167,139,250,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .pricing-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--primary-subtle);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius-full);
+      padding: 6px 16px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--primary-light);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+      animation: fadeInDown 0.7s ease both;
+    }
+
+    .pricing-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.2rem, 5vw, 3.6rem);
+      font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin-bottom: 18px;
+      animation: fadeInUp 0.7s ease 0.1s both;
+    }
+
+    .pricing-sub {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      max-width: 520px;
+      margin: 0 auto 40px;
+      line-height: 1.7;
+      animation: fadeInUp 0.7s ease 0.18s both;
+    }
+
+    /* ─── BILLING TOGGLE ───────────────────────────────────── */
+    .billing-toggle-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 16px;
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-full);
+      padding: 6px 20px 6px 10px;
+      backdrop-filter: blur(12px);
+      margin-bottom: 16px;
+      animation: fadeInUp 0.7s ease 0.26s both;
+    }
+    .billing-label {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: var(--transition);
+      padding: 4px 0;
+      user-select: none;
+    }
+    .billing-label.active { color: var(--text-primary); }
+
+    /* Custom pill toggle */
+    .billing-pill {
+      position: relative;
+      width: 52px;
+      height: 28px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      transition: var(--transition);
+      flex-shrink: 0;
+    }
+    .billing-pill.annual {
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+    .billing-pill::after {
+      content: '';
+      position: absolute;
+      top: 3px; left: 3px;
+      width: 20px; height: 20px;
+      background: var(--text-tertiary);
+      border-radius: 50%;
+      transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+    }
+    .billing-pill.annual::after {
+      left: 27px;
+      background: white;
+    }
+
+    .annual-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--success-subtle);
+      border: 1px solid rgba(16,185,129,0.3);
+      border-radius: var(--radius-full);
+      padding: 3px 10px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--success);
+      letter-spacing: 0.03em;
+    }
+
+    /* Social proof */
+    .social-proof {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 8px;
+      animation: fadeInUp 0.7s ease 0.34s both;
+    }
+    .social-proof-avatars {
+      display: flex;
+    }
+    .social-proof-avatars .avatar {
+      width: 28px; height: 28px;
+      font-size: 0.65rem;
+      border: 2px solid var(--bg-base);
+      margin-left: -8px;
+    }
+    .social-proof-avatars .avatar:first-child { margin-left: 0; }
+    .social-proof-text {
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+    }
+    .social-proof-text strong {
+      color: var(--text-primary);
+      font-weight: 700;
+    }
+
+    /* ─── PRICING CARDS ────────────────────────────────────── */
+    .pricing-section {
+      padding: 20px 0 100px;
+    }
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      align-items: start;
+    }
+
+    .pricing-card {
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 32px 28px;
+      position: relative;
+      transition: var(--transition-slow);
+      overflow: hidden;
+      backdrop-filter: blur(12px);
+      display: flex;
+      flex-direction: column;
+    }
+    .pricing-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border-strong), transparent);
+    }
+    .pricing-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--border-strong);
+    }
+
+    /* Featured / Most Popular */
+    .pricing-card.featured {
+      background: linear-gradient(160deg, rgba(99,102,241,0.15) 0%, rgba(99,102,241,0.06) 60%, rgba(34,211,238,0.05) 100%);
+      border-color: var(--border-primary);
+      box-shadow: 0 0 0 1px rgba(99,102,241,0.2), 0 24px 80px rgba(99,102,241,0.18);
+      transform: translateY(-10px);
+    }
+    .pricing-card.featured:hover {
+      transform: translateY(-16px);
+    }
+    .pricing-card.featured::after {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: calc(var(--radius-xl) + 1px);
+      background: linear-gradient(135deg, rgba(99,102,241,0.5), rgba(34,211,238,0.3), rgba(167,139,250,0.4));
+      z-index: -1;
+      opacity: 0.5;
+    }
+
+    .most-popular-badge {
+      position: absolute;
+      top: -1px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: white;
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 5px 18px;
+      border-radius: 0 0 var(--radius) var(--radius);
+      white-space: nowrap;
+    }
+
+    .plan-icon {
+      width: 48px; height: 48px;
+      border-radius: var(--radius-lg);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem;
+      margin-bottom: 20px;
+    }
+    .plan-name {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+    .plan-tagline {
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+    .plan-storage {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--accent);
+      background: var(--accent-subtle);
+      border-radius: var(--radius-full);
+      padding: 3px 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-bottom: 20px;
+    }
+
+    .plan-price-wrap {
+      margin-bottom: 28px;
+    }
+    .plan-price {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+      margin-bottom: 4px;
+    }
+    .plan-currency {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      margin-top: 6px;
+    }
+    .plan-amount {
+      font-family: var(--font-display);
+      font-size: 2.6rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1;
+      transition: all 0.3s ease;
+    }
+    .plan-period {
+      font-size: 0.78rem;
+      color: var(--text-tertiary);
+      margin-left: 2px;
+    }
+    .plan-billed {
+      font-size: 0.72rem;
+      color: var(--text-tertiary);
+    }
+    .plan-billed .save-tag {
+      color: var(--success);
+      font-weight: 600;
+    }
+
+    /* Enterprise custom */
+    .plan-custom {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+    .plan-custom-sub {
+      font-size: 0.78rem;
+      color: var(--text-tertiary);
+    }
+
+    .plan-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 0 0 24px;
+    }
+
+    .plan-features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+      margin-bottom: 28px;
+      flex: 1;
+    }
+    .plan-feature {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      line-height: 1.45;
+    }
+    .plan-feature .fi {
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      background: var(--success-subtle);
+      color: var(--success);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.6rem;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .plan-feature .fi.accent-fi {
+      background: var(--primary-subtle);
+      color: var(--primary-light);
+    }
+    .plan-feature span { color: var(--text-primary); font-weight: 500; }
+
+    /* ─── COMPARISON TABLE ─────────────────────────────────── */
+    .comparison-section {
+      padding: 80px 0 100px;
+      background: var(--bg-surface);
+      position: relative;
+    }
+    .comparison-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 800px 400px at 50% 0%, rgba(99,102,241,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .comparison-table-wrap {
+      overflow-x: auto;
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--border);
+      background: var(--bg-glass);
+      backdrop-filter: blur(12px);
+      margin-top: 48px;
+    }
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+    }
+    .comparison-table th,
+    .comparison-table td {
+      padding: 0;
+    }
+    /* Header row */
+    .ct-head {
+      background: var(--bg-surface);
+    }
+    .ct-head th {
+      padding: 28px 24px 24px;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+      vertical-align: bottom;
+    }
+    .ct-head th:first-child {
+      text-align: left;
+      width: 28%;
+      min-width: 200px;
+    }
+    .ct-plan-name {
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-primary);
+      display: block;
+      margin-bottom: 4px;
+    }
+    .ct-plan-price {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--primary-light);
+    }
+    .ct-featured-col {
+      background: rgba(99,102,241,0.06);
+      border-left: 1px solid var(--border-primary);
+      border-right: 1px solid var(--border-primary);
+    }
+
+    /* Category row */
+    .ct-category td {
+      padding: 14px 24px 10px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      background: rgba(255,255,255,0.015);
+      border-top: 1px solid var(--border);
+    }
+    .ct-category td:first-child {
+      color: var(--primary-light);
+    }
+
+    /* Data rows */
+    .ct-row td {
+      padding: 14px 24px;
+      color: var(--text-secondary);
+      border-top: 1px solid rgba(255,255,255,0.04);
+      text-align: center;
+      vertical-align: middle;
+    }
+    .ct-row td:first-child {
+      text-align: left;
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+    .ct-row:hover td { background: rgba(255,255,255,0.02); }
+
+    .ct-check { color: var(--success); font-size: 1rem; }
+    .ct-dash  { color: var(--text-tertiary); font-size: 1.1rem; opacity: 0.5; }
+    .ct-val   {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .ct-custom-val {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    /* ─── FAQ ──────────────────────────────────────────────── */
+    .faq-section {
+      padding: 100px 0;
+    }
+    .faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-width: 800px;
+      margin: 48px auto 0;
+    }
+    .faq-item {
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      transition: var(--transition);
+      backdrop-filter: blur(8px);
+    }
+    .faq-item.open {
+      border-color: var(--border-primary);
+      box-shadow: 0 0 0 1px rgba(99,102,241,0.1);
+    }
+    .faq-q {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 22px 28px;
+      cursor: pointer;
+      user-select: none;
+      transition: var(--transition);
+      gap: 16px;
+    }
+    .faq-q:hover { background: var(--bg-glass-hover); }
+    .faq-q-text {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--text-primary);
+      line-height: 1.4;
+    }
+    .faq-icon {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-tertiary);
+      font-size: 1rem;
+      transition: all 0.25s ease;
+      flex-shrink: 0;
+    }
+    .faq-item.open .faq-icon {
+      transform: rotate(45deg);
+      background: var(--primary-subtle);
+      border-color: var(--border-primary);
+      color: var(--primary-light);
+    }
+    .faq-a {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s cubic-bezier(0.4,0,0.2,1), padding 0.35s ease;
+      padding: 0 28px;
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      line-height: 1.85;
+      border-top: 0px solid var(--border);
+    }
+    .faq-item.open .faq-a {
+      max-height: 500px;
+      padding: 0 28px 22px;
+      border-top-width: 1px;
+    }
+    .faq-a-inner {
+      padding-top: 16px;
+    }
+    .faq-a code {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      background: var(--bg-elevated);
+      color: var(--accent);
+      padding: 2px 7px;
+      border-radius: 5px;
+    }
+    .faq-a strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    /* ─── CTA SECTION ──────────────────────────────────────── */
+    .cta-section {
+      padding: 40px 0 100px;
+      background: var(--bg-surface);
+    }
+    .cta-banner {
+      background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 40%, #5B21B6 70%, var(--accent) 100%);
+      border-radius: var(--radius-xl);
+      padding: 80px 48px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-banner::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+    .cta-orb-1 {
+      position: absolute;
+      width: 350px; height: 350px;
+      top: -100px; left: -80px;
+      background: radial-gradient(circle, rgba(255,255,255,0.14) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .cta-orb-2 {
+      position: absolute;
+      width: 280px; height: 280px;
+      bottom: -80px; right: -50px;
+      background: radial-gradient(circle, rgba(255,255,255,0.09) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .cta-orb-3 {
+      position: absolute;
+      width: 180px; height: 180px;
+      top: 20%; right: 20%;
+      background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .cta-banner h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 800;
+      color: white;
+      margin-bottom: 12px;
+      position: relative;
+      letter-spacing: -0.02em;
+    }
+    .cta-banner p {
+      color: rgba(255,255,255,0.72);
+      font-size: 1rem;
+      margin-bottom: 36px;
+      position: relative;
+    }
+    .cta-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      position: relative;
+    }
+    .btn-white {
+      background: white;
+      color: var(--primary-dark);
+      font-weight: 700;
+      padding: 15px 36px;
+      border-radius: var(--radius-lg);
+      font-size: 1rem;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-white:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.35);
+    }
+    .btn-ghost-white {
+      background: rgba(255,255,255,0.12);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.28);
+      padding: 15px 32px;
+      border-radius: var(--radius-lg);
+      font-size: 1rem;
+      font-weight: 600;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-ghost-white:hover {
+      background: rgba(255,255,255,0.2);
+      border-color: rgba(255,255,255,0.4);
+    }
+    .cta-trust {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      margin-top: 24px;
+      flex-wrap: wrap;
+      position: relative;
+    }
+    .cta-trust-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.6);
+    }
+    .cta-trust-item i { color: rgba(255,255,255,0.8); }
+
+    /* ─── FOOTER ───────────────────────────────────────────── */
+    .footer {
+      background: var(--bg-surface);
+      border-top: 1px solid var(--border);
+      padding: 72px 0 32px;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.6fr 1fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 56px;
+    }
+    .footer-col-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      margin-bottom: 20px;
+    }
+    .footer-links {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .footer-link {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      transition: var(--transition);
+    }
+    .footer-link:hover { color: var(--text-primary); }
+    .footer-tagline {
+      font-size: 0.875rem;
+      color: var(--text-tertiary);
+      line-height: 1.7;
+      margin-top: 12px;
+      max-width: 280px;
+    }
+    .footer-social {
+      display: flex;
+      gap: 10px;
+      margin-top: 24px;
+    }
+    .social-btn {
+      width: 38px; height: 38px;
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      transition: var(--transition);
+    }
+    .social-btn:hover {
+      background: var(--primary-subtle);
+      border-color: var(--border-primary);
+      color: var(--primary-light);
+    }
+    .footer-bottom {
+      border-top: 1px solid var(--border);
+      padding-top: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .footer-copy { font-size: 0.78rem; color: var(--text-tertiary); }
+    .footer-bottom-links { display: flex; gap: 20px; }
+    .footer-bottom-link {
+      font-size: 0.78rem;
+      color: var(--text-tertiary);
+      transition: var(--transition);
+    }
+    .footer-bottom-link:hover { color: var(--text-secondary); }
+
+    /* ─── SECTION HEADER ───────────────────────────────────── */
+    .section-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--primary-subtle);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius-full);
+      padding: 5px 14px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--primary-light);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+      font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+    }
+    .section-sub {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      max-width: 560px;
+    }
+
+    /* ─── ANIMATIONS ───────────────────────────────────────── */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ─── ACTIVE NAV ───────────────────────────────────────── */
+    .marketing-nav .nav-link.active {
+      color: var(--text-primary);
+      background: var(--bg-glass);
+    }
+
+    /* ─── RESPONSIVE ───────────────────────────────────────── */
+    @media (max-width: 1100px) {
+      .pricing-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .pricing-card.featured {
+        transform: translateY(0);
+      }
+    }
+    @media (max-width: 700px) {
+      .pricing-grid {
+        grid-template-columns: 1fr;
+      }
+      .cta-banner { padding: 56px 28px; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .billing-toggle-wrap { flex-wrap: wrap; justify-content: center; }
+    }
+    @media (max-width: 480px) {
+      .footer-grid { grid-template-columns: 1fr; }
+      .cta-trust { flex-direction: column; gap: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════
+     FIXED MARKETING NAVBAR
+═══════════════════════════════════════════════════════════ -->
+<nav class="marketing-nav" id="mainNav">
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-icon">FP</div>
+    FastPic<span style="color:var(--accent)">.</span>ai
+  </a>
+
+  <div class="nav-links">
+    <a href="index.html#features" class="nav-link">Features</a>
+    <a href="pricing.html" class="nav-link active">Pricing</a>
+    <a href="index.html#how-it-works" class="nav-link">How It Works</a>
+    <a href="#" class="nav-link">Docs</a>
+    <a href="#" class="nav-link">Guest Gallery</a>
+  </div>
+
+  <div class="nav-actions">
+    <a href="auth.html" class="btn btn-secondary btn-sm">Sign In</a>
+    <a href="auth.html" class="btn btn-primary btn-sm">Start Free Trial</a>
+  </div>
+</nav>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     1. HERO
+═══════════════════════════════════════════════════════════ -->
+<section class="pricing-hero">
+  <div class="container" style="position:relative;z-index:1;">
+    <div class="pricing-eyebrow">
+      <i class="fa fa-tag"></i> Pricing Plans
+    </div>
+
+    <h1 class="pricing-title">
+      Simple, Transparent<br/>
+      <span class="gradient-text">Pricing</span>
+    </h1>
+
+    <p class="pricing-sub">
+      Pay only for storage. No per-photo fees. No surprises.<br/>
+      Scale as your studio grows.
+    </p>
+
+    <!-- Billing toggle -->
+    <div class="billing-toggle-wrap" id="billingToggleWrap">
+      <span class="billing-label active" id="lblMonthly" onclick="setBilling('monthly')">Monthly</span>
+      <div class="billing-pill" id="billingPill" onclick="toggleBilling()" role="switch" aria-checked="false" tabindex="0"></div>
+      <span class="billing-label" id="lblAnnual" onclick="setBilling('annual')">Annual</span>
+      <span class="annual-badge"><i class="fa fa-bolt" style="font-size:0.6rem;"></i> Save 20%</span>
+    </div>
+
+    <!-- Social proof -->
+    <div class="social-proof">
+      <div class="social-proof-avatars">
+        <div class="avatar" style="background:linear-gradient(135deg,#6366F1,#22D3EE);">RK</div>
+        <div class="avatar" style="background:linear-gradient(135deg,#10B981,#22D3EE);">PS</div>
+        <div class="avatar" style="background:linear-gradient(135deg,#F59E0B,#EF4444);">AM</div>
+        <div class="avatar" style="background:linear-gradient(135deg,#A78BFA,#6366F1);">VD</div>
+        <div class="avatar" style="background:linear-gradient(135deg,#22D3EE,#6366F1);">NJ</div>
+      </div>
+      <p class="social-proof-text">
+        Trusted by <strong>1,200+ photographers</strong> across India
+        <span style="margin-left:8px;display:inline-flex;gap:2px;color:var(--warning);">★★★★★</span>
+      </p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     2. PRICING CARDS
+═══════════════════════════════════════════════════════════ -->
+<section class="pricing-section" id="plans">
+  <div class="container">
+    <div class="pricing-grid">
+
+      <!-- ── STARTER ── -->
+      <div class="pricing-card reveal">
+        <div class="plan-icon" style="background:rgba(100,116,139,0.12);border:1px solid rgba(100,116,139,0.2);">
+          🌱
+        </div>
+        <div class="plan-name">Starter</div>
+        <div class="plan-tagline">For individual photographers getting started</div>
+        <div class="plan-storage"><i class="fa fa-database" style="font-size:0.6rem;"></i> 100 GB Storage</div>
+
+        <div class="plan-price-wrap">
+          <div class="plan-price">
+            <span class="plan-currency">₹</span>
+            <span class="plan-amount" data-monthly="799" data-annual="639">799</span>
+            <span class="plan-period">/mo</span>
+          </div>
+          <div class="plan-billed" id="billed-starter">Billed monthly</div>
+        </div>
+
+        <div class="plan-divider"></div>
+
+        <ul class="plan-features">
+          <li class="plan-feature">
+            <span class="fi"><i class="fa fa-check" style="font-size:0.55rem;"></i></span>
+            <span>100 GB Storage</span>
+          </li>
+          <li class="plan-feature">
+            <span class="fi"><i class="fa fa-check" style="font-size:0.55rem;"></i></span>
+            <span>AI Face Recognition</span>
+          </li>
+          <li class="plan-feature">
+            <span class="fi"><i class="fa fa-check" style="font-size:0.55rem;"></i></span>
+            <span>Unlimited Events</span>
+          </li>
+          <li class="plan-feature">
+            <span class="fi"><i class="fa fa-check" style="font-size:0.55rem;"></i></span>
+            <span>Guest Gallery Access</span>
+          </li>
+          <li class="plan-feature">
+            <span class="fi"><i class="fa fa-check" style="font-size:0.55rem;"></i></span>
+            <span>Basic Watermarks</span>
+          </li>
+          <li class="plan-feature">
+            <span class="fi"><i class="fa fa-check" style="font-size:0.55rem;"></i></span>
+            <span>Email Support</span>
+          </li>
+        </ul>
+
+        <a href="auth.html" class="btn btn-secondary btn-full">
+          Start Free Trial
+        </a>
+        <p style="text-align:center;font-size:0.72rem;color:var(--text-tertiary);margin-top:10px;">
+          14-day free trial · No credit card
+        </p>
+      </div>
+
+      <!-- ── PROFESSIONAL (FEATURED) ── -->
+      <div class="pricing-card featured reveal">
+        <div class="most-popular-badge">⚡ Most Popular</div>
+
+        <div class="plan-icon" style="background:var(--primary-subtle);border:1px solid var(--border-primary);">
+          🚀
+        </div>
+        <div class="plan-name" style="color:var(--primary-light);">Professional</div>
+        <div class="plan-tagline">For growing studios scaling their operations</div>
+        <div class="plan-storage" style="background:var(--primary-subtle);color:var(--primary-light);border:1px solid var(--border-primary);">
+          <i class="fa fa-database" style="font-size:0.6rem;"></i> 500 GB Storage
+        </div>
+
+        <div class="plan-price-wrap">
+          <div class="plan-price">
+            <span class="plan-currency" style="color:var(--primary-light);">₹</span>
+            <span class="plan-amount" data-monthly="2499" data-annual="1999">2,499</span>
+            <span class="plan-period">/mo</span>
+          </div>
+          <div class="plan-billed" id="billed-professional">Billed monthly</div>
+        </div>
+
+        <div class="plan-divider" style="background:var(--border-primary);"></div>
+
+        <ul class="plan-features">
+          <li class="plan-feature">
+            <span class="fi accent-fi"><i class="fa fa-check" style="font-size:0.55rem;"></i></span>
+            <span>500 GB Storage</span>
+          </li>
+          <li class="plan-feature">
+            <span class="fi accent-fi"><i class="fa fa-check" style="font-size:0.55rem;"></i></span>
+            <span>Everything in Starter</span>
+          </li>
+          <li class="plan-feature">
+            <span class="fi accent-fi"><i class="fa fa-check" style="font-size:0.55rem;"></i></span>
+            <span>Team (up to 5 members)</span>
+          </li>
+          <li class="plan-feature">
+            <span class="fi accent-fi"><i class="fa fa-check" style="font-size:0.55rem;"></i></span>
+            <span>Priority CDN Delivery</span>
+          </li>
+          <li class="plan-feature">
+            <span class="fi accent-fi"><i class="fa fa-check" style="font-size:0.55rem;"></i></span>
+            <span>Advanced Watermarks</span>
+          </li>
+          <li class="plan-feature">
+            <span class="fi accent-fi"><i class="fa fa-check" style="font-size:0.55rem;"></i></span>
+            <span>Dual Watermarks</span>
+          </li>
+          <li class="plan-feature">
+            <span class="fi accent-fi"><i class="fa fa-check" style="font-size:0.55rem;"></i></span>
+            <span>Custom Branding</span>
+          </li>
+          <li class="plan-feature">
+            <span class="fi accent-fi"><i class="fa fa-check" style="font-size:0.55rem;"></i></span>
+            <span>Priority Support</span>
+          </li>
+        </ul>
+
+        <a href="auth.html" class="btn btn-primary btn-full" style="margin-top:auto;">
+          <i class="fa fa-rocket" style="font-size:0.8em;"></i> Start Free Trial
+        </a>
+        <p style="text-align:center;font-size:0.72rem;color:rgba(255,255,255,0.4);margin-top:10px;">
+          14-day free trial · No credit card
+        </p>
+      </div>
+
+      <!-- ── STUDIO ── -->
+      <div class="pricing-card reveal">
+        <div class="plan-icon" style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);">
+          🏛️
+        </div>
+        <div class="plan-name">Studio</div>
+        <div class="plan-tagline">For professional studios with high-volume needs</div>
+        <div class="plan-storage" style="background:rgba(245,158,11,0.1);color:var(--warning);border:1px solid rgba(245,158,11,0.2);">
+          <i class="fa fa-database" style="font-size:0.6rem;"></i> 1 TB Storage
+        </div>
+
+        <div class="plan-price-wrap">
+          <div class="plan-price">
+            <span class="plan-currency">₹</span>
+            <span class="plan-amount" data-monthly="3999" data-annual="3199">3,999</span>
+            <span class="plan-period">/mo</span>
+          </div>
+          <div class="plan-billed" id="billed-studio">Billed monthly</div>
+        </div>
+
+        <div class="plan-divider"></div>
+
+        <ul class="plan-features">
+          <li class="plan-feature">
+            <span class="fi"><i class="fa fa-check" style="font-size:0.55rem;"></i></span>
+            <span>1 TB Storage</span>
+          </li>
+          <li class="plan-feature">
+            <span class="fi"><i class="fa fa-check" style="font-size:0.55rem;"></i></span>
+            <span>Everything in Professional</span>
+          </li>
+          <li class="plan-feature">
+            <span class="fi"><i class="fa fa-check" style="font-size:0.55rem;"></i></span>
+            <span>Team (up to 15 members)</span>
+          </li>
+          <li class="plan-feature">
+            <span class="fi"><i class="fa fa-check" style="font-size:0.55rem;"></i></span>
+            <span>White-label Galleries</span>
+          </li>
+          <li class="plan-feature">
+            <span class="fi"><i class="fa fa-check" style="font-size:0.55rem;"></i></span>
+            <span>Full API Access</span>
+          </li>
+          <li class="plan-feature">
+            <span class="fi"><i class="fa fa-check" style="font-size:0.55rem;"></i></span>
+            <span>Dedicated CDN</span>
+          </li>
+          <li class="plan-feature">
+            <span class="fi"><i class="fa fa-check" style="font-size:0.55rem;"></i></span>
+            <span>99.9% SLA Guarantee</span>
+          </li>
+          <li class="plan-feature">
+            <span class="fi"><i class="fa fa-check" style="font-size:0.55rem;"></i></span>
+            <span>Phone Support</span>
+          </li>
+        </ul>
+
+        <a href="auth.html" class="btn btn-secondary btn-full">
+          Start Free Trial
+        </a>
+        <p style="text-align:center;font-size:0.72rem;color:var(--text-tertiary);margin-top:10px;">
+          14-day free trial · No credit card
+        </p>
+      </div>
+
+      <!-- ── ENTERPRISE ── -->
+      <div class="pricing-card reveal" style="background:linear-gradient(160deg,rgba(34,211,238,0.06),var(--bg-glass));border-color:rgba(34,211,238,0.2);">
+        <div class="plan-icon" style="background:var(--accent-subtle);border:1px solid rgba(34,211,238,0.25);">
+          🏢
+        </div>
+        <div class="plan-name" style="color:var(--accent);">Enterprise</div>
+        <div class="plan-tagline">For large agencies and media organizations</div>
+        <div class="plan-storage" style="background:var(--accent-subtle);color:var(--accent);">
+          <i class="fa fa-infinity" style="font-size:0.6rem;"></i> Unlimited Storage
+        </div>
+
+        <div class="plan-price-wrap">
+          <div class="plan-custom">Custom</div>
+          <div class="plan-custom-sub">Tailored to your infrastructure</div>
+        </div>
+
+        <div class="plan-divider" style="background:rgba(34,211,238,0.15);"></div>
+
+        <ul class="plan-features">
+          <li class="plan-feature">
+            <span class="fi" style="background:var(--accent-subtle);color:var(--accent);"><i class="fa fa-check" style="font-size:0.55rem;"></i></span>
+            <span>Unlimited Storage</span>
+          </li>
+          <li class="plan-feature">
+            <span class="fi" style="background:var(--accent-subtle);color:var(--accent);"><i class="fa fa-check" style="font-size:0.55rem;"></i></span>
+            <span>Dedicated Infrastructure</span>
+          </li>
+          <li class="plan-feature">
+            <span class="fi" style="background:var(--accent-subtle);color:var(--accent);"><i class="fa fa-check" style="font-size:0.55rem;"></i></span>
+            <span>Custom AI Model Training</span>
+          </li>
+          <li class="plan-feature">
+            <span class="fi" style="background:var(--accent-subtle);color:var(--accent);"><i class="fa fa-check" style="font-size:0.55rem;"></i></span>
+            <span>SSO Integration</span>
+          </li>
+          <li class="plan-feature">
+            <span class="fi" style="background:var(--accent-subtle);color:var(--accent);"><i class="fa fa-check" style="font-size:0.55rem;"></i></span>
+            <span>99.99% SLA Guarantee</span>
+          </li>
+          <li class="plan-feature">
+            <span class="fi" style="background:var(--accent-subtle);color:var(--accent);"><i class="fa fa-check" style="font-size:0.55rem;"></i></span>
+            <span>Dedicated Account Manager</span>
+          </li>
+          <li class="plan-feature">
+            <span class="fi" style="background:var(--accent-subtle);color:var(--accent);"><i class="fa fa-check" style="font-size:0.55rem;"></i></span>
+            <span>Custom Integrations</span>
+          </li>
+          <li class="plan-feature">
+            <span class="fi" style="background:var(--accent-subtle);color:var(--accent);"><i class="fa fa-check" style="font-size:0.55rem;"></i></span>
+            <span>On-premise Option</span>
+          </li>
+        </ul>
+
+        <a href="mailto:sales@fastpic.ai" class="btn btn-primary btn-full" style="background:linear-gradient(135deg,rgba(34,211,238,0.3),rgba(34,211,238,0.15));color:var(--accent);border:1px solid rgba(34,211,238,0.3);box-shadow:none;">
+          <i class="fa fa-envelope" style="font-size:0.8em;"></i> Contact Sales
+        </a>
+        <p style="text-align:center;font-size:0.72rem;color:var(--text-tertiary);margin-top:10px;">
+          Custom pricing · Volume discounts
+        </p>
+      </div>
+
+    </div><!-- /pricing-grid -->
+
+    <!-- Billing notice -->
+    <p style="text-align:center;margin-top:32px;font-size:0.78rem;color:var(--text-tertiary);">
+      All plans include 3-tier photo processing (thumbnail + preview + master). Prices shown in INR excl. GST.
+    </p>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     3. FEATURE COMPARISON TABLE
+═══════════════════════════════════════════════════════════ -->
+<section class="comparison-section" id="compare">
+  <div class="container" style="position:relative;z-index:1;">
+    <div style="text-align:center;" class="reveal">
+      <div class="section-eyebrow"><i class="fa fa-table-columns"></i> Compare Plans</div>
+      <h2 class="section-title">Everything you get,<br/><span class="gradient-text">at a glance.</span></h2>
+      <p class="section-sub" style="margin:0 auto;">
+        See exactly which features are included in each plan before you decide.
+      </p>
+    </div>
+
+    <div class="comparison-table-wrap reveal">
+      <table class="comparison-table">
+        <!-- ── TABLE HEADER ── -->
+        <thead>
+          <tr class="ct-head">
+            <th style="text-align:left;">
+              <div style="font-size:0.75rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-tertiary);">Feature</div>
+            </th>
+            <th>
+              <span class="ct-plan-name">Starter</span>
+              <span class="ct-plan-price">₹799<span style="font-size:0.75rem;color:var(--text-tertiary);font-weight:400;">/mo</span></span>
+            </th>
+            <th class="ct-featured-col">
+              <span class="ct-plan-name" style="color:var(--primary-light);">Professional</span>
+              <span class="ct-plan-price">₹2,499<span style="font-size:0.75rem;color:var(--text-tertiary);font-weight:400;">/mo</span></span>
+            </th>
+            <th>
+              <span class="ct-plan-name">Studio</span>
+              <span class="ct-plan-price">₹3,999<span style="font-size:0.75rem;color:var(--text-tertiary);font-weight:400;">/mo</span></span>
+            </th>
+            <th>
+              <span class="ct-plan-name" style="color:var(--accent);">Enterprise</span>
+              <span class="ct-plan-price" style="color:var(--accent);">Custom</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <!-- ── STORAGE & FILES ── -->
+          <tr class="ct-category">
+            <td colspan="5"><i class="fa fa-hard-drive" style="margin-right:6px;"></i> Storage &amp; Files</td>
+          </tr>
+          <tr class="ct-row">
+            <td>Storage Capacity</td>
+            <td><span class="ct-val">100 GB</span></td>
+            <td class="ct-featured-col"><span class="ct-val" style="color:var(--primary-light);">500 GB</span></td>
+            <td><span class="ct-val">1 TB</span></td>
+            <td><span class="ct-custom-val">Unlimited</span></td>
+          </tr>
+          <tr class="ct-row">
+            <td>Max File Size</td>
+            <td><span class="ct-val">100 MB</span></td>
+            <td class="ct-featured-col"><span class="ct-val">250 MB</span></td>
+            <td><span class="ct-val">500 MB</span></td>
+            <td><span class="ct-custom-val">Custom</span></td>
+          </tr>
+          <tr class="ct-row">
+            <td>File Formats</td>
+            <td><span class="ct-val">JPG, PNG, HEIC</span></td>
+            <td class="ct-featured-col"><span class="ct-val">All + RAW</span></td>
+            <td><span class="ct-val">All formats</span></td>
+            <td><span class="ct-custom-val">All formats</span></td>
+          </tr>
+          <tr class="ct-row">
+            <td>3-Tier Processing</td>
+            <td><i class="fa fa-check ct-check"></i></td>
+            <td class="ct-featured-col"><i class="fa fa-check ct-check"></i></td>
+            <td><i class="fa fa-check ct-check"></i></td>
+            <td><i class="fa fa-check ct-check"></i></td>
+          </tr>
+
+          <!-- ── AI FEATURES ── -->
+          <tr class="ct-category">
+            <td colspan="5"><i class="fa fa-brain" style="margin-right:6px;"></i> AI Features</td>
+          </tr>
+          <tr class="ct-row">
+            <td>Face Recognition</td>
+            <td><i class="fa fa-check ct-check"></i></td>
+            <td class="ct-featured-col"><i class="fa fa-check ct-check"></i></td>
+            <td><i class="fa fa-check ct-check"></i></td>
+            <td><i class="fa fa-check ct-check"></i></td>
+          </tr>
+          <tr class="ct-row">
+            <td>Face Clustering</td>
+            <td><span class="ct-val">Basic</span></td>
+            <td class="ct-featured-col"><span class="ct-val" style="color:var(--primary-light);">Advanced</span></td>
+            <td><span class="ct-val" style="color:var(--primary-light);">Advanced</span></td>
+            <td><span class="ct-custom-val">Custom Models</span></td>
+          </tr>
+          <tr class="ct-row">
+            <td>AI Search</td>
+            <td><i class="fa fa-minus ct-dash"></i></td>
+            <td class="ct-featured-col"><i class="fa fa-check ct-check"></i></td>
+            <td><i class="fa fa-check ct-check"></i></td>
+            <td><i class="fa fa-check ct-check"></i></td>
+          </tr>
+          <tr class="ct-row">
+            <td>Custom AI Training</td>
+            <td><i class="fa fa-minus ct-dash"></i></td>
+            <td class="ct-featured-col"><i class="fa fa-minus ct-dash"></i></td>
+            <td><i class="fa fa-minus ct-dash"></i></td>
+            <td><i class="fa fa-check ct-check"></i></td>
+          </tr>
+
+          <!-- ── GALLERY ── -->
+          <tr class="ct-category">
+            <td colspan="5"><i class="fa fa-images" style="margin-right:6px;"></i> Gallery</td>
+          </tr>
+          <tr class="ct-row">
+            <td>Unlimited Events</td>
+            <td><i class="fa fa-check ct-check"></i></td>
+            <td class="ct-featured-col"><i class="fa fa-check ct-check"></i></td>
+            <td><i class="fa fa-check ct-check"></i></td>
+            <td><i class="fa fa-check ct-check"></i></td>
+          </tr>
+          <tr class="ct-row">
+            <td>Guest Access Modes</td>
+            <td><span class="ct-val">Face / PIN</span></td>
+            <td class="ct-featured-col"><span class="ct-val">Face / PIN / OTP</span></td>
+            <td><span class="ct-val">All modes</span></td>
+            <td><span class="ct-custom-val">All + Custom SSO</span></td>
+          </tr>
+          <tr class="ct-row">
+            <td>Gallery Customization</td>
+            <td><span class="ct-val">Basic</span></td>
+            <td class="ct-featured-col"><span class="ct-val" style="color:var(--primary-light);">Advanced</span></td>
+            <td><span class="ct-val">White-label</span></td>
+            <td><span class="ct-custom-val">Full White-label</span></td>
+          </tr>
+          <tr class="ct-row">
+            <td>Custom Domain</td>
+            <td><i class="fa fa-minus ct-dash"></i></td>
+            <td class="ct-featured-col"><i class="fa fa-check ct-check"></i></td>
+            <td><i class="fa fa-check ct-check"></i></td>
+            <td><i class="fa fa-check ct-check"></i></td>
+          </tr>
+
+          <!-- ── TEAM ── -->
+          <tr class="ct-category">
+            <td colspan="5"><i class="fa fa-users" style="margin-right:6px;"></i> Team</td>
+          </tr>
+          <tr class="ct-row">
+            <td>Team Members</td>
+            <td><span class="ct-val">1 (Solo)</span></td>
+            <td class="ct-featured-col"><span class="ct-val" style="color:var(--primary-light);">Up to 5</span></td>
+            <td><span class="ct-val">Up to 15</span></td>
+            <td><span class="ct-custom-val">Unlimited</span></td>
+          </tr>
+          <tr class="ct-row">
+            <td>Role Management</td>
+            <td><i class="fa fa-minus ct-dash"></i></td>
+            <td class="ct-featured-col"><i class="fa fa-check ct-check"></i></td>
+            <td><i class="fa fa-check ct-check"></i></td>
+            <td><i class="fa fa-check ct-check"></i></td>
+          </tr>
+          <tr class="ct-row">
+            <td>Activity Logs</td>
+            <td><i class="fa fa-minus ct-dash"></i></td>
+            <td class="ct-featured-col"><span class="ct-val">30 days</span></td>
+            <td><span class="ct-val">1 year</span></td>
+            <td><span class="ct-custom-val">Unlimited</span></td>
+          </tr>
+
+          <!-- ── SECURITY ── -->
+          <tr class="ct-category">
+            <td colspan="5"><i class="fa fa-shield-halved" style="margin-right:6px;"></i> Security</td>
+          </tr>
+          <tr class="ct-row">
+            <td>Signed URLs</td>
+            <td><i class="fa fa-check ct-check"></i></td>
+            <td class="ct-featured-col"><i class="fa fa-check ct-check"></i></td>
+            <td><i class="fa fa-check ct-check"></i></td>
+            <td><i class="fa fa-check ct-check"></i></td>
+          </tr>
+          <tr class="ct-row">
+            <td>Watermarks</td>
+            <td><span class="ct-val">Basic (1)</span></td>
+            <td class="ct-featured-col"><span class="ct-val" style="color:var(--primary-light);">Advanced (Dual)</span></td>
+            <td><span class="ct-val">Advanced (Dual)</span></td>
+            <td><span class="ct-custom-val">Custom</span></td>
+          </tr>
+          <tr class="ct-row">
+            <td>Download Controls</td>
+            <td><i class="fa fa-check ct-check"></i></td>
+            <td class="ct-featured-col"><i class="fa fa-check ct-check"></i></td>
+            <td><i class="fa fa-check ct-check"></i></td>
+            <td><i class="fa fa-check ct-check"></i></td>
+          </tr>
+          <tr class="ct-row">
+            <td>Audit Trail</td>
+            <td><i class="fa fa-minus ct-dash"></i></td>
+            <td class="ct-featured-col"><i class="fa fa-minus ct-dash"></i></td>
+            <td><i class="fa fa-check ct-check"></i></td>
+            <td><i class="fa fa-check ct-check"></i></td>
+          </tr>
+
+          <!-- ── SUPPORT ── -->
+          <tr class="ct-category">
+            <td colspan="5"><i class="fa fa-headset" style="margin-right:6px;"></i> Support &amp; SLA</td>
+          </tr>
+          <tr class="ct-row">
+            <td>Support Type</td>
+            <td><span class="ct-val">Email</span></td>
+            <td class="ct-featured-col"><span class="ct-val" style="color:var(--primary-light);">Priority Email</span></td>
+            <td><span class="ct-val">Phone + Email</span></td>
+            <td><span class="ct-custom-val">Dedicated Manager</span></td>
+          </tr>
+          <tr class="ct-row">
+            <td>Uptime SLA</td>
+            <td><span class="ct-val">99.5%</span></td>
+            <td class="ct-featured-col"><span class="ct-val">99.5%</span></td>
+            <td><span class="ct-val" style="color:var(--success);">99.9%</span></td>
+            <td><span class="ct-custom-val" style="color:var(--success);">99.99%</span></td>
+          </tr>
+          <tr class="ct-row" style="border-bottom:none;">
+            <td>API Access</td>
+            <td><i class="fa fa-minus ct-dash"></i></td>
+            <td class="ct-featured-col"><span class="ct-val">Read-only</span></td>
+            <td><span class="ct-val">Full API</span></td>
+            <td><span class="ct-custom-val">Full + Webhooks</span></td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div><!-- /comparison-table-wrap -->
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     4. FAQ
+═══════════════════════════════════════════════════════════ -->
+<section class="faq-section" id="faq">
+  <div class="container">
+    <div style="text-align:center;" class="reveal">
+      <div class="section-eyebrow"><i class="fa fa-circle-question"></i> FAQ</div>
+      <h2 class="section-title">Frequently asked<br/><span class="gradient-text">questions.</span></h2>
+      <p class="section-sub" style="margin:0 auto;">
+        Everything you need to know about FastPic.ai pricing and billing.
+      </p>
+    </div>
+
+    <div class="faq-list">
+
+      <!-- Q1 -->
+      <div class="faq-item reveal">
+        <div class="faq-q">
+          <span class="faq-q-text">How is storage calculated on FastPic.ai?</span>
+          <div class="faq-icon"><i class="fa fa-plus"></i></div>
+        </div>
+        <div class="faq-a">
+          <div class="faq-a-inner">
+            FastPic.ai uses a <strong>3-tier photo processing system</strong> for every image you upload:
+            <ul style="margin-top:10px;margin-left:16px;display:flex;flex-direction:column;gap:6px;list-style:disc;">
+              <li><code>Thumbnail</code> — ~50 KB, used for instant grid browsing</li>
+              <li><code>Preview</code> — ~500 KB, used for gallery viewing</li>
+              <li><code>Master</code> — up to 25 MB, your lossless original for final delivery</li>
+            </ul>
+            <p style="margin-top:10px;">
+              Storage is counted against the <strong>master file size only</strong>. The thumbnail and preview tiers add only ~<strong>2.2% overhead</strong> — so a 10 MB RAW file counts as roughly 10.22 MB against your quota, not 30 MB.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="faq-item reveal">
+        <div class="faq-q">
+          <span class="faq-q-text">Can I upgrade or downgrade my plan anytime?</span>
+          <div class="faq-icon"><i class="fa fa-plus"></i></div>
+        </div>
+        <div class="faq-a">
+          <div class="faq-a-inner">
+            <strong>Yes, absolutely.</strong> You can upgrade or downgrade your plan at any time from your dashboard under <strong>Settings → Billing</strong>.
+            <ul style="margin-top:10px;margin-left:16px;display:flex;flex-direction:column;gap:6px;list-style:disc;">
+              <li><strong>Upgrades</strong> take effect immediately, and you're charged a prorated amount for the remainder of the billing cycle.</li>
+              <li><strong>Downgrades</strong> take effect at the start of your next billing cycle. Your current features remain active until then.</li>
+            </ul>
+            <p style="margin-top:10px;">
+              No contracts, no cancellation fees — your photos are always yours.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="faq-item reveal">
+        <div class="faq-q">
+          <span class="faq-q-text">What happens if I exceed my storage limit?</span>
+          <div class="faq-icon"><i class="fa fa-plus"></i></div>
+        </div>
+        <div class="faq-a">
+          <div class="faq-a-inner">
+            <p>We'll <strong>never delete your photos</strong> or lock you out unexpectedly. Here's what happens:</p>
+            <ul style="margin-top:10px;margin-left:16px;display:flex;flex-direction:column;gap:6px;list-style:disc;">
+              <li>At <strong>80% usage</strong>, you'll receive an email notification.</li>
+              <li>At <strong>95% usage</strong>, a banner alert appears in your dashboard.</li>
+              <li>At <strong>100% usage</strong>, new photo uploads are paused — but all existing galleries remain fully accessible to you and your clients.</li>
+            </ul>
+            <p style="margin-top:10px;">You can upgrade your plan instantly to resume uploads, or archive older events to free space.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="faq-item reveal">
+        <div class="faq-q">
+          <span class="faq-q-text">Do you offer a free trial? What's included?</span>
+          <div class="faq-icon"><i class="fa fa-plus"></i></div>
+        </div>
+        <div class="faq-a">
+          <div class="faq-a-inner">
+            <p><strong>Yes — every plan includes a 14-day free trial</strong>, no credit card required.</p>
+            <p style="margin-top:10px;">During the trial you get:</p>
+            <ul style="margin-top:8px;margin-left:16px;display:flex;flex-direction:column;gap:6px;list-style:disc;">
+              <li><strong>Full access</strong> to all features of the plan you choose</li>
+              <li><code>10 GB</code> of storage to test uploads and AI recognition</li>
+              <li>Up to <strong>3 live events</strong> with guest gallery access</li>
+              <li>AI face recognition on up to <strong>1,000 photos</strong></li>
+            </ul>
+            <p style="margin-top:10px;">At the end of your trial, you can subscribe or export all your data — no lock-in.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q5 -->
+      <div class="faq-item reveal">
+        <div class="faq-q">
+          <span class="faq-q-text">What payment methods do you accept?</span>
+          <div class="faq-icon"><i class="fa fa-plus"></i></div>
+        </div>
+        <div class="faq-a">
+          <div class="faq-a-inner">
+            <p>We accept all major payment methods available in India and internationally:</p>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;">
+              <span style="display:inline-flex;align-items:center;gap:6px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:0.8rem;color:var(--text-secondary);">
+                <i class="fa fa-mobile-alt" style="color:var(--success);"></i> UPI (GPay, PhonePe, Paytm)
+              </span>
+              <span style="display:inline-flex;align-items:center;gap:6px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:0.8rem;color:var(--text-secondary);">
+                <i class="fa fa-credit-card" style="color:var(--primary-light);"></i> Debit &amp; Credit Cards
+              </span>
+              <span style="display:inline-flex;align-items:center;gap:6px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:0.8rem;color:var(--text-secondary);">
+                <i class="fa fa-building-columns" style="color:var(--accent);"></i> Net Banking
+              </span>
+              <span style="display:inline-flex;align-items:center;gap:6px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:0.8rem;color:var(--text-secondary);">
+                <i class="fa fa-money-bill-transfer" style="color:var(--warning);"></i> Wire Transfer (Enterprise)
+              </span>
+            </div>
+            <p style="margin-top:12px;">All transactions are secured by <strong>Razorpay</strong> and PCI-DSS compliant. GST invoices are issued for all Indian business subscriptions.</p>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /faq-list -->
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     5. FINAL CTA SECTION
+═══════════════════════════════════════════════════════════ -->
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-banner reveal">
+      <div class="cta-orb-1"></div>
+      <div class="cta-orb-2"></div>
+      <div class="cta-orb-3"></div>
+
+      <div style="position:relative;">
+        <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);border-radius:var(--radius-full);padding:5px 14px;font-size:0.72rem;font-weight:700;color:white;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:20px;">
+          ✨ 14-day free trial
+        </div>
+        <h2>
+          Start your free trial.<br/>No credit card required.
+        </h2>
+        <p>
+          Join 1,200+ photographers already using FastPic.ai to deliver stunning galleries faster than ever.
+        </p>
+        <div class="cta-actions">
+          <a href="auth.html" class="btn-white">
+            <i class="fa fa-rocket"></i> Start Free Trial
+          </a>
+          <a href="#" class="btn-ghost-white">
+            <i class="fa fa-calendar"></i> Book a Demo
+          </a>
+        </div>
+        <div class="cta-trust">
+          <div class="cta-trust-item">
+            <i class="fa fa-shield-halved"></i> No credit card needed
+          </div>
+          <div class="cta-trust-item">
+            <i class="fa fa-rotate-left"></i> Cancel anytime
+          </div>
+          <div class="cta-trust-item">
+            <i class="fa fa-download"></i> Export your data anytime
+          </div>
+          <div class="cta-trust-item">
+            <i class="fa fa-lock"></i> SOC 2 compliant
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════════════════════════ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+
+      <!-- Col 1: Brand -->
+      <div>
+        <a href="index.html" class="nav-logo" style="margin-bottom:12px;display:inline-flex;">
+          <div class="nav-logo-icon">FP</div>
+          FastPic<span style="color:var(--accent)">.</span>ai
+        </a>
+        <p class="footer-tagline">
+          The AI-powered photography platform built for professionals who care about speed, security, and delivering a flawless client experience.
+        </p>
+        <div class="footer-social">
+          <a href="#" class="social-btn" data-tooltip="Twitter / X"><i class="fab fa-x-twitter"></i></a>
+          <a href="#" class="social-btn" data-tooltip="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="social-btn" data-tooltip="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+          <a href="#" class="social-btn" data-tooltip="YouTube"><i class="fab fa-youtube"></i></a>
+          <a href="#" class="social-btn" data-tooltip="GitHub"><i class="fab fa-github"></i></a>
+        </div>
+      </div>
+
+      <!-- Col 2: Product -->
+      <div>
+        <div class="footer-col-title">Product</div>
+        <ul class="footer-links">
+          <li><a href="index.html#features" class="footer-link">Features</a></li>
+          <li><a href="pricing.html" class="footer-link" style="color:var(--primary-light);">Pricing</a></li>
+          <li><a href="index.html#storage" class="footer-link">Storage Tiers</a></li>
+          <li><a href="#" class="footer-link">API Docs</a></li>
+          <li><a href="#" class="footer-link">Changelog</a></li>
+          <li><a href="#" class="footer-link">Guest Gallery</a></li>
+        </ul>
+      </div>
+
+      <!-- Col 3: Company -->
+      <div>
+        <div class="footer-col-title">Company</div>
+        <ul class="footer-links">
+          <li><a href="#" class="footer-link">About Us</a></li>
+          <li><a href="#" class="footer-link">Blog</a></li>
+          <li><a href="#" class="footer-link">Careers</a></li>
+          <li><a href="#" class="footer-link">Press Kit</a></li>
+          <li><a href="#" class="footer-link">Contact</a></li>
+        </ul>
+      </div>
+
+      <!-- Col 4: Support & Legal -->
+      <div>
+        <div class="footer-col-title">Support</div>
+        <ul class="footer-links">
+          <li><a href="#" class="footer-link">Help Center</a></li>
+          <li><a href="#" class="footer-link">Status Page</a></li>
+          <li><a href="#" class="footer-link">Community</a></li>
+        </ul>
+        <div class="footer-col-title" style="margin-top:24px;">Legal</div>
+        <ul class="footer-links">
+          <li><a href="#" class="footer-link">Privacy Policy</a></li>
+          <li><a href="#" class="footer-link">Terms of Service</a></li>
+          <li><a href="#" class="footer-link">Cookie Policy</a></li>
+          <li><a href="#" class="footer-link">GDPR</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Footer Bottom Bar -->
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2025 FastPic.ai. All rights reserved. Prices in INR excl. GST.</div>
+      <div class="footer-bottom-links">
+        <a href="#" class="footer-bottom-link">Privacy</a>
+        <a href="#" class="footer-bottom-link">Terms</a>
+        <a href="#" class="footer-bottom-link">Cookies</a>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <div style="width:8px;height:8px;border-radius:50%;background:var(--success);box-shadow:0 0 8px var(--success);"></div>
+        <span style="font-size:0.72rem;color:var(--text-tertiary);">All systems operational</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════════════════════════════ -->
+<script>
+  /* ── Navbar scroll effect ── */
+  window.addEventListener('scroll', () => {
+    document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 20);
+  });
+
+  /* ── Billing Toggle Logic ── */
+  let isAnnual = false;
+
+  const PRICES = {
+    starter:      { monthly: '799',   annual: '639' },
+    professional: { monthly: '2,499', annual: '1,999' },
+    studio:       { monthly: '3,999', annual: '3,199' },
+  };
+
+  function formatPrice(num) {
+    // num is already a formatted string with commas
+    return num;
+  }
+
+  function applyBilling(annual) {
+    isAnnual = annual;
+    const pill = document.getElementById('billingPill');
+    const lblM = document.getElementById('lblMonthly');
+    const lblA = document.getElementById('lblAnnual');
+
+    pill.classList.toggle('annual', annual);
+    pill.setAttribute('aria-checked', annual ? 'true' : 'false');
+    lblM.classList.toggle('active', !annual);
+    lblA.classList.toggle('active', annual);
+
+    // Update all price amounts
+    document.querySelectorAll('.plan-amount').forEach(el => {
+      const monthly = el.dataset.monthly;
+      const annualVal = el.dataset.annual;
+      if (!monthly) return; // Enterprise custom
+      el.textContent = annual ? annualVal : monthly;
+      el.style.transform = 'scale(0.85)';
+      el.style.opacity   = '0';
+      setTimeout(() => {
+        el.textContent = annual ? annualVal : monthly;
+        el.style.transition = 'all 0.22s ease';
+        el.style.transform = 'scale(1)';
+        el.style.opacity   = '1';
+      }, 40);
+    });
+
+    // Update billing labels
+    const plans = ['starter', 'professional', 'studio'];
+    plans.forEach(plan => {
+      const el = document.getElementById(`billed-${plan}`);
+      if (!el) return;
+      if (annual) {
+        const annualTotal = parseInt(PRICES[plan].annual.replace(',','')) * 12;
+        el.innerHTML = `Billed annually — <span class="save-tag">₹${annualTotal.toLocaleString('en-IN')}/yr</span>`;
+      } else {
+        el.innerHTML = 'Billed monthly';
+      }
+    });
+  }
+
+  function toggleBilling() {
+    applyBilling(!isAnnual);
+  }
+
+  function setBilling(mode) {
+    applyBilling(mode === 'annual');
+  }
+
+  // Keyboard support for pill
+  document.getElementById('billingPill').addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleBilling(); }
+  });
+
+  /* ── FAQ Accordion ── */
+  document.querySelectorAll('.faq-q').forEach(q => {
+    q.addEventListener('click', () => {
+      const item = q.parentElement;
+      const isOpen = item.classList.contains('open');
+      // Close all
+      document.querySelectorAll('.faq-item.open').forEach(open => open.classList.remove('open'));
+      // Open clicked if it was closed
+      if (!isOpen) item.classList.add('open');
+    });
+  });
+
+  /* ── Scroll Reveal ── */
+  const revealObs = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        entry.target.style.transitionDelay = `${(i % 4) * 0.09}s`;
+        entry.target.classList.add('visible');
+        revealObs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+</script>
+
+</body>
+</html>

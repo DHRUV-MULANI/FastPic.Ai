@@ -1,0 +1,2332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sharma Wedding Ceremony — FastPic.AI</title>
+  <link rel="stylesheet" href="design-system.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <style>
+    /* ─── PAGE-LEVEL OVERRIDES & NEW COMPONENTS ─────────────────── */
+
+    /* ── EVENT HEADER ─── */
+    .event-header {
+      position: relative;
+      height: 300px;
+      overflow: hidden;
+      border-radius: 0;
+    }
+    .event-cover-bg {
+      position: absolute;
+      inset: 0;
+      background-image: url('https://images.unsplash.com/photo-1519741497674-611481863552?w=1600&q=80');
+      background-size: cover;
+      background-position: center 40%;
+      filter: blur(18px) brightness(0.45) saturate(1.2);
+      transform: scale(1.08);
+    }
+    .event-header-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(8,8,15,0.35) 0%,
+        rgba(8,8,15,0.65) 60%,
+        rgba(8,8,15,0.92) 100%
+      );
+    }
+    .event-header-content {
+      position: relative;
+      z-index: 2;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 28px 32px;
+      gap: 12px;
+    }
+    .event-meta-row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .event-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 11px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 99px;
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.85);
+      backdrop-filter: blur(6px);
+    }
+    .event-tag i { font-size: 0.7rem; opacity: 0.8; }
+    .event-stat-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 11px;
+      background: rgba(99,102,241,0.22);
+      border: 1px solid rgba(99,102,241,0.4);
+      border-radius: 99px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #a5b4fc;
+      backdrop-filter: blur(6px);
+    }
+    .event-stat-chip.active-chip {
+      background: rgba(16,185,129,0.2);
+      border-color: rgba(16,185,129,0.4);
+      color: #6ee7b7;
+    }
+    .event-stat-chip i { font-size: 0.68rem; }
+    .event-title {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.02em;
+      text-shadow: 0 2px 20px rgba(0,0,0,0.5);
+      line-height: 1.15;
+    }
+    .event-action-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    /* ── TAB BAR ─── */
+    .tab-bar {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      padding: 0 32px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(8,8,15,0.9);
+      backdrop-filter: blur(16px);
+      position: sticky;
+      top: 64px;
+      z-index: 40;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .tab-bar::-webkit-scrollbar { display: none; }
+    .tab-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 14px 18px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      white-space: nowrap;
+      transition: var(--transition);
+      margin-bottom: -1px;
+    }
+    .tab-item:hover { color: var(--text-primary); }
+    .tab-item.active {
+      color: var(--primary-light);
+      border-bottom-color: var(--primary);
+    }
+    .tab-item .tab-count {
+      padding: 1px 7px;
+      background: var(--primary-subtle);
+      color: var(--primary-light);
+      border-radius: 99px;
+      font-size: 0.7rem;
+      font-weight: 700;
+    }
+    .tab-item.active .tab-count {
+      background: var(--primary);
+      color: white;
+    }
+
+    /* ── FOLDER GRID ─── */
+    .folder-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 20px;
+    }
+    .folder-thumb-collage {
+      width: 100%;
+      aspect-ratio: 4/3;
+      border-radius: var(--radius);
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 2px;
+      background: var(--bg-elevated);
+    }
+    .folder-thumb-collage .main-img {
+      grid-row: span 2;
+      object-fit: cover;
+      width: 100%;
+      height: 100%;
+    }
+    .folder-thumb-collage .side-img {
+      object-fit: cover;
+      width: 100%;
+      height: 100%;
+    }
+    .folder-card-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .folder-name {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+    }
+    .folder-count {
+      font-size: 0.8rem;
+      color: var(--text-tertiary);
+    }
+    .folder-add {
+      border: 2px dashed var(--border);
+      background: transparent;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      aspect-ratio: auto;
+      min-height: 200px;
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+      transition: var(--transition);
+      color: var(--text-tertiary);
+    }
+    .folder-add:hover {
+      border-color: var(--primary);
+      color: var(--primary-light);
+      background: var(--primary-subtle);
+    }
+    .folder-add i { font-size: 1.75rem; }
+    .folder-add span { font-size: 0.875rem; font-weight: 600; }
+
+    /* ── MASONRY PHOTO GRID ─── */
+    .masonry-grid {
+      columns: 4;
+      column-gap: 6px;
+    }
+    @media (max-width: 1200px) { .masonry-grid { columns: 3; } }
+    @media (max-width: 860px)  { .masonry-grid { columns: 2; } }
+
+    .masonry-item {
+      break-inside: avoid;
+      position: relative;
+      margin-bottom: 6px;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      cursor: pointer;
+      background: var(--bg-elevated);
+      display: block;
+    }
+    .masonry-item img {
+      width: 100%;
+      height: auto;
+      display: block;
+      transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
+    }
+    .masonry-item:hover img { transform: scale(1.04); }
+
+    .masonry-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.15) 45%, transparent 70%);
+      opacity: 0;
+      transition: opacity 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 10px;
+    }
+    .masonry-item:hover .masonry-overlay { opacity: 1; }
+
+    .photo-top-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+    .photo-checkbox {
+      width: 20px; height: 20px;
+      border: 2px solid rgba(255,255,255,0.7);
+      border-radius: 5px;
+      background: rgba(0,0,0,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition);
+      flex-shrink: 0;
+    }
+    .photo-checkbox.checked,
+    .masonry-item.selected .photo-checkbox {
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+    .photo-checkbox.checked::after,
+    .masonry-item.selected .photo-checkbox::after {
+      content: '\f00c';
+      font-family: 'Font Awesome 6 Free';
+      font-weight: 900;
+      color: white;
+      font-size: 10px;
+    }
+    .photo-top-actions {
+      display: flex;
+      gap: 5px;
+    }
+    .photo-micro-btn {
+      width: 30px; height: 30px;
+      border-radius: 8px;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(6px);
+      display: flex; align-items: center; justify-content: center;
+      color: rgba(255,255,255,0.85);
+      font-size: 0.75rem;
+      transition: var(--transition);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .photo-micro-btn:hover {
+      background: var(--primary);
+      border-color: transparent;
+      color: white;
+    }
+    .photo-micro-btn.liked { color: #f87171; }
+    .photo-bottom-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .face-count-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(6px);
+      border-radius: 99px;
+      font-size: 0.7rem;
+      color: rgba(255,255,255,0.9);
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+    .face-count-badge i { color: var(--accent); font-size: 0.65rem; }
+
+    /* ── MASONRY ITEM: SELECTION STATE ─── */
+    .masonry-item.selected::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border: 3px solid var(--primary);
+      border-radius: var(--radius-sm);
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    /* ── BULK ACTION BAR ─── */
+    .bulk-bar {
+      position: fixed;
+      bottom: 100px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      z-index: 200;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius-xl);
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.7), 0 0 0 1px var(--border-primary), var(--shadow-glow);
+      backdrop-filter: blur(20px);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+      white-space: nowrap;
+    }
+    .bulk-bar.visible {
+      opacity: 1;
+      pointer-events: all;
+      transform: translateX(-50%) translateY(0);
+    }
+    .bulk-count {
+      font-weight: 700;
+      font-size: 0.875rem;
+      color: var(--primary-light);
+      padding-right: 12px;
+      border-right: 1px solid var(--border);
+    }
+    .bulk-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border-radius: var(--radius);
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .bulk-action:hover {
+      color: var(--text-primary);
+      background: var(--bg-glass-hover);
+      border-color: var(--border-strong);
+    }
+    .bulk-action.danger:hover {
+      color: var(--danger);
+      background: var(--danger-subtle);
+      border-color: rgba(239,68,68,0.3);
+    }
+    .bulk-close {
+      width: 28px; height: 28px;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-tertiary);
+      cursor: pointer;
+      margin-left: 4px;
+      transition: var(--transition);
+    }
+    .bulk-close:hover { color: var(--text-primary); background: var(--bg-glass); }
+
+    /* ── AI FACES STRIP ─── */
+    .faces-strip {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+      scrollbar-width: none;
+    }
+    .faces-strip::-webkit-scrollbar { display: none; }
+    .face-card {
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      padding: 12px 14px;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      background: var(--bg-glass);
+      transition: var(--transition);
+      min-width: 90px;
+      text-align: center;
+    }
+    .face-card:hover, .face-card.active {
+      border-color: var(--border-primary);
+      background: var(--primary-subtle);
+    }
+    .face-card.active .face-avatar { box-shadow: 0 0 0 2px var(--primary), 0 0 16px var(--primary-glow); }
+    .face-avatar {
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--border-strong);
+      transition: var(--transition);
+    }
+    .face-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .face-photo-count {
+      font-size: 0.68rem;
+      color: var(--text-tertiary);
+    }
+    .face-all-card {
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      padding: 12px 14px;
+      border-radius: var(--radius-lg);
+      border: 1px dashed var(--border);
+      background: transparent;
+      transition: var(--transition);
+      min-width: 90px;
+      color: var(--text-tertiary);
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .face-all-card:hover { border-color: var(--primary); color: var(--primary-light); background: var(--primary-subtle); }
+    .face-all-card i { font-size: 1.25rem; }
+
+    /* ── FAB UPLOAD BUTTON ─── */
+    .fab-upload {
+      position: fixed;
+      bottom: 32px;
+      right: 32px;
+      z-index: 300;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary) 0%, #7C3AED 100%);
+      box-shadow: 0 8px 32px var(--primary-glow), 0 4px 16px rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+    .fab-upload:hover {
+      transform: scale(1.12) rotate(90deg);
+      box-shadow: 0 12px 40px var(--primary-glow), 0 6px 20px rgba(0,0,0,0.6);
+    }
+    .fab-upload i {
+      font-size: 1.5rem;
+      color: white;
+      transition: var(--transition);
+    }
+    .fab-tooltip {
+      position: fixed;
+      bottom: 100px;
+      right: 32px;
+      z-index: 299;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 8px 14px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      opacity: 0;
+      transform: translateY(6px);
+      transition: var(--transition);
+      white-space: nowrap;
+      pointer-events: none;
+    }
+    .fab-upload:hover ~ .fab-tooltip {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── MODAL BASE ─── */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(6px);
+      z-index: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+    .modal-backdrop.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .modal {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      width: 100%;
+      max-width: 520px;
+      max-height: 88vh;
+      overflow-y: auto;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.8), 0 0 0 1px var(--border-primary);
+      transform: scale(0.94) translateY(12px);
+      transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+      margin: 16px;
+    }
+    .modal-backdrop.open .modal {
+      transform: scale(1) translateY(0);
+    }
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 22px 24px 18px;
+      border-bottom: 1px solid var(--border);
+    }
+    .modal-title {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .modal-title i {
+      width: 34px; height: 34px;
+      background: var(--primary-subtle);
+      border-radius: var(--radius);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--primary-light);
+      font-size: 0.9rem;
+    }
+    .modal-close {
+      width: 32px; height: 32px;
+      border-radius: var(--radius);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-tertiary);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .modal-close:hover { background: var(--bg-glass); color: var(--text-primary); }
+    .modal-body { padding: 24px; display: flex; flex-direction: column; gap: 20px; }
+    .modal-footer {
+      padding: 16px 24px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    /* ── SHARE MODAL SPECIFICS ─── */
+    .share-link-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .share-link-input {
+      flex: 1;
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 9px 14px;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      outline: none;
+    }
+    .access-options {
+      display: flex;
+      gap: 8px;
+    }
+    .access-option {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 7px;
+      padding: 14px 10px;
+      border-radius: var(--radius);
+      border: 1.5px solid var(--border);
+      cursor: pointer;
+      transition: var(--transition);
+      text-align: center;
+    }
+    .access-option i {
+      font-size: 1.2rem;
+      color: var(--text-tertiary);
+    }
+    .access-option span {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--text-tertiary);
+    }
+    .access-option.selected {
+      border-color: var(--primary);
+      background: var(--primary-subtle);
+    }
+    .access-option.selected i,
+    .access-option.selected span { color: var(--primary-light); }
+    .qr-placeholder {
+      width: 120px; height: 120px;
+      border-radius: var(--radius);
+      border: 2px dashed var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: var(--text-tertiary);
+      font-size: 0.72rem;
+      font-weight: 500;
+    }
+    .qr-placeholder i { font-size: 2rem; }
+
+    .share-toggles {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .share-toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      background: var(--bg-glass);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+    }
+    .share-toggle-info { display: flex; flex-direction: column; gap: 2px; }
+    .share-toggle-label { font-size: 0.875rem; font-weight: 600; color: var(--text-primary); }
+    .share-toggle-sub { font-size: 0.75rem; color: var(--text-tertiary); }
+
+    /* ── SETTINGS MODAL SPECIFICS ─── */
+    .danger-zone {
+      border: 1px solid rgba(239,68,68,0.3);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      background: rgba(239,68,68,0.05);
+    }
+    .danger-zone-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--danger);
+      margin-bottom: 12px;
+    }
+    .privacy-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .privacy-option {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      padding: 13px;
+      border-radius: var(--radius);
+      border: 1.5px solid var(--border);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .privacy-option.selected {
+      border-color: var(--primary);
+      background: var(--primary-subtle);
+    }
+    .privacy-option i { color: var(--text-tertiary); font-size: 1rem; }
+    .privacy-option.selected i { color: var(--primary-light); }
+    .privacy-option-label { font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); }
+    .privacy-option.selected .privacy-option-label { color: var(--primary-light); }
+    .privacy-option-sub { font-size: 0.7rem; color: var(--text-tertiary); }
+
+    /* ── SECTION HEADINGS ─── */
+    .section-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      margin-bottom: 2px;
+    }
+
+    /* ── TOPBAR BREADCRUMB ─── */
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      color: var(--text-tertiary);
+    }
+    .breadcrumb a {
+      color: var(--text-tertiary);
+      transition: var(--transition);
+    }
+    .breadcrumb a:hover { color: var(--primary-light); }
+    .breadcrumb .sep { color: var(--text-tertiary); opacity: 0.5; }
+    .breadcrumb .current { color: var(--text-primary); font-weight: 600; }
+
+    /* ── TAB PANELS ─── */
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── TOPBAR (overridden for this page) ─── */
+    .topbar-search-scoped {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 8px 14px;
+      min-width: 260px;
+      transition: var(--transition);
+    }
+    .topbar-search-scoped:focus-within {
+      border-color: var(--primary);
+      background: rgba(99,102,241,0.06);
+      box-shadow: 0 0 0 3px var(--primary-subtle);
+    }
+    .topbar-search-scoped input {
+      background: none;
+      border: none;
+      outline: none;
+      color: var(--text-primary);
+      font-size: 0.875rem;
+      font-family: var(--font-body);
+      width: 100%;
+    }
+    .topbar-search-scoped input::placeholder { color: var(--text-tertiary); }
+    .topbar-search-scoped i { color: var(--text-tertiary); font-size: 0.8rem; }
+
+    /* ── ICON BUTTON ─── */
+    .icon-btn {
+      width: 36px; height: 36px;
+      border-radius: var(--radius);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-secondary);
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: var(--transition);
+      font-size: 0.9rem;
+    }
+    .icon-btn:hover {
+      color: var(--text-primary);
+      background: var(--bg-glass-hover);
+      border-color: var(--border-strong);
+    }
+
+    /* ── VIEW TOGGLE ─── */
+    .view-toggle {
+      display: flex;
+      gap: 2px;
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2px;
+    }
+    .view-btn {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.875rem;
+      color: var(--text-tertiary);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .view-btn.active {
+      background: var(--primary-subtle);
+      color: var(--primary-light);
+    }
+
+    /* ── CONTENT PADDING ─── */
+    .page-content {
+      padding: 28px 32px 120px;
+    }
+
+    /* ── NOTIFICATION TOAST ─── */
+    .toast {
+      position: fixed;
+      top: 80px;
+      right: 24px;
+      z-index: 900;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius-lg);
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: var(--shadow-lg);
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      transform: translateX(120%);
+      transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .toast.show { transform: translateX(0); }
+    .toast i { color: var(--primary-light); }
+
+    /* ── SCROLLBAR ─── */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 4px; }
+  </style>
+</head>
+
+<body>
+
+<!-- ══ LAYOUT WRAPPER ════════════════════════════════════════════════ -->
+<div class="dashboard-layout">
+
+  <!-- ════════════════ SIDEBAR ════════════════ -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="sidebar-logo">F</div>
+      <div>
+        <div class="sidebar-brand-name">FastPic.AI</div>
+        <div class="sidebar-brand-sub">Studio Pro</div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Workspace</div>
+
+      <a href="dashboard.html" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-grid-2"></i></span>
+        Dashboard
+      </a>
+      <a href="#" class="nav-item active">
+        <span class="nav-icon"><i class="fa-solid fa-calendar-image"></i></span>
+        Events
+        <span class="nav-badge">12</span>
+      </a>
+      <a href="#" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-images"></i></span>
+        All Photos
+      </a>
+      <a href="#" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-folder"></i></span>
+        Folders
+      </a>
+
+      <div class="nav-section-label">AI Tools</div>
+      <a href="face-search.html" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-face-viewfinder"></i></span>
+        Face Search
+        <span class="nav-badge" style="background: var(--accent-subtle); color: var(--accent);">AI</span>
+      </a>
+      <a href="#" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></span>
+        AI Enhance
+      </a>
+      <a href="#" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-droplet-slash"></i></span>
+        Watermarks
+      </a>
+      <a href="#" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-sliders"></i></span>
+        Smart Presets
+      </a>
+
+      <div class="nav-section-label">Delivery</div>
+      <a href="#" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-share-nodes"></i></span>
+        Client Galleries
+      </a>
+      <a href="#" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-cloud-arrow-down"></i></span>
+        Downloads
+        <span class="nav-badge" style="background: var(--success-subtle); color: var(--success);">3</span>
+      </a>
+      <a href="#" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-bell"></i></span>
+        Notifications
+      </a>
+
+      <div class="nav-section-label">Account</div>
+      <a href="#" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-gear"></i></span>
+        Settings
+      </a>
+      <a href="#" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-chart-line"></i></span>
+        Analytics
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <!-- Storage bar -->
+      <div style="padding: 8px; margin-bottom: 8px;">
+        <div class="flex justify-between mb-4" style="margin-bottom: 6px;">
+          <span style="font-size: 0.72rem; color: var(--text-tertiary);">Storage</span>
+          <span style="font-size: 0.72rem; color: var(--text-secondary); font-weight: 600;">68.2 / 100 GB</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill warning" style="width: 68%;"></div>
+        </div>
+      </div>
+      <!-- User -->
+      <div class="sidebar-user">
+        <div class="avatar avatar-sm" style="background: linear-gradient(135deg, var(--primary), var(--accent));">
+          <span>AK</span>
+        </div>
+        <div style="flex: 1; min-width: 0;">
+          <div style="font-size: 0.8rem; font-weight: 600; color: var(--text-primary);">Anil Kumar</div>
+          <div style="font-size: 0.68rem; color: var(--text-tertiary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Pro Photographer</div>
+        </div>
+        <i class="fa-solid fa-ellipsis-vertical" style="color: var(--text-tertiary); font-size: 0.8rem;"></i>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ════════════════ MAIN AREA ════════════════ -->
+  <main class="dashboard-main">
+
+    <!-- ── TOPBAR ── -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <!-- Breadcrumb -->
+        <nav class="breadcrumb">
+          <a href="dashboard.html"><i class="fa-solid fa-house" style="font-size:0.7rem;"></i></a>
+          <span class="sep">/</span>
+          <a href="#">Events</a>
+          <span class="sep">/</span>
+          <span class="current">Sharma Wedding Ceremony</span>
+        </nav>
+      </div>
+      <div style="display:flex; align-items:center; gap: 12px;">
+        <!-- Scoped Search -->
+        <div class="topbar-search-scoped">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" placeholder="Search within this event…" />
+          <span style="font-size:0.65rem; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 5px; padding: 2px 6px; color: var(--text-tertiary); white-space: nowrap;">/ K</span>
+        </div>
+        <!-- Actions -->
+        <button class="btn btn-primary btn-sm" onclick="showToast('Upload dialog opening…')">
+          <i class="fa-solid fa-arrow-up-from-bracket"></i> Upload
+        </button>
+        <button class="btn btn-secondary btn-sm" onclick="openModal('shareModal')">
+          <i class="fa-solid fa-share-nodes"></i> Share
+        </button>
+        <button class="btn btn-secondary btn-sm" onclick="showToast('Preparing ZIP download…')">
+          <i class="fa-solid fa-cloud-arrow-down"></i> Download All
+        </button>
+        <button class="icon-btn" onclick="openModal('settingsModal')" data-tooltip="Event Settings">
+          <i class="fa-solid fa-sliders"></i>
+        </button>
+        <div class="divider-vertical" style="height: 28px;"></div>
+        <div class="avatar avatar-sm" style="background: linear-gradient(135deg, var(--primary), var(--accent)); cursor:pointer;" data-tooltip="Anil Kumar">AK</div>
+      </div>
+    </header>
+
+    <!-- ── EVENT HEADER ── -->
+    <div class="event-header">
+      <div class="event-cover-bg"></div>
+      <div class="event-header-overlay"></div>
+      <div class="event-header-content">
+        <!-- Stats chips row -->
+        <div class="event-meta-row">
+          <span class="event-tag"><i class="fa-solid fa-calendar"></i> 18 Nov 2025</span>
+          <span class="event-tag"><i class="fa-solid fa-location-dot"></i> The Grand Rajmahal, Jaipur</span>
+          <span class="event-stat-chip"><i class="fa-solid fa-images"></i> 842 photos</span>
+          <span class="event-stat-chip"><i class="fa-solid fa-folder"></i> 3 folders</span>
+          <span class="event-stat-chip"><i class="fa-solid fa-face-smile"></i> 47 faces</span>
+          <span class="event-stat-chip active-chip badge-dot"><i class="fa-solid fa-circle" style="font-size:6px;"></i> Active</span>
+        </div>
+        <!-- Event title -->
+        <h1 class="event-title">Sharma Wedding Ceremony</h1>
+        <!-- Action row -->
+        <div class="event-action-row">
+          <button class="btn btn-secondary btn-sm" onclick="openModal('shareModal')">
+            <i class="fa-solid fa-share-nodes"></i> Share Gallery
+          </button>
+          <button class="btn btn-secondary btn-sm" onclick="showToast('Generating PDF report…')">
+            <i class="fa-solid fa-file-chart-column"></i> Download Report
+          </button>
+          <button class="btn btn-secondary btn-sm" onclick="openModal('settingsModal')">
+            <i class="fa-solid fa-gear"></i> Event Settings
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TAB BAR ── -->
+    <div class="tab-bar">
+      <div class="tab-item active" data-tab="folders" onclick="switchTab('folders', this)">
+        <i class="fa-solid fa-folder"></i> Folders
+        <span class="tab-count">4</span>
+      </div>
+      <div class="tab-item" data-tab="all-photos" onclick="switchTab('all-photos', this)">
+        <i class="fa-solid fa-images"></i> All Photos
+        <span class="tab-count">842</span>
+      </div>
+      <div class="tab-item" data-tab="ai-faces" onclick="switchTab('ai-faces', this)">
+        <i class="fa-solid fa-face-viewfinder"></i> AI Faces
+        <span class="tab-count" style="background: var(--accent-subtle); color: var(--accent);">47</span>
+      </div>
+      <div class="tab-item" data-tab="guest-uploads" onclick="switchTab('guest-uploads', this)">
+        <i class="fa-solid fa-cloud-arrow-up"></i> Guest Uploads
+        <span class="tab-count">38</span>
+      </div>
+      <div class="tab-item" data-tab="trash" onclick="switchTab('trash', this)">
+        <i class="fa-solid fa-trash-can"></i> Trash
+        <span class="tab-count" style="background: var(--danger-subtle); color: var(--danger);">12</span>
+      </div>
+    </div>
+
+    <!-- ══════════════ PAGE CONTENT ══════════════ -->
+    <div class="page-content">
+
+      <!-- ────────── TAB: FOLDERS (DEFAULT) ────────── -->
+      <div id="tab-folders" class="tab-panel active">
+        <div class="flex justify-between items-center mb-16" style="margin-bottom: 20px;">
+          <div>
+            <div class="page-title" style="font-size: 1.2rem;">Folders</div>
+            <div class="page-subtitle">4 folders · 842 photos total</div>
+          </div>
+          <div class="flex gap-8">
+            <div class="view-toggle">
+              <div class="view-btn active"><i class="fa-solid fa-grid-2"></i></div>
+              <div class="view-btn"><i class="fa-solid fa-list"></i></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="folder-grid">
+          <!-- Folder 1 -->
+          <div class="folder-card" onclick="switchTab('all-photos', document.querySelector('[data-tab=all-photos]'))">
+            <div class="folder-thumb-collage">
+              <img class="main-img" src="https://images.unsplash.com/photo-1571987872552-a4a5da73eaa2?w=400&q=80" alt="Getting Ready" loading="lazy" />
+              <img class="side-img" src="https://images.unsplash.com/photo-1537633552985-df8429e8048b?w=200&q=80" alt="" loading="lazy" />
+              <img class="side-img" src="https://images.unsplash.com/photo-1529636444744-adffc9135a5e?w=200&q=80" alt="" loading="lazy" />
+            </div>
+            <div class="folder-card-meta">
+              <div>
+                <div class="folder-name">Getting Ready</div>
+                <div class="folder-count">142 photos · 2.1 GB</div>
+              </div>
+              <div style="display:flex; gap: 6px; align-items: center;">
+                <span class="badge badge-success badge-dot">Delivered</span>
+                <button class="icon-btn" style="width:28px; height:28px;" onclick="event.stopPropagation()">
+                  <i class="fa-solid fa-ellipsis"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Folder 2 -->
+          <div class="folder-card" onclick="switchTab('all-photos', document.querySelector('[data-tab=all-photos]'))">
+            <div class="folder-thumb-collage">
+              <img class="main-img" src="https://images.unsplash.com/photo-1519741497674-611481863552?w=400&q=80" alt="Ceremony" loading="lazy" />
+              <img class="side-img" src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=200&q=80" alt="" loading="lazy" />
+              <img class="side-img" src="https://images.unsplash.com/photo-1606800052052-a08af7148866?w=200&q=80" alt="" loading="lazy" />
+            </div>
+            <div class="folder-card-meta">
+              <div>
+                <div class="folder-name">Ceremony</div>
+                <div class="folder-count">387 photos · 5.8 GB</div>
+              </div>
+              <div style="display:flex; gap: 6px; align-items: center;">
+                <span class="badge badge-primary badge-dot">Editing</span>
+                <button class="icon-btn" style="width:28px; height:28px;" onclick="event.stopPropagation()">
+                  <i class="fa-solid fa-ellipsis"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Folder 3 -->
+          <div class="folder-card" onclick="switchTab('all-photos', document.querySelector('[data-tab=all-photos]'))">
+            <div class="folder-thumb-collage">
+              <img class="main-img" src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=400&q=80" alt="Reception" loading="lazy" />
+              <img class="side-img" src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=200&q=80" alt="" loading="lazy" />
+              <img class="side-img" src="https://images.unsplash.com/photo-1478146059778-26028b07395a?w=200&q=80" alt="" loading="lazy" />
+            </div>
+            <div class="folder-card-meta">
+              <div>
+                <div class="folder-name">Reception & Dance</div>
+                <div class="folder-count">251 photos · 3.7 GB</div>
+              </div>
+              <div style="display:flex; gap: 6px; align-items: center;">
+                <span class="badge badge-warning badge-dot">Processing</span>
+                <button class="icon-btn" style="width:28px; height:28px;" onclick="event.stopPropagation()">
+                  <i class="fa-solid fa-ellipsis"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Folder 4 -->
+          <div class="folder-card" onclick="switchTab('all-photos', document.querySelector('[data-tab=all-photos]'))">
+            <div class="folder-thumb-collage">
+              <img class="main-img" src="https://images.unsplash.com/photo-1610882648335-eda5c8483b36?w=400&q=80" alt="Portraits" loading="lazy" />
+              <img class="side-img" src="https://images.unsplash.com/photo-1529636444744-adffc9135a5e?w=200&q=80" alt="" loading="lazy" />
+              <img class="side-img" src="https://images.unsplash.com/photo-1509927083803-4bd519298ac4?w=200&q=80" alt="" loading="lazy" />
+            </div>
+            <div class="folder-card-meta">
+              <div>
+                <div class="folder-name">Portraits</div>
+                <div class="folder-count">62 photos · 0.9 GB</div>
+              </div>
+              <div style="display:flex; gap: 6px; align-items: center;">
+                <span class="badge badge-success badge-dot">Delivered</span>
+                <button class="icon-btn" style="width:28px; height:28px;" onclick="event.stopPropagation()">
+                  <i class="fa-solid fa-ellipsis"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Add Folder card -->
+          <div class="folder-add" onclick="showToast('Create new folder…')">
+            <i class="fa-solid fa-folder-plus"></i>
+            <span>+ Add Folder</span>
+          </div>
+        </div>
+
+        <!-- Quick Stats Below Folders -->
+        <div class="grid grid-4 mt-32" style="margin-top: 32px;">
+          <div class="stat-card">
+            <div class="stat-icon" style="background: var(--primary-subtle); color: var(--primary-light);">
+              <i class="fa-solid fa-images"></i>
+            </div>
+            <div class="stat-value">842</div>
+            <div class="stat-label">Total Photos</div>
+            <div class="stat-change up"><i class="fa-solid fa-arrow-up"></i> +127 this session</div>
+          </div>
+          <div class="stat-card" style="--stat-color: var(--accent);">
+            <div class="stat-icon" style="background: var(--accent-subtle); color: var(--accent);">
+              <i class="fa-solid fa-face-smile"></i>
+            </div>
+            <div class="stat-value">47</div>
+            <div class="stat-label">Faces Detected</div>
+            <div class="stat-change up"><i class="fa-solid fa-sparkles"></i> AI identified</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background: var(--success-subtle); color: var(--success);">
+              <i class="fa-solid fa-check-circle"></i>
+            </div>
+            <div class="stat-value">204</div>
+            <div class="stat-label">Delivered</div>
+            <div class="stat-change up"><i class="fa-solid fa-arrow-up"></i> 24% of total</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background: var(--warning-subtle); color: var(--warning);">
+              <i class="fa-solid fa-hard-drive"></i>
+            </div>
+            <div class="stat-value">12.5 GB</div>
+            <div class="stat-label">Storage Used</div>
+            <div class="stat-change" style="color: var(--warning);"><i class="fa-solid fa-triangle-exclamation"></i> 12.5% of limit</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ────────── TAB: ALL PHOTOS ────────── -->
+      <div id="tab-all-photos" class="tab-panel">
+        <!-- Filter + Controls Row -->
+        <div class="flex justify-between items-center" style="margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+          <div class="flex items-center gap-12">
+            <div style="font-size: 0.875rem; color: var(--text-secondary);">
+              <strong style="color: var(--text-primary);">842</strong> photos
+              <span id="filterLabel"></span>
+            </div>
+            <!-- Sort -->
+            <select class="form-select" style="width: auto; padding: 7px 14px; font-size: 0.8rem;">
+              <option>Newest First</option>
+              <option>Oldest First</option>
+              <option>Most Liked</option>
+              <option>File Size</option>
+            </select>
+          </div>
+          <div class="flex gap-8">
+            <button class="btn btn-secondary btn-sm" id="selectAllBtn" onclick="toggleSelectAll()">
+              <i class="fa-solid fa-square-check"></i> Select All
+            </button>
+            <div class="view-toggle">
+              <div class="view-btn active"><i class="fa-solid fa-grid-2"></i></div>
+              <div class="view-btn" onclick="showToast('List view coming soon')"><i class="fa-solid fa-list"></i></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- AI FACES filter strip -->
+        <div style="margin-bottom: 20px;">
+          <div class="section-label mb-8" style="margin-bottom: 10px;">Filter by Person</div>
+          <div class="faces-strip">
+            <div class="face-all-card active" id="faceFilterAll" onclick="filterByFace('all', this)">
+              <i class="fa-solid fa-users"></i>
+              All
+            </div>
+            <div class="face-card" onclick="filterByFace('person1', this)">
+              <img class="face-avatar" src="https://images.unsplash.com/photo-1607746882042-944635dfe10e?w=100&q=80" alt="Priya Sharma" />
+              <div class="face-label">Priya S.</div>
+              <div class="face-photo-count">142 photos</div>
+            </div>
+            <div class="face-card" onclick="filterByFace('person2', this)">
+              <img class="face-avatar" src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=100&q=80" alt="Rahul Sharma" />
+              <div class="face-label">Rahul S.</div>
+              <div class="face-photo-count">118 photos</div>
+            </div>
+            <div class="face-card" onclick="filterByFace('person3', this)">
+              <img class="face-avatar" src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=100&q=80" alt="Person 3" />
+              <div class="face-label">Amit K.</div>
+              <div class="face-photo-count">87 photos</div>
+            </div>
+            <div class="face-card" onclick="filterByFace('person4', this)">
+              <img class="face-avatar" src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=100&q=80" alt="Person 4" />
+              <div class="face-label">Sunita D.</div>
+              <div class="face-photo-count">74 photos</div>
+            </div>
+            <div class="face-card" onclick="filterByFace('person5', this)">
+              <img class="face-avatar" src="https://images.unsplash.com/photo-1534308143481-c55f00be8bd7?w=100&q=80" alt="Person 5" />
+              <div class="face-label">Vikram J.</div>
+              <div class="face-photo-count">63 photos</div>
+            </div>
+            <div class="face-card" onclick="filterByFace('person6', this)">
+              <img class="face-avatar" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80" alt="Person 6" />
+              <div class="face-label">Ravi M.</div>
+              <div class="face-photo-count">56 photos</div>
+            </div>
+            <div class="face-card" onclick="filterByFace('person7', this)">
+              <img class="face-avatar" src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=100&q=80" alt="Person 7" />
+              <div class="face-label">Meera P.</div>
+              <div class="face-photo-count">49 photos</div>
+            </div>
+            <div class="face-card" onclick="filterByFace('person8', this)">
+              <img class="face-avatar" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&q=80" alt="Person 8" />
+              <div class="face-label">Karan T.</div>
+              <div class="face-photo-count">38 photos</div>
+            </div>
+            <a href="face-search.html" class="face-all-card" style="border-style: solid; background: var(--bg-glass);">
+              <i class="fa-solid fa-plus"></i>
+              +39 more
+            </a>
+          </div>
+        </div>
+
+        <!-- MASONRY PHOTO GRID -->
+        <div class="masonry-grid" id="photoGrid">
+
+          <!-- Photo 1 -->
+          <a href="photo-viewer.html" class="masonry-item" data-id="1" onclick="handlePhotoClick(event, this)">
+            <img src="https://images.unsplash.com/photo-1519741497674-611481863552?w=600&q=80" alt="Wedding ceremony" loading="lazy" />
+            <div class="masonry-overlay">
+              <div class="photo-top-row">
+                <div class="photo-checkbox" onclick="toggleSelect(event, this.closest('.masonry-item'))"></div>
+                <div class="photo-top-actions">
+                  <div class="photo-micro-btn liked" onclick="toggleLike(event, this)" data-tooltip="Favorite"><i class="fa-solid fa-heart"></i></div>
+                  <div class="photo-micro-btn" onclick="downloadPhoto(event)" data-tooltip="Download"><i class="fa-solid fa-arrow-down"></i></div>
+                </div>
+              </div>
+              <div class="photo-bottom-row">
+                <div class="face-count-badge"><i class="fa-solid fa-face-smile"></i> 2 faces</div>
+              </div>
+            </div>
+          </a>
+
+          <!-- Photo 2 -->
+          <a href="photo-viewer.html" class="masonry-item" data-id="2" onclick="handlePhotoClick(event, this)">
+            <img src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=600&q=80" alt="Couple" loading="lazy" />
+            <div class="masonry-overlay">
+              <div class="photo-top-row">
+                <div class="photo-checkbox" onclick="toggleSelect(event, this.closest('.masonry-item'))"></div>
+                <div class="photo-top-actions">
+                  <div class="photo-micro-btn" onclick="toggleLike(event, this)" data-tooltip="Favorite"><i class="fa-regular fa-heart"></i></div>
+                  <div class="photo-micro-btn" onclick="downloadPhoto(event)" data-tooltip="Download"><i class="fa-solid fa-arrow-down"></i></div>
+                </div>
+              </div>
+              <div class="photo-bottom-row">
+                <div class="face-count-badge"><i class="fa-solid fa-face-smile"></i> 1 face</div>
+              </div>
+            </div>
+          </a>
+
+          <!-- Photo 3 -->
+          <a href="photo-viewer.html" class="masonry-item" data-id="3" onclick="handlePhotoClick(event, this)">
+            <img src="https://images.unsplash.com/photo-1606800052052-a08af7148866?w=600&q=80" alt="Wedding rings" loading="lazy" />
+            <div class="masonry-overlay">
+              <div class="photo-top-row">
+                <div class="photo-checkbox" onclick="toggleSelect(event, this.closest('.masonry-item'))"></div>
+                <div class="photo-top-actions">
+                  <div class="photo-micro-btn liked" onclick="toggleLike(event, this)" data-tooltip="Favorite"><i class="fa-solid fa-heart"></i></div>
+                  <div class="photo-micro-btn" onclick="downloadPhoto(event)" data-tooltip="Download"><i class="fa-solid fa-arrow-down"></i></div>
+                </div>
+              </div>
+              <div class="photo-bottom-row">
+                <div class="face-count-badge"><i class="fa-solid fa-face-smile"></i> 0 faces</div>
+              </div>
+            </div>
+          </a>
+
+          <!-- Photo 4 -->
+          <a href="photo-viewer.html" class="masonry-item" data-id="4" onclick="handlePhotoClick(event, this)">
+            <img src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=600&q=80" alt="Reception" loading="lazy" />
+            <div class="masonry-overlay">
+              <div class="photo-top-row">
+                <div class="photo-checkbox" onclick="toggleSelect(event, this.closest('.masonry-item'))"></div>
+                <div class="photo-top-actions">
+                  <div class="photo-micro-btn" onclick="toggleLike(event, this)" data-tooltip="Favorite"><i class="fa-regular fa-heart"></i></div>
+                  <div class="photo-micro-btn" onclick="downloadPhoto(event)" data-tooltip="Download"><i class="fa-solid fa-arrow-down"></i></div>
+                </div>
+              </div>
+              <div class="photo-bottom-row">
+                <div class="face-count-badge"><i class="fa-solid fa-face-smile"></i> 4 faces</div>
+              </div>
+            </div>
+          </a>
+
+          <!-- Photo 5 -->
+          <a href="photo-viewer.html" class="masonry-item" data-id="5" onclick="handlePhotoClick(event, this)">
+            <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=600&q=80" alt="Outdoor reception" loading="lazy" />
+            <div class="masonry-overlay">
+              <div class="photo-top-row">
+                <div class="photo-checkbox" onclick="toggleSelect(event, this.closest('.masonry-item'))"></div>
+                <div class="photo-top-actions">
+                  <div class="photo-micro-btn" onclick="toggleLike(event, this)" data-tooltip="Favorite"><i class="fa-regular fa-heart"></i></div>
+                  <div class="photo-micro-btn" onclick="downloadPhoto(event)" data-tooltip="Download"><i class="fa-solid fa-arrow-down"></i></div>
+                </div>
+              </div>
+              <div class="photo-bottom-row">
+                <div class="face-count-badge"><i class="fa-solid fa-face-smile"></i> 6 faces</div>
+              </div>
+            </div>
+          </a>
+
+          <!-- Photo 6 -->
+          <a href="photo-viewer.html" class="masonry-item" data-id="6" onclick="handlePhotoClick(event, this)">
+            <img src="https://images.unsplash.com/photo-1537633552985-df8429e8048b?w=600&q=80" alt="Bride getting ready" loading="lazy" />
+            <div class="masonry-overlay">
+              <div class="photo-top-row">
+                <div class="photo-checkbox" onclick="toggleSelect(event, this.closest('.masonry-item'))"></div>
+                <div class="photo-top-actions">
+                  <div class="photo-micro-btn liked" onclick="toggleLike(event, this)" data-tooltip="Favorite"><i class="fa-solid fa-heart"></i></div>
+                  <div class="photo-micro-btn" onclick="downloadPhoto(event)" data-tooltip="Download"><i class="fa-solid fa-arrow-down"></i></div>
+                </div>
+              </div>
+              <div class="photo-bottom-row">
+                <div class="face-count-badge"><i class="fa-solid fa-face-smile"></i> 1 face</div>
+              </div>
+            </div>
+          </a>
+
+          <!-- Photo 7 -->
+          <a href="photo-viewer.html" class="masonry-item" data-id="7" onclick="handlePhotoClick(event, this)">
+            <img src="https://images.unsplash.com/photo-1529636444744-adffc9135a5e?w=600&q=80" alt="Wedding details" loading="lazy" />
+            <div class="masonry-overlay">
+              <div class="photo-top-row">
+                <div class="photo-checkbox" onclick="toggleSelect(event, this.closest('.masonry-item'))"></div>
+                <div class="photo-top-actions">
+                  <div class="photo-micro-btn" onclick="toggleLike(event, this)" data-tooltip="Favorite"><i class="fa-regular fa-heart"></i></div>
+                  <div class="photo-micro-btn" onclick="downloadPhoto(event)" data-tooltip="Download"><i class="fa-solid fa-arrow-down"></i></div>
+                </div>
+              </div>
+              <div class="photo-bottom-row">
+                <div class="face-count-badge"><i class="fa-solid fa-face-smile"></i> 2 faces</div>
+              </div>
+            </div>
+          </a>
+
+          <!-- Photo 8 -->
+          <a href="photo-viewer.html" class="masonry-item" data-id="8" onclick="handlePhotoClick(event, this)">
+            <img src="https://images.unsplash.com/photo-1478146059778-26028b07395a?w=600&q=80" alt="Dance" loading="lazy" />
+            <div class="masonry-overlay">
+              <div class="photo-top-row">
+                <div class="photo-checkbox" onclick="toggleSelect(event, this.closest('.masonry-item'))"></div>
+                <div class="photo-top-actions">
+                  <div class="photo-micro-btn" onclick="toggleLike(event, this)" data-tooltip="Favorite"><i class="fa-regular fa-heart"></i></div>
+                  <div class="photo-micro-btn" onclick="downloadPhoto(event)" data-tooltip="Download"><i class="fa-solid fa-arrow-down"></i></div>
+                </div>
+              </div>
+              <div class="photo-bottom-row">
+                <div class="face-count-badge"><i class="fa-solid fa-face-smile"></i> 3 faces</div>
+              </div>
+            </div>
+          </a>
+
+          <!-- Photo 9 -->
+          <a href="photo-viewer.html" class="masonry-item" data-id="9" onclick="handlePhotoClick(event, this)">
+            <img src="https://images.unsplash.com/photo-1571987872552-a4a5da73eaa2?w=600&q=80" alt="Portrait" loading="lazy" />
+            <div class="masonry-overlay">
+              <div class="photo-top-row">
+                <div class="photo-checkbox" onclick="toggleSelect(event, this.closest('.masonry-item'))"></div>
+                <div class="photo-top-actions">
+                  <div class="photo-micro-btn liked" onclick="toggleLike(event, this)" data-tooltip="Favorite"><i class="fa-solid fa-heart"></i></div>
+                  <div class="photo-micro-btn" onclick="downloadPhoto(event)" data-tooltip="Download"><i class="fa-solid fa-arrow-down"></i></div>
+                </div>
+              </div>
+              <div class="photo-bottom-row">
+                <div class="face-count-badge"><i class="fa-solid fa-face-smile"></i> 1 face</div>
+              </div>
+            </div>
+          </a>
+
+          <!-- Photo 10 -->
+          <a href="photo-viewer.html" class="masonry-item" data-id="10" onclick="handlePhotoClick(event, this)">
+            <img src="https://images.unsplash.com/photo-1610882648335-eda5c8483b36?w=600&q=80" alt="Couple portrait" loading="lazy" />
+            <div class="masonry-overlay">
+              <div class="photo-top-row">
+                <div class="photo-checkbox" onclick="toggleSelect(event, this.closest('.masonry-item'))"></div>
+                <div class="photo-top-actions">
+                  <div class="photo-micro-btn" onclick="toggleLike(event, this)" data-tooltip="Favorite"><i class="fa-regular fa-heart"></i></div>
+                  <div class="photo-micro-btn" onclick="downloadPhoto(event)" data-tooltip="Download"><i class="fa-solid fa-arrow-down"></i></div>
+                </div>
+              </div>
+              <div class="photo-bottom-row">
+                <div class="face-count-badge"><i class="fa-solid fa-face-smile"></i> 2 faces</div>
+              </div>
+            </div>
+          </a>
+
+          <!-- Photo 11 -->
+          <a href="photo-viewer.html" class="masonry-item" data-id="11" onclick="handlePhotoClick(event, this)">
+            <img src="https://images.unsplash.com/photo-1509927083803-4bd519298ac4?w=600&q=80" alt="Wedding party" loading="lazy" />
+            <div class="masonry-overlay">
+              <div class="photo-top-row">
+                <div class="photo-checkbox" onclick="toggleSelect(event, this.closest('.masonry-item'))"></div>
+                <div class="photo-top-actions">
+                  <div class="photo-micro-btn" onclick="toggleLike(event, this)" data-tooltip="Favorite"><i class="fa-regular fa-heart"></i></div>
+                  <div class="photo-micro-btn" onclick="downloadPhoto(event)" data-tooltip="Download"><i class="fa-solid fa-arrow-down"></i></div>
+                </div>
+              </div>
+              <div class="photo-bottom-row">
+                <div class="face-count-badge"><i class="fa-solid fa-face-smile"></i> 5 faces</div>
+              </div>
+            </div>
+          </a>
+
+          <!-- Photo 12 -->
+          <a href="photo-viewer.html" class="masonry-item" data-id="12" onclick="handlePhotoClick(event, this)">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&q=80" alt="Bride portrait" loading="lazy" />
+            <div class="masonry-overlay">
+              <div class="photo-top-row">
+                <div class="photo-checkbox" onclick="toggleSelect(event, this.closest('.masonry-item'))"></div>
+                <div class="photo-top-actions">
+                  <div class="photo-micro-btn liked" onclick="toggleLike(event, this)" data-tooltip="Favorite"><i class="fa-solid fa-heart"></i></div>
+                  <div class="photo-micro-btn" onclick="downloadPhoto(event)" data-tooltip="Download"><i class="fa-solid fa-arrow-down"></i></div>
+                </div>
+              </div>
+              <div class="photo-bottom-row">
+                <div class="face-count-badge"><i class="fa-solid fa-face-smile"></i> 1 face</div>
+              </div>
+            </div>
+          </a>
+
+          <!-- Photo 13 -->
+          <a href="photo-viewer.html" class="masonry-item" data-id="13" onclick="handlePhotoClick(event, this)">
+            <img src="https://images.unsplash.com/photo-1520854221256-17d7dc88b5f4?w=600&q=80" alt="Floral decorations" loading="lazy" />
+            <div class="masonry-overlay">
+              <div class="photo-top-row">
+                <div class="photo-checkbox" onclick="toggleSelect(event, this.closest('.masonry-item'))"></div>
+                <div class="photo-top-actions">
+                  <div class="photo-micro-btn" onclick="toggleLike(event, this)" data-tooltip="Favorite"><i class="fa-regular fa-heart"></i></div>
+                  <div class="photo-micro-btn" onclick="downloadPhoto(event)" data-tooltip="Download"><i class="fa-solid fa-arrow-down"></i></div>
+                </div>
+              </div>
+              <div class="photo-bottom-row">
+                <div class="face-count-badge"><i class="fa-solid fa-face-smile"></i> 0 faces</div>
+              </div>
+            </div>
+          </a>
+
+          <!-- Photo 14 -->
+          <a href="photo-viewer.html" class="masonry-item" data-id="14" onclick="handlePhotoClick(event, this)">
+            <img src="https://images.unsplash.com/photo-1492681290082-e932832941e6?w=600&q=80" alt="Groom" loading="lazy" />
+            <div class="masonry-overlay">
+              <div class="photo-top-row">
+                <div class="photo-checkbox" onclick="toggleSelect(event, this.closest('.masonry-item'))"></div>
+                <div class="photo-top-actions">
+                  <div class="photo-micro-btn" onclick="toggleLike(event, this)" data-tooltip="Favorite"><i class="fa-regular fa-heart"></i></div>
+                  <div class="photo-micro-btn" onclick="downloadPhoto(event)" data-tooltip="Download"><i class="fa-solid fa-arrow-down"></i></div>
+                </div>
+              </div>
+              <div class="photo-bottom-row">
+                <div class="face-count-badge"><i class="fa-solid fa-face-smile"></i> 1 face</div>
+              </div>
+            </div>
+          </a>
+
+          <!-- Photo 15 -->
+          <a href="photo-viewer.html" class="masonry-item" data-id="15" onclick="handlePhotoClick(event, this)">
+            <img src="https://images.unsplash.com/photo-1591604466107-ec97de577aff?w=600&q=80" alt="Wedding venue" loading="lazy" />
+            <div class="masonry-overlay">
+              <div class="photo-top-row">
+                <div class="photo-checkbox" onclick="toggleSelect(event, this.closest('.masonry-item'))"></div>
+                <div class="photo-top-actions">
+                  <div class="photo-micro-btn" onclick="toggleLike(event, this)" data-tooltip="Favorite"><i class="fa-regular fa-heart"></i></div>
+                  <div class="photo-micro-btn" onclick="downloadPhoto(event)" data-tooltip="Download"><i class="fa-solid fa-arrow-down"></i></div>
+                </div>
+              </div>
+              <div class="photo-bottom-row">
+                <div class="face-count-badge"><i class="fa-solid fa-face-smile"></i> 8 faces</div>
+              </div>
+            </div>
+          </a>
+
+          <!-- Photo 16 -->
+          <a href="photo-viewer.html" class="masonry-item" data-id="16" onclick="handlePhotoClick(event, this)">
+            <img src="https://images.unsplash.com/photo-1478145046317-39f10e56b5e9?w=600&q=80" alt="Wedding rings" loading="lazy" />
+            <div class="masonry-overlay">
+              <div class="photo-top-row">
+                <div class="photo-checkbox" onclick="toggleSelect(event, this.closest('.masonry-item'))"></div>
+                <div class="photo-top-actions">
+                  <div class="photo-micro-btn liked" onclick="toggleLike(event, this)" data-tooltip="Favorite"><i class="fa-solid fa-heart"></i></div>
+                  <div class="photo-micro-btn" onclick="downloadPhoto(event)" data-tooltip="Download"><i class="fa-solid fa-arrow-down"></i></div>
+                </div>
+              </div>
+              <div class="photo-bottom-row">
+                <div class="face-count-badge"><i class="fa-solid fa-face-smile"></i> 0 faces</div>
+              </div>
+            </div>
+          </a>
+
+          <!-- Photo 17 -->
+          <a href="photo-viewer.html" class="masonry-item" data-id="17" onclick="handlePhotoClick(event, this)">
+            <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=600&q=80" alt="Family group photo" loading="lazy" />
+            <div class="masonry-overlay">
+              <div class="photo-top-row">
+                <div class="photo-checkbox" onclick="toggleSelect(event, this.closest('.masonry-item'))"></div>
+                <div class="photo-top-actions">
+                  <div class="photo-micro-btn" onclick="toggleLike(event, this)" data-tooltip="Favorite"><i class="fa-regular fa-heart"></i></div>
+                  <div class="photo-micro-btn" onclick="downloadPhoto(event)" data-tooltip="Download"><i class="fa-solid fa-arrow-down"></i></div>
+                </div>
+              </div>
+              <div class="photo-bottom-row">
+                <div class="face-count-badge"><i class="fa-solid fa-face-smile"></i> 12 faces</div>
+              </div>
+            </div>
+          </a>
+
+          <!-- Photo 18 -->
+          <a href="photo-viewer.html" class="masonry-item" data-id="18" onclick="handlePhotoClick(event, this)">
+            <img src="https://images.unsplash.com/photo-1532712938310-34cb3982ef74?w=600&q=80" alt="Bride smile" loading="lazy" />
+            <div class="masonry-overlay">
+              <div class="photo-top-row">
+                <div class="photo-checkbox" onclick="toggleSelect(event, this.closest('.masonry-item'))"></div>
+                <div class="photo-top-actions">
+                  <div class="photo-micro-btn liked" onclick="toggleLike(event, this)" data-tooltip="Favorite"><i class="fa-solid fa-heart"></i></div>
+                  <div class="photo-micro-btn" onclick="downloadPhoto(event)" data-tooltip="Download"><i class="fa-solid fa-arrow-down"></i></div>
+                </div>
+              </div>
+              <div class="photo-bottom-row">
+                <div class="face-count-badge"><i class="fa-solid fa-face-smile"></i> 1 face</div>
+              </div>
+            </div>
+          </a>
+
+          <!-- Photo 19 -->
+          <a href="photo-viewer.html" class="masonry-item" data-id="19" onclick="handlePhotoClick(event, this)">
+            <img src="https://images.unsplash.com/photo-1549417229-aa67d3263ad5?w=600&q=80" alt="Evening lights" loading="lazy" />
+            <div class="masonry-overlay">
+              <div class="photo-top-row">
+                <div class="photo-checkbox" onclick="toggleSelect(event, this.closest('.masonry-item'))"></div>
+                <div class="photo-top-actions">
+                  <div class="photo-micro-btn" onclick="toggleLike(event, this)" data-tooltip="Favorite"><i class="fa-regular fa-heart"></i></div>
+                  <div class="photo-micro-btn" onclick="downloadPhoto(event)" data-tooltip="Download"><i class="fa-solid fa-arrow-down"></i></div>
+                </div>
+              </div>
+              <div class="photo-bottom-row">
+                <div class="face-count-badge"><i class="fa-solid fa-face-smile"></i> 3 faces</div>
+              </div>
+            </div>
+          </a>
+
+          <!-- Photo 20 -->
+          <a href="photo-viewer.html" class="masonry-item" data-id="20" onclick="handlePhotoClick(event, this)">
+            <img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=600&q=80" alt="Cake cutting" loading="lazy" />
+            <div class="masonry-overlay">
+              <div class="photo-top-row">
+                <div class="photo-checkbox" onclick="toggleSelect(event, this.closest('.masonry-item'))"></div>
+                <div class="photo-top-actions">
+                  <div class="photo-micro-btn" onclick="toggleLike(event, this)" data-tooltip="Favorite"><i class="fa-regular fa-heart"></i></div>
+                  <div class="photo-micro-btn" onclick="downloadPhoto(event)" data-tooltip="Download"><i class="fa-solid fa-arrow-down"></i></div>
+                </div>
+              </div>
+              <div class="photo-bottom-row">
+                <div class="face-count-badge"><i class="fa-solid fa-face-smile"></i> 2 faces</div>
+              </div>
+            </div>
+          </a>
+
+          <!-- Photo 21 -->
+          <a href="photo-viewer.html" class="masonry-item" data-id="21" onclick="handlePhotoClick(event, this)">
+            <img src="https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=600&q=80" alt="Wedding bouquet" loading="lazy" />
+            <div class="masonry-overlay">
+              <div class="photo-top-row">
+                <div class="photo-checkbox" onclick="toggleSelect(event, this.closest('.masonry-item'))"></div>
+                <div class="photo-top-actions">
+                  <div class="photo-micro-btn liked" onclick="toggleLike(event, this)" data-tooltip="Favorite"><i class="fa-solid fa-heart"></i></div>
+                  <div class="photo-micro-btn" onclick="downloadPhoto(event)" data-tooltip="Download"><i class="fa-solid fa-arrow-down"></i></div>
+                </div>
+              </div>
+              <div class="photo-bottom-row">
+                <div class="face-count-badge"><i class="fa-solid fa-face-smile"></i> 0 faces</div>
+              </div>
+            </div>
+          </a>
+
+          <!-- Photo 22 -->
+          <a href="photo-viewer.html" class="masonry-item" data-id="22" onclick="handlePhotoClick(event, this)">
+            <img src="https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?w=600&q=80" alt="Couple dance" loading="lazy" />
+            <div class="masonry-overlay">
+              <div class="photo-top-row">
+                <div class="photo-checkbox" onclick="toggleSelect(event, this.closest('.masonry-item'))"></div>
+                <div class="photo-top-actions">
+                  <div class="photo-micro-btn" onclick="toggleLike(event, this)" data-tooltip="Favorite"><i class="fa-regular fa-heart"></i></div>
+                  <div class="photo-micro-btn" onclick="downloadPhoto(event)" data-tooltip="Download"><i class="fa-solid fa-arrow-down"></i></div>
+                </div>
+              </div>
+              <div class="photo-bottom-row">
+                <div class="face-count-badge"><i class="fa-solid fa-face-smile"></i> 2 faces</div>
+              </div>
+            </div>
+          </a>
+
+          <!-- Photo 23 -->
+          <a href="photo-viewer.html" class="masonry-item" data-id="23" onclick="handlePhotoClick(event, this)">
+            <img src="https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=600&q=80" alt="Reception venue" loading="lazy" />
+            <div class="masonry-overlay">
+              <div class="photo-top-row">
+                <div class="photo-checkbox" onclick="toggleSelect(event, this.closest('.masonry-item'))"></div>
+                <div class="photo-top-actions">
+                  <div class="photo-micro-btn" onclick="toggleLike(event, this)" data-tooltip="Favorite"><i class="fa-regular fa-heart"></i></div>
+                  <div class="photo-micro-btn" onclick="downloadPhoto(event)" data-tooltip="Download"><i class="fa-solid fa-arrow-down"></i></div>
+                </div>
+              </div>
+              <div class="photo-bottom-row">
+                <div class="face-count-badge"><i class="fa-solid fa-face-smile"></i> 7 faces</div>
+              </div>
+            </div>
+          </a>
+
+          <!-- Photo 24 (wide — spans) -->
+          <a href="photo-viewer.html" class="masonry-item" data-id="24" onclick="handlePhotoClick(event, this)">
+            <img src="https://images.unsplash.com/photo-1522318607-be83f30e7d73?w=600&q=80" alt="Haldi ceremony" loading="lazy" />
+            <div class="masonry-overlay">
+              <div class="photo-top-row">
+                <div class="photo-checkbox" onclick="toggleSelect(event, this.closest('.masonry-item'))"></div>
+                <div class="photo-top-actions">
+                  <div class="photo-micro-btn liked" onclick="toggleLike(event, this)" data-tooltip="Favorite"><i class="fa-solid fa-heart"></i></div>
+                  <div class="photo-micro-btn" onclick="downloadPhoto(event)" data-tooltip="Download"><i class="fa-solid fa-arrow-down"></i></div>
+                </div>
+              </div>
+              <div class="photo-bottom-row">
+                <div class="face-count-badge"><i class="fa-solid fa-face-smile"></i> 5 faces</div>
+              </div>
+            </div>
+          </a>
+
+        </div>
+        <!-- End masonry grid -->
+
+        <!-- Load More -->
+        <div class="flex justify-center mt-32" style="margin-top: 32px;">
+          <button class="btn btn-secondary" onclick="showToast('Loading more photos…')">
+            <i class="fa-solid fa-arrows-rotate"></i> Load 100 more photos
+          </button>
+        </div>
+      </div>
+
+      <!-- ────────── TAB: AI FACES ────────── -->
+      <div id="tab-ai-faces" class="tab-panel">
+        <div class="flex justify-between items-center" style="margin-bottom: 24px;">
+          <div>
+            <div class="page-title" style="font-size: 1.2rem;">AI Faces
+              <span class="badge badge-cyan" style="margin-left: 8px; vertical-align: middle;"><i class="fa-solid fa-sparkles"></i> AI Powered</span>
+            </div>
+            <div class="page-subtitle">47 unique faces detected across 842 photos</div>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="showToast('Re-running face detection…')">
+            <i class="fa-solid fa-rotate"></i> Re-scan
+          </button>
+        </div>
+
+        <!-- Faces Grid -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 16px;">
+
+          <!-- Face cards -->
+          <a href="face-search.html" class="face-card" style="text-decoration: none; padding: 20px 14px;">
+            <img class="face-avatar" style="width: 64px; height: 64px; border: 3px solid var(--primary);" src="https://images.unsplash.com/photo-1607746882042-944635dfe10e?w=200&q=80" alt="Priya Sharma" />
+            <div class="face-label" style="font-size: 0.875rem;">Priya Sharma</div>
+            <div class="face-photo-count">142 photos</div>
+            <span class="badge badge-success badge-dot" style="margin-top: 4px;">Bride</span>
+          </a>
+
+          <a href="face-search.html" class="face-card" style="text-decoration: none; padding: 20px 14px;">
+            <img class="face-avatar" style="width: 64px; height: 64px; border: 3px solid var(--primary);" src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=200&q=80" alt="Rahul Sharma" />
+            <div class="face-label" style="font-size: 0.875rem;">Rahul Sharma</div>
+            <div class="face-photo-count">118 photos</div>
+            <span class="badge badge-primary badge-dot" style="margin-top: 4px;">Groom</span>
+          </a>
+
+          <a href="face-search.html" class="face-card" style="text-decoration: none; padding: 20px 14px;">
+            <img class="face-avatar" style="width: 64px; height: 64px;" src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=200&q=80" alt="Person 3" />
+            <div class="face-label" style="font-size: 0.875rem;">Amit Kumar</div>
+            <div class="face-photo-count">87 photos</div>
+            <span class="badge badge-warning" style="margin-top: 4px;">Guest</span>
+          </a>
+
+          <a href="face-search.html" class="face-card" style="text-decoration: none; padding: 20px 14px;">
+            <img class="face-avatar" style="width: 64px; height: 64px;" src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=200&q=80" alt="Person 4" />
+            <div class="face-label" style="font-size: 0.875rem;">Sunita Devi</div>
+            <div class="face-photo-count">74 photos</div>
+            <span class="badge badge-warning" style="margin-top: 4px;">Guest</span>
+          </a>
+
+          <a href="face-search.html" class="face-card" style="text-decoration: none; padding: 20px 14px;">
+            <img class="face-avatar" style="width: 64px; height: 64px;" src="https://images.unsplash.com/photo-1534308143481-c55f00be8bd7?w=200&q=80" alt="Person 5" />
+            <div class="face-label" style="font-size: 0.875rem;">Vikram Joshi</div>
+            <div class="face-photo-count">63 photos</div>
+            <span class="badge badge-warning" style="margin-top: 4px;">Guest</span>
+          </a>
+
+          <a href="face-search.html" class="face-card" style="text-decoration: none; padding: 20px 14px;">
+            <img class="face-avatar" style="width: 64px; height: 64px;" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80" alt="Person 6" />
+            <div class="face-label" style="font-size: 0.875rem;">Ravi Mehta</div>
+            <div class="face-photo-count">56 photos</div>
+            <span class="badge badge-warning" style="margin-top: 4px;">Guest</span>
+          </a>
+
+          <a href="face-search.html" class="face-card" style="text-decoration: none; padding: 20px 14px;">
+            <img class="face-avatar" style="width: 64px; height: 64px;" src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=200&q=80" alt="Person 7" />
+            <div class="face-label" style="font-size: 0.875rem;">Meera Patel</div>
+            <div class="face-photo-count">49 photos</div>
+            <span class="badge badge-warning" style="margin-top: 4px;">Guest</span>
+          </a>
+
+          <a href="face-search.html" class="face-card" style="text-decoration: none; padding: 20px 14px;">
+            <img class="face-avatar" style="width: 64px; height: 64px;" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&q=80" alt="Person 8" />
+            <div class="face-label" style="font-size: 0.875rem;">Karan Trivedi</div>
+            <div class="face-photo-count">38 photos</div>
+            <span class="badge badge-warning" style="margin-top: 4px;">Guest</span>
+          </a>
+
+          <!-- Unknown face cards -->
+          <a href="face-search.html" class="face-card" style="text-decoration: none; padding: 20px 14px; border-style: dashed; opacity: 0.7;">
+            <div style="width:64px; height:64px; border-radius:50%; background: var(--bg-elevated); border: 2px dashed var(--border); display:flex; align-items:center; justify-content:center; font-size: 1.5rem; color: var(--text-tertiary);">
+              <i class="fa-solid fa-user-question"></i>
+            </div>
+            <div class="face-label" style="font-size: 0.875rem; color: var(--text-tertiary);">Unknown</div>
+            <div class="face-photo-count">23 photos</div>
+            <span class="badge badge-danger" style="margin-top: 4px;">Tag?</span>
+          </a>
+
+          <!-- Add more placeholder -->
+          <div class="face-card" style="border-style: dashed; min-height: 170px; justify-content: center; align-items: center;" onclick="showToast('Opening AI face scanner…')">
+            <i class="fa-solid fa-plus" style="font-size: 1.5rem; color: var(--text-tertiary);"></i>
+            <div class="face-photo-count" style="margin-top: 6px;">+39 more</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ────────── TAB: GUEST UPLOADS ────────── -->
+      <div id="tab-guest-uploads" class="tab-panel">
+        <div class="flex justify-between items-center" style="margin-bottom: 24px;">
+          <div>
+            <div class="page-title" style="font-size: 1.2rem;">Guest Uploads</div>
+            <div class="page-subtitle">38 photos uploaded by guests · Pending review</div>
+          </div>
+          <div class="flex gap-8">
+            <button class="btn btn-secondary btn-sm" onclick="showToast('Rejecting selected…')">
+              <i class="fa-solid fa-xmark"></i> Reject All
+            </button>
+            <button class="btn btn-primary btn-sm" onclick="showToast('Approving all guest uploads…')">
+              <i class="fa-solid fa-check"></i> Approve All
+            </button>
+          </div>
+        </div>
+        <div style="background: var(--warning-subtle); border: 1px solid rgba(245,158,11,0.3); border-radius: var(--radius-lg); padding: 16px 20px; display:flex; align-items:center; gap:12px; margin-bottom: 24px;">
+          <i class="fa-solid fa-triangle-exclamation" style="color: var(--warning);"></i>
+          <div>
+            <div style="font-size: 0.875rem; font-weight: 600; color: var(--text-primary);">38 photos awaiting review</div>
+            <div style="font-size: 0.8rem; color: var(--text-secondary);">Guest uploads are not visible to the couple until you approve them.</div>
+          </div>
+        </div>
+        <div class="masonry-grid">
+          <a href="photo-viewer.html" class="masonry-item" onclick="handlePhotoClick(event, this)">
+            <img src="https://images.unsplash.com/photo-1549417229-aa67d3263ad5?w=600&q=80" alt="Guest photo" loading="lazy" />
+            <div class="masonry-overlay">
+              <div class="photo-top-row">
+                <span style="font-size: 0.7rem; background: rgba(245,158,11,0.2); border: 1px solid rgba(245,158,11,0.4); border-radius: 99px; padding: 2px 8px; color: var(--warning);">Pending</span>
+                <div class="photo-top-actions">
+                  <div class="photo-micro-btn" onclick="event.stopPropagation(); showToast('Photo approved!')" data-tooltip="Approve"><i class="fa-solid fa-check" style="color: var(--success);"></i></div>
+                  <div class="photo-micro-btn" onclick="event.stopPropagation(); showToast('Photo rejected!')" data-tooltip="Reject"><i class="fa-solid fa-xmark" style="color: var(--danger);"></i></div>
+                </div>
+              </div>
+            </div>
+          </a>
+          <a href="photo-viewer.html" class="masonry-item" onclick="handlePhotoClick(event, this)">
+            <img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=600&q=80" alt="Guest photo" loading="lazy" />
+            <div class="masonry-overlay">
+              <div class="photo-top-row">
+                <span style="font-size: 0.7rem; background: rgba(245,158,11,0.2); border: 1px solid rgba(245,158,11,0.4); border-radius: 99px; padding: 2px 8px; color: var(--warning);">Pending</span>
+                <div class="photo-top-actions">
+                  <div class="photo-micro-btn" onclick="event.stopPropagation(); showToast('Photo approved!')" data-tooltip="Approve"><i class="fa-solid fa-check" style="color: var(--success);"></i></div>
+                  <div class="photo-micro-btn" onclick="event.stopPropagation(); showToast('Photo rejected!')" data-tooltip="Reject"><i class="fa-solid fa-xmark" style="color: var(--danger);"></i></div>
+                </div>
+              </div>
+            </div>
+          </a>
+          <a href="photo-viewer.html" class="masonry-item" onclick="handlePhotoClick(event, this)">
+            <img src="https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=600&q=80" alt="Guest photo" loading="lazy" />
+            <div class="masonry-overlay">
+              <div class="photo-top-row">
+                <span style="font-size: 0.7rem; background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.3); border-radius: 99px; padding: 2px 8px; color: var(--success);">Approved</span>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <!-- ────────── TAB: TRASH ────────── -->
+      <div id="tab-trash" class="tab-panel">
+        <div class="flex justify-between items-center" style="margin-bottom: 24px;">
+          <div>
+            <div class="page-title" style="font-size: 1.2rem;">Trash</div>
+            <div class="page-subtitle">12 photos · Auto-deletes in 30 days</div>
+          </div>
+          <button class="btn btn-danger btn-sm" onclick="showToast('Permanently deleting 12 photos…')">
+            <i class="fa-solid fa-trash-can"></i> Empty Trash
+          </button>
+        </div>
+        <div style="background: var(--danger-subtle); border: 1px solid rgba(239,68,68,0.25); border-radius: var(--radius-lg); padding: 14px 20px; display:flex; align-items:center; gap:12px; margin-bottom: 24px;">
+          <i class="fa-solid fa-clock" style="color: var(--danger);"></i>
+          <div style="font-size: 0.875rem; color: var(--text-secondary);">Photos in trash will be permanently deleted in <strong style="color: var(--danger);">30 days</strong></div>
+        </div>
+        <div class="masonry-grid">
+          <div class="masonry-item" style="opacity: 0.6; filter: grayscale(0.5);">
+            <img src="https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=600&q=80" alt="Deleted" loading="lazy" />
+            <div class="masonry-overlay" style="opacity: 1; background: rgba(0,0,0,0.5);">
+              <div class="photo-top-row">
+                <span style="font-size: 0.7rem; background: var(--danger-subtle); border: 1px solid rgba(239,68,68,0.3); border-radius: 99px; padding: 2px 8px; color: var(--danger);">Trashed</span>
+                <div class="photo-top-actions">
+                  <div class="photo-micro-btn" onclick="showToast('Photo restored!')" data-tooltip="Restore"><i class="fa-solid fa-rotate-left"></i></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="masonry-item" style="opacity: 0.6; filter: grayscale(0.5);">
+            <img src="https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?w=600&q=80" alt="Deleted" loading="lazy" />
+            <div class="masonry-overlay" style="opacity: 1; background: rgba(0,0,0,0.5);">
+              <div class="photo-top-row">
+                <span style="font-size: 0.7rem; background: var(--danger-subtle); border: 1px solid rgba(239,68,68,0.3); border-radius: 99px; padding: 2px 8px; color: var(--danger);">Trashed</span>
+                <div class="photo-top-actions">
+                  <div class="photo-micro-btn" onclick="showToast('Photo restored!')" data-tooltip="Restore"><i class="fa-solid fa-rotate-left"></i></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end .page-content -->
+
+  </main>
+</div><!-- end .dashboard-layout -->
+
+
+<!-- ══════════ BULK ACTION BAR ══════════ -->
+<div class="bulk-bar" id="bulkBar">
+  <div class="bulk-count"><span id="selectedCount">0</span> selected</div>
+  <button class="bulk-action" onclick="showToast('Downloading selected photos…')">
+    <i class="fa-solid fa-arrow-down"></i> Download
+  </button>
+  <button class="bulk-action" onclick="showToast('Move to folder…')">
+    <i class="fa-solid fa-folder-open"></i> Move
+  </button>
+  <button class="bulk-action" onclick="showToast('Adding to favorites…')">
+    <i class="fa-solid fa-heart"></i> Favorite
+  </button>
+  <button class="bulk-action danger" onclick="showToast('Moving to trash…')">
+    <i class="fa-solid fa-trash"></i> Delete
+  </button>
+  <div class="bulk-close" onclick="clearSelection()"><i class="fa-solid fa-xmark"></i></div>
+</div>
+
+
+<!-- ══════════ FAB UPLOAD BUTTON ══════════ -->
+<div class="fab-upload" onclick="showToast('📁 Select photos to upload…')" data-tooltip="Upload Photos">
+  <i class="fa-solid fa-plus"></i>
+</div>
+<div class="fab-tooltip">Upload Photos</div>
+
+
+<!-- ══════════ SHARE MODAL ══════════ -->
+<div class="modal-backdrop" id="shareModal" onclick="closeModalOnBackdrop(event, 'shareModal')">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="shareModalTitle">
+    <div class="modal-header">
+      <div class="modal-title" id="shareModalTitle">
+        <i class="fa-solid fa-share-nodes"></i>
+        Share Gallery
+      </div>
+      <div class="modal-close" onclick="closeModal('shareModal')"><i class="fa-solid fa-xmark"></i></div>
+    </div>
+
+    <div class="modal-body">
+      <!-- Share Link -->
+      <div class="form-group">
+        <label class="form-label">Gallery Link</label>
+        <div class="share-link-row">
+          <input class="share-link-input" type="text" value="https://fastpic.ai/g/sharma-wedding-2025" readonly id="shareLink" />
+          <button class="btn btn-secondary btn-sm" onclick="copyShareLink()">
+            <i class="fa-solid fa-copy"></i> Copy
+          </button>
+        </div>
+      </div>
+
+      <!-- Access Type -->
+      <div class="form-group">
+        <label class="form-label">Access Control</label>
+        <div class="access-options">
+          <div class="access-option" onclick="selectAccess('public', this)">
+            <i class="fa-solid fa-globe"></i>
+            <span>Public</span>
+          </div>
+          <div class="access-option selected" onclick="selectAccess('pin', this)">
+            <i class="fa-solid fa-key"></i>
+            <span>PIN Protected</span>
+          </div>
+          <div class="access-option" onclick="selectAccess('face', this)">
+            <i class="fa-solid fa-face-id"></i>
+            <span>Face ID</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- PIN Input -->
+      <div class="form-group" id="pinInputGroup">
+        <label class="form-label">Access PIN</label>
+        <input type="password" class="form-input" placeholder="Enter 4-6 digit PIN" maxlength="6" value="2511" />
+      </div>
+
+      <!-- QR Code -->
+      <div class="flex gap-16 items-center">
+        <div class="qr-placeholder">
+          <i class="fa-solid fa-qrcode"></i>
+          <span>QR Code</span>
+        </div>
+        <div style="flex: 1;">
+          <div style="font-size: 0.875rem; font-weight: 600; color: var(--text-primary); margin-bottom: 6px;">QR Code Access</div>
+          <div style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 12px;">Guests can scan to access the gallery instantly on their phones.</div>
+          <button class="btn btn-secondary btn-sm" onclick="showToast('Downloading QR code…')">
+            <i class="fa-solid fa-arrow-down"></i> Download QR
+          </button>
+        </div>
+      </div>
+
+      <!-- Toggles -->
+      <div class="share-toggles">
+        <div class="share-toggle-row">
+          <div class="share-toggle-info">
+            <div class="share-toggle-label">Enable Watermarks</div>
+            <div class="share-toggle-sub">Add FastPic.AI watermark to shared photos</div>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" checked />
+            <div class="toggle-track"></div>
+          </label>
+        </div>
+        <div class="share-toggle-row">
+          <div class="share-toggle-info">
+            <div class="share-toggle-label">Allow Downloads</div>
+            <div class="share-toggle-sub">Guests can download full-resolution photos</div>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" />
+            <div class="toggle-track"></div>
+          </label>
+        </div>
+        <div class="share-toggle-row">
+          <div class="share-toggle-info">
+            <div class="share-toggle-label">Guest Uploads</div>
+            <div class="share-toggle-sub">Guests can contribute their own photos</div>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" checked />
+            <div class="toggle-track"></div>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('shareModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="showToast('Gallery link updated & copied!'); closeModal('shareModal')">
+        <i class="fa-solid fa-check"></i> Save & Share
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════ EVENT SETTINGS MODAL ══════════ -->
+<div class="modal-backdrop" id="settingsModal" onclick="closeModalOnBackdrop(event, 'settingsModal')">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="settingsModalTitle">
+    <div class="modal-header">
+      <div class="modal-title" id="settingsModalTitle">
+        <i class="fa-solid fa-gear"></i>
+        Event Settings
+      </div>
+      <div class="modal-close" onclick="closeModal('settingsModal')"><i class="fa-solid fa-xmark"></i></div>
+    </div>
+
+    <div class="modal-body">
+      <!-- Event Details -->
+      <div class="form-group">
+        <label class="form-label">Event Name</label>
+        <input type="text" class="form-input" value="Sharma Wedding Ceremony" />
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+        <div class="form-group">
+          <label class="form-label">Event Date</label>
+          <input type="date" class="form-input" value="2025-11-18" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Location</label>
+          <input type="text" class="form-input" value="The Grand Rajmahal, Jaipur" />
+        </div>
+      </div>
+
+      <!-- Tags -->
+      <div class="form-group">
+        <label class="form-label">Tags</label>
+        <input type="text" class="form-input" value="wedding, ceremony, jaipur, rajasthan" placeholder="Comma separated tags" />
+      </div>
+
+      <!-- Privacy -->
+      <div class="form-group">
+        <label class="form-label">Privacy Settings</label>
+        <div class="privacy-grid">
+          <div class="privacy-option selected" onclick="selectPrivacy(this)">
+            <i class="fa-solid fa-lock"></i>
+            <div class="privacy-option-label">Private</div>
+            <div class="privacy-option-sub">Only you can see</div>
+          </div>
+          <div class="privacy-option" onclick="selectPrivacy(this)">
+            <i class="fa-solid fa-key"></i>
+            <div class="privacy-option-label">PIN Protected</div>
+            <div class="privacy-option-sub">PIN required</div>
+          </div>
+          <div class="privacy-option" onclick="selectPrivacy(this)">
+            <i class="fa-solid fa-users"></i>
+            <div class="privacy-option-label">Clients Only</div>
+            <div class="privacy-option-sub">Shared with clients</div>
+          </div>
+          <div class="privacy-option" onclick="selectPrivacy(this)">
+            <i class="fa-solid fa-globe"></i>
+            <div class="privacy-option-label">Public</div>
+            <div class="privacy-option-sub">Anyone with link</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Client Notification -->
+      <div class="share-toggle-row">
+        <div class="share-toggle-info">
+          <div class="share-toggle-label">Notify client on delivery</div>
+          <div class="share-toggle-sub">Send email when gallery is ready</div>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" checked />
+          <div class="toggle-track"></div>
+        </label>
+      </div>
+
+      <!-- Danger Zone -->
+      <div class="danger-zone">
+        <div class="danger-zone-title"><i class="fa-solid fa-triangle-exclamation"></i> Danger Zone</div>
+        <div style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 14px;">
+          Permanently deleting this event will remove all photos, folders, and AI face data. This action cannot be undone.
+        </div>
+        <button class="btn btn-danger btn-sm" onclick="showToast('⚠️ Type event name to confirm deletion')">
+          <i class="fa-solid fa-trash-can"></i> Delete This Event
+        </button>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('settingsModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="showToast('Event settings saved!'); closeModal('settingsModal')">
+        <i class="fa-solid fa-floppy-disk"></i> Save Changes
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════ TOAST NOTIFICATION ══════════ -->
+<div class="toast" id="toast">
+  <i class="fa-solid fa-check-circle"></i>
+  <span id="toastMsg">Action completed</span>
+</div>
+
+
+<!-- ══════════ JAVASCRIPT ══════════ -->
+<script>
+  /* ── TAB SWITCHING ── */
+  function switchTab(tabId, el) {
+    // Deactivate all tabs
+    document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    // Activate selected
+    const tab = document.querySelector(`[data-tab="${tabId}"]`);
+    if (tab) tab.classList.add('active');
+    const panel = document.getElementById(`tab-${tabId}`);
+    if (panel) panel.classList.add('active');
+    // Clear selection when switching tabs
+    clearSelection();
+  }
+
+  /* ── MULTI-SELECT ── */
+  const selectedItems = new Set();
+
+  function toggleSelect(event, item) {
+    event.preventDefault();
+    event.stopPropagation();
+    const id = item.dataset.id;
+    if (selectedItems.has(id)) {
+      selectedItems.delete(id);
+      item.classList.remove('selected');
+    } else {
+      selectedItems.add(id);
+      item.classList.add('selected');
+    }
+    updateBulkBar();
+  }
+
+  function updateBulkBar() {
+    const bar = document.getElementById('bulkBar');
+    const count = document.getElementById('selectedCount');
+    count.textContent = selectedItems.size;
+    if (selectedItems.size > 0) {
+      bar.classList.add('visible');
+    } else {
+      bar.classList.remove('visible');
+    }
+  }
+
+  function clearSelection() {
+    selectedItems.clear();
+    document.querySelectorAll('.masonry-item.selected').forEach(item => {
+      item.classList.remove('selected');
+    });
+    updateBulkBar();
+  }
+
+  let allSelected = false;
+  function toggleSelectAll() {
+    const items = document.querySelectorAll('#tab-all-photos .masonry-item');
+    const btn = document.getElementById('selectAllBtn');
+    allSelected = !allSelected;
+    if (allSelected) {
+      items.forEach(item => {
+        item.classList.add('selected');
+        selectedItems.add(item.dataset.id);
+      });
+      btn.innerHTML = '<i class="fa-solid fa-square-minus"></i> Deselect All';
+    } else {
+      clearSelection();
+      btn.innerHTML = '<i class="fa-solid fa-square-check"></i> Select All';
+    }
+    updateBulkBar();
+  }
+
+  /* ── PHOTO CLICK HANDLER ── */
+  function handlePhotoClick(event, item) {
+    // If in select mode (any selection active), toggle select instead of navigating
+    if (selectedItems.size > 0) {
+      event.preventDefault();
+      toggleSelect(event, item);
+    }
+  }
+
+  /* ── LIKE / HEART TOGGLE ── */
+  function toggleLike(event, btn) {
+    event.preventDefault();
+    event.stopPropagation();
+    const isSolid = btn.querySelector('i').classList.contains('fa-solid');
+    if (isSolid) {
+      btn.querySelector('i').className = 'fa-regular fa-heart';
+      btn.classList.remove('liked');
+    } else {
+      btn.querySelector('i').className = 'fa-solid fa-heart';
+      btn.classList.add('liked');
+    }
+  }
+
+  /* ── DOWNLOAD PHOTO ── */
+  function downloadPhoto(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    showToast('Preparing high-res download…');
+  }
+
+  /* ── FACE FILTER ── */
+  function filterByFace(person, el) {
+    // Deactivate all
+    document.querySelectorAll('.faces-strip .face-card, .faces-strip .face-all-card').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+    if (person === 'all') {
+      showToast('Showing all photos');
+    } else {
+      showToast(`Filtering by ${el.querySelector('.face-label')?.textContent || 'person'}…`);
+    }
+  }
+
+  /* ── MODAL SYSTEM ── */
+  function openModal(id) {
+    const backdrop = document.getElementById(id);
+    backdrop.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal(id) {
+    const backdrop = document.getElementById(id);
+    backdrop.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  function closeModalOnBackdrop(event, id) {
+    if (event.target === event.currentTarget) closeModal(id);
+  }
+  // ESC key
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.modal-backdrop.open').forEach(m => {
+        m.classList.remove('open');
+        document.body.style.overflow = '';
+      });
+    }
+  });
+
+  /* ── SHARE MODAL: Access type ── */
+  function selectAccess(type, el) {
+    document.querySelectorAll('.access-option').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+    const pinGroup = document.getElementById('pinInputGroup');
+    if (type === 'pin') {
+      pinGroup.style.display = 'flex';
+    } else {
+      pinGroup.style.display = 'none';
+    }
+  }
+
+  /* ── SETTINGS MODAL: Privacy ── */
+  function selectPrivacy(el) {
+    document.querySelectorAll('.privacy-option').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+
+  /* ── COPY SHARE LINK ── */
+  function copyShareLink() {
+    const link = document.getElementById('shareLink').value;
+    navigator.clipboard.writeText(link).then(() => showToast('Link copied to clipboard!'));
+  }
+
+  /* ── TOAST ── */
+  let toastTimer;
+  function showToast(msg) {
+    const toast = document.getElementById('toast');
+    const toastMsg = document.getElementById('toastMsg');
+    toastMsg.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 3200);
+  }
+
+  /* ── KEYBOARD SHORTCUT: / for search ── */
+  document.addEventListener('keydown', e => {
+    if (e.key === '/' && document.activeElement.tagName !== 'INPUT') {
+      e.preventDefault();
+      document.querySelector('.topbar-search-scoped input').focus();
+    }
+  });
+
+  /* ── VIEW TOGGLE BUTTONS ── */
+  document.querySelectorAll('.view-toggle').forEach(toggle => {
+    toggle.querySelectorAll('.view-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        toggle.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+  });
+</script>
+
+</body>
+</html>

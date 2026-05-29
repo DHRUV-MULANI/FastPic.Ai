@@ -1,0 +1,1390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Face Intelligence — FastPic.AI</title>
+  <link rel="stylesheet" href="design-system.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <style>
+    /* ═══════════════════════════════════════════════════════
+       FACE SEARCH — PAGE-SPECIFIC STYLES
+       ═══════════════════════════════════════════════════════ */
+
+    /* ── Stat card colour variants ───────────────────────── */
+    .stat-card.cyan::before   { background: var(--accent); }
+    .stat-card.cyan .stat-icon { background: var(--accent-subtle); color: var(--accent); }
+    .stat-card.indigo::before  { background: var(--primary); }
+    .stat-card.indigo .stat-icon { background: var(--primary-subtle); color: var(--primary-light); }
+    .stat-card.success::before { background: var(--success); }
+    .stat-card.success .stat-icon { background: var(--success-subtle); color: var(--success); }
+    .stat-card.warning::before { background: var(--warning); }
+    .stat-card.warning .stat-icon { background: var(--warning-subtle); color: var(--warning); }
+
+    /* ── Notification bell ───────────────────────────────── */
+    .notif-btn {
+      position: relative; width: 38px; height: 38px;
+      border-radius: var(--radius); background: var(--bg-glass);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-secondary); font-size: 1rem; cursor: pointer;
+      transition: var(--transition);
+    }
+    .notif-btn:hover { background: var(--bg-glass-hover); color: var(--text-primary); }
+    .notif-badge {
+      position: absolute; top: -4px; right: -4px;
+      background: var(--danger); color: white;
+      font-size: 0.6rem; font-weight: 700;
+      width: 16px; height: 16px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      border: 2px solid var(--bg-base);
+    }
+
+    /* ── Topbar user pill ────────────────────────────────── */
+    .topbar-user {
+      display: flex; align-items: center; gap: 8px;
+      padding: 4px 10px 4px 4px;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--border); background: var(--bg-glass);
+      cursor: pointer; transition: var(--transition);
+    }
+    .topbar-user:hover { background: var(--bg-glass-hover); border-color: var(--border-strong); }
+    .topbar-user-name { font-size: 0.8rem; font-weight: 500; color: var(--text-secondary); }
+
+    /* ── Sidebar user / storage (same as dashboard) ──────── */
+    .sidebar-user-block { padding: 12px 16px 16px; border-bottom: 1px solid var(--border); }
+    .sidebar-user-inner {
+      display: flex; align-items: center; gap: 10px; padding: 8px;
+      border-radius: var(--radius); transition: var(--transition); cursor: pointer;
+    }
+    .sidebar-user-inner:hover { background: var(--bg-glass-hover); }
+    .sidebar-user-name { font-size: 0.85rem; font-weight: 600; color: var(--text-primary); line-height: 1.2; }
+    .sidebar-user-sub { font-size: 0.7rem; color: var(--text-tertiary); }
+    .storage-block { padding: 14px 16px; }
+    .storage-label {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 8px;
+    }
+    .storage-label span { color: var(--warning); font-weight: 600; }
+
+    /* ── Section utility ─────────────────────────────────── */
+    .section-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .section-title {
+      font-family: var(--font-display); font-size: 1rem;
+      font-weight: 700; color: var(--text-primary);
+    }
+    .card-header {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 18px;
+    }
+    .card-header-icon {
+      width: 34px; height: 34px; border-radius: var(--radius);
+      display: flex; align-items: center; justify-content: center; font-size: 0.9rem;
+    }
+    .card-header-title { font-family: var(--font-display); font-size: 0.95rem; font-weight: 700; color: var(--text-primary); }
+    .card-header-sub { font-size: 0.72rem; color: var(--text-tertiary); margin-top: 1px; }
+
+    /* ── AI STATUS BAR ───────────────────────────────────── */
+    .ai-status-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+    }
+    .ai-stat-col {
+      padding: 4px 24px 4px 0;
+      border-right: 1px solid var(--border);
+    }
+    .ai-stat-col:last-child { border-right: none; padding-left: 24px; padding-right: 0; }
+    .ai-stat-col:first-child { padding-left: 0; }
+    .ai-stat-col + .ai-stat-col { padding-left: 24px; }
+    .ai-stat-value {
+      font-family: var(--font-display);
+      font-size: 1.6rem; font-weight: 800;
+      color: var(--text-primary);
+    }
+    .ai-stat-value.cyan   { color: var(--accent); }
+    .ai-stat-value.indigo { color: var(--primary-light); }
+    .ai-stat-value.green  { color: var(--success); }
+    .ai-stat-value.warn   { color: var(--warning); }
+    .ai-stat-label {
+      font-size: 0.75rem; color: var(--text-secondary); margin-top: 2px;
+    }
+
+    /* ── Processing queue bar ────────────────────────────── */
+    .queue-row {
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      display: flex; align-items: center; gap: 16px;
+    }
+    .queue-label {
+      font-size: 0.8rem; color: var(--text-secondary); white-space: nowrap;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .queue-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--success-subtle); color: var(--success);
+      border: 1px solid rgba(16,185,129,0.25);
+      border-radius: var(--radius-full); padding: 3px 12px;
+      font-size: 0.75rem; font-weight: 600;
+    }
+    .queue-bar-wrap {
+      flex: 1; background: var(--bg-elevated);
+      border-radius: var(--radius-full); height: 6px; overflow: hidden;
+    }
+    .queue-bar-fill {
+      height: 100%; width: 0%;
+      background: linear-gradient(90deg, var(--success), var(--accent));
+      border-radius: var(--radius-full);
+    }
+
+    /* ── UPLOAD ZONE ─────────────────────────────────────── */
+    .upload-zone {
+      border: 2px dashed var(--border);
+      border-radius: var(--radius-xl);
+      padding: 48px 32px;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+      background: var(--bg-glass);
+    }
+    .upload-zone::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 60% 50% at 50% 100%, rgba(99,102,241,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .upload-zone:hover, .upload-zone.drag-over {
+      border-color: var(--primary);
+      background: rgba(99,102,241,0.05);
+      box-shadow: 0 0 0 1px var(--border-primary), inset 0 0 40px rgba(99,102,241,0.04);
+    }
+    .upload-zone.drag-over {
+      border-color: var(--accent);
+      background: rgba(34,211,238,0.05);
+      box-shadow: 0 0 0 2px rgba(34,211,238,0.3), inset 0 0 60px rgba(34,211,238,0.06);
+    }
+    .upload-icon-ring {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      background: var(--primary-subtle);
+      border: 2px solid var(--border-primary);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 2rem; color: var(--primary-light);
+      transition: var(--transition);
+      box-shadow: 0 0 24px var(--primary-glow);
+    }
+    .upload-zone:hover .upload-icon-ring,
+    .upload-zone.drag-over .upload-icon-ring {
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 0 40px var(--primary-glow);
+      transform: scale(1.08);
+    }
+    .upload-title {
+      font-family: var(--font-display); font-size: 1.05rem; font-weight: 700;
+      color: var(--text-primary); margin-bottom: 6px;
+    }
+    .upload-sub {
+      font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 4px;
+    }
+    .upload-formats {
+      font-size: 0.75rem; color: var(--text-tertiary);
+    }
+    .upload-actions {
+      display: flex; align-items: center; gap: 12px; margin-top: 24px; justify-content: center;
+    }
+    .upload-select {
+      background: var(--bg-glass); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 9px 14px;
+      font-family: var(--font-body); font-size: 0.85rem;
+      color: var(--text-secondary); cursor: pointer; outline: none;
+      transition: var(--transition); min-width: 180px;
+    }
+    .upload-select:hover { border-color: var(--border-strong); color: var(--text-primary); }
+    .upload-select:focus { border-color: var(--primary); }
+
+    /* ── FACE CARDS GRID ─────────────────────────────────── */
+    .face-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 16px;
+    }
+    .face-card {
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 16px 12px 14px;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+    .face-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      opacity: 0;
+      transition: var(--transition);
+    }
+    .face-card:hover {
+      border-color: var(--border-primary);
+      background: var(--bg-glass-hover);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-lg);
+    }
+    .face-card:hover::before { opacity: 1; }
+    .face-card.active {
+      border-color: var(--primary);
+      background: var(--primary-subtle);
+      box-shadow: 0 0 0 1px var(--border-primary), var(--shadow-glow);
+    }
+    .face-card.active::before { opacity: 1; }
+
+    /* Unknown / grayed faces */
+    .face-card.unknown {
+      border-style: dashed;
+      opacity: 0.7;
+    }
+    .face-card.unknown:hover { opacity: 1; }
+
+    .face-avatar-wrap {
+      position: relative;
+      width: 64px; height: 64px;
+      margin: 0 auto 10px;
+    }
+    .face-avatar {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--border);
+      transition: var(--transition);
+    }
+    .face-card:hover .face-avatar { border-color: var(--primary); }
+    .face-card.active .face-avatar { border-color: var(--primary-light); }
+
+    .face-avatar-initials {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      background: var(--bg-elevated);
+      border: 2px dashed var(--border-strong);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display); font-weight: 700;
+      font-size: 0.9rem; color: var(--text-tertiary);
+    }
+    .face-verified-badge {
+      position: absolute; bottom: 0; right: 0;
+      width: 18px; height: 18px;
+      background: var(--success); border-radius: 50%;
+      border: 2px solid var(--bg-card);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.5rem; color: white;
+    }
+    .face-name {
+      font-family: var(--font-display);
+      font-size: 0.78rem; font-weight: 700;
+      color: var(--text-primary);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      margin-bottom: 3px;
+    }
+    .face-meta {
+      font-size: 0.68rem; color: var(--text-tertiary); line-height: 1.5;
+    }
+    .face-photo-count {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 0.7rem; font-weight: 600;
+      color: var(--primary-light);
+      background: var(--primary-subtle);
+      border-radius: var(--radius-full);
+      padding: 2px 8px; margin-top: 6px;
+    }
+    .face-labeled-badge {
+      position: absolute; top: 8px; right: 8px;
+      font-size: 0.55rem; padding: 2px 6px;
+    }
+
+    /* ── FILTER ROW ──────────────────────────────────────── */
+    .filter-row {
+      display: flex; align-items: center; gap: 12px; margin-bottom: 20px;
+    }
+    .filter-input-wrap {
+      flex: 1; position: relative;
+    }
+    .filter-input-wrap i {
+      position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+      color: var(--text-tertiary); font-size: 0.85rem;
+    }
+    .filter-input {
+      width: 100%;
+      background: var(--bg-glass); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 9px 14px 9px 36px;
+      font-family: var(--font-body); font-size: 0.875rem;
+      color: var(--text-primary); outline: none; transition: var(--transition);
+    }
+    .filter-input::placeholder { color: var(--text-tertiary); }
+    .filter-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-subtle); }
+    .filter-select {
+      background: var(--bg-glass); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 9px 14px;
+      font-family: var(--font-body); font-size: 0.85rem;
+      color: var(--text-secondary); cursor: pointer; outline: none;
+      transition: var(--transition);
+    }
+    .filter-select:hover { border-color: var(--border-strong); }
+
+    /* ── SIDE PANEL ──────────────────────────────────────── */
+    .side-panel-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(4px); z-index: 200;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .side-panel-overlay.open { opacity: 1; pointer-events: all; }
+
+    .side-panel {
+      position: fixed; top: 0; right: 0;
+      width: 360px; height: 100vh;
+      background: var(--bg-surface);
+      border-left: 1px solid var(--border);
+      z-index: 201;
+      transform: translateX(100%);
+      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex; flex-direction: column;
+      overflow: hidden;
+    }
+    .side-panel.open { transform: translateX(0); }
+
+    .side-panel-header {
+      padding: 20px 20px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .side-panel-close {
+      width: 32px; height: 32px; border-radius: var(--radius);
+      background: var(--bg-glass); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-secondary); cursor: pointer; transition: var(--transition);
+    }
+    .side-panel-close:hover { background: var(--bg-glass-hover); color: var(--text-primary); }
+
+    .side-panel-body {
+      flex: 1; overflow-y: auto; padding: 24px 20px;
+    }
+    .side-panel-body::-webkit-scrollbar { width: 4px; }
+    .side-panel-body::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 4px; }
+
+    /* Identity hero */
+    .identity-hero { text-align: center; margin-bottom: 24px; }
+    .identity-avatar-wrap { position: relative; display: inline-block; margin-bottom: 14px; }
+    .identity-avatar {
+      width: 120px; height: 120px; border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--primary);
+      box-shadow: 0 0 0 4px var(--primary-subtle), 0 0 32px var(--primary-glow);
+    }
+    .identity-avatar-ring {
+      position: absolute; inset: -6px;
+      border-radius: 50%;
+      border: 2px dashed var(--primary-light);
+      animation: spin-slow 8s linear infinite;
+    }
+    @keyframes spin-slow {
+      to { transform: rotate(360deg); }
+    }
+    .identity-name-row {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      margin-bottom: 4px;
+    }
+    .identity-name {
+      font-family: var(--font-display); font-size: 1.1rem; font-weight: 700;
+      color: var(--text-primary);
+    }
+    .identity-edit {
+      width: 26px; height: 26px; border-radius: 6px;
+      background: var(--bg-glass); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-tertiary); cursor: pointer; font-size: 0.75rem;
+      transition: var(--transition);
+    }
+    .identity-edit:hover { background: var(--primary-subtle); color: var(--primary-light); border-color: var(--border-primary); }
+    .identity-stats {
+      font-size: 0.8rem; color: var(--text-secondary);
+    }
+
+    /* Event list in panel */
+    .panel-event-list { margin-top: 16px; display: flex; flex-direction: column; gap: 8px; }
+    .panel-event-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 12px;
+      background: var(--bg-glass); border: 1px solid var(--border);
+      border-radius: var(--radius); font-size: 0.8rem;
+      transition: var(--transition);
+    }
+    .panel-event-item:hover { border-color: var(--border-strong); background: var(--bg-glass-hover); }
+    .panel-event-name { color: var(--text-primary); font-weight: 500; }
+    .panel-event-count { color: var(--text-tertiary); font-size: 0.72rem; }
+
+    /* Thumbnail grid in panel */
+    .panel-photo-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px;
+      margin-top: 16px; border-radius: var(--radius); overflow: hidden;
+    }
+    .panel-thumb {
+      aspect-ratio: 1; overflow: hidden; cursor: pointer; position: relative;
+    }
+    .panel-thumb img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+    .panel-thumb:hover img { transform: scale(1.08); }
+    .panel-thumb-overlay {
+      position: absolute; inset: 0;
+      background: rgba(0,0,0,0); transition: var(--transition);
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-size: 1.1rem;
+    }
+    .panel-thumb:hover .panel-thumb-overlay { background: rgba(99,102,241,0.4); }
+
+    /* Panel action buttons */
+    .panel-actions {
+      display: flex; flex-direction: column; gap: 8px; margin-top: 20px;
+    }
+    .panel-action-btn {
+      display: flex; align-items: center; gap: 10px;
+      padding: 11px 14px; border-radius: var(--radius);
+      font-size: 0.82rem; font-weight: 500;
+      cursor: pointer; transition: var(--transition); width: 100%;
+      border: 1px solid var(--border); background: var(--bg-glass);
+      color: var(--text-secondary);
+    }
+    .panel-action-btn:hover { background: var(--bg-glass-hover); color: var(--text-primary); border-color: var(--border-strong); }
+    .panel-action-btn.danger { color: var(--danger); }
+    .panel-action-btn.danger:hover { background: var(--danger-subtle); border-color: rgba(239,68,68,0.3); }
+    .panel-action-icon {
+      width: 30px; height: 30px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center; font-size: 0.85rem;
+      background: var(--bg-elevated); flex-shrink: 0;
+    }
+    .panel-action-btn:hover .panel-action-icon { background: var(--primary-subtle); color: var(--primary-light); }
+    .panel-action-btn.danger:hover .panel-action-icon { background: var(--danger-subtle); color: var(--danger); }
+
+    .panel-divider { height: 1px; background: var(--border); margin: 16px 0; }
+    .panel-section-label {
+      font-size: 0.68rem; font-weight: 600;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--text-tertiary); margin-bottom: 10px;
+    }
+
+    /* ── AI PIPELINE ─────────────────────────────────────── */
+    .pipeline-track {
+      display: flex; align-items: flex-start;
+      gap: 0; margin: 20px 0 8px; position: relative;
+    }
+    .pipeline-step {
+      display: flex; flex-direction: column;
+      align-items: center; gap: 6px; flex: 1; position: relative;
+    }
+    .pipeline-step::after {
+      content: ''; position: absolute; top: 16px; left: 50%;
+      width: 100%; height: 2px; background: var(--border); z-index: 0;
+    }
+    .pipeline-step:last-child::after { display: none; }
+    .pipeline-dot {
+      width: 32px; height: 32px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem; position: relative; z-index: 1; transition: var(--transition);
+    }
+    .pipeline-dot.done {
+      background: var(--success-subtle); color: var(--success);
+      border: 2px solid var(--success); box-shadow: 0 0 10px rgba(16,185,129,0.3);
+    }
+    .pipeline-dot.active {
+      background: var(--primary-subtle); color: var(--primary-light);
+      border: 2px solid var(--primary); box-shadow: 0 0 10px var(--primary-glow);
+      animation: pulse-glow 1.6s ease-in-out infinite;
+    }
+    .pipeline-dot.pending {
+      background: var(--bg-elevated); color: var(--text-tertiary);
+      border: 2px solid var(--border);
+    }
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 8px var(--primary-glow); }
+      50%       { box-shadow: 0 0 20px var(--primary-glow), 0 0 40px var(--primary-glow); }
+    }
+    .pipeline-label {
+      font-size: 0.65rem; color: var(--text-tertiary);
+      font-weight: 500; text-align: center; white-space: nowrap;
+    }
+    .pipeline-step.active .pipeline-label { color: var(--primary-light); font-weight: 600; }
+    .pipeline-step.done .pipeline-label   { color: var(--success); }
+
+    .pipeline-connector {
+      flex: 1; height: 2px; background: var(--border);
+      position: relative; top: -18px; margin: 0 -2px; z-index: 0;
+    }
+    .pipeline-connector.done   { background: var(--success); }
+    .pipeline-connector.active { background: linear-gradient(90deg, var(--success), var(--primary)); }
+
+    .pipeline-stats-row {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px;
+    }
+    .pipeline-stat {
+      background: var(--bg-glass); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 12px; text-align: center;
+    }
+    .pipeline-stat .val {
+      font-family: var(--font-display); font-size: 1.2rem; font-weight: 700;
+      color: var(--text-primary);
+    }
+    .pipeline-stat .val.green { color: var(--success); }
+    .pipeline-stat .lbl { font-size: 0.7rem; color: var(--text-tertiary); margin-top: 2px; }
+
+    /* ── STATUS BADGE ────────────────────────────────────── */
+    .processing-status {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--success-subtle); border: 1px solid rgba(16,185,129,0.25);
+      border-radius: var(--radius-full); padding: 6px 14px;
+      font-size: 0.8rem; font-weight: 600; color: var(--success);
+    }
+    .status-pulse {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--success); box-shadow: 0 0 6px var(--success);
+      animation: pulse-green 2s ease-in-out infinite;
+    }
+    @keyframes pulse-green {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(0.85); }
+    }
+
+    /* ── PAGE TITLE AREA ─────────────────────────────────── */
+    .page-title-main {
+      font-family: var(--font-display); font-size: 1.6rem; font-weight: 800;
+      color: var(--text-primary); line-height: 1.2;
+    }
+    .page-subtitle-main {
+      font-size: 0.85rem; color: var(--text-secondary); margin-top: 5px; max-width: 520px;
+    }
+
+    /* ── SCROLLBAR ───────────────────────────────────────── */
+    .dashboard-main::-webkit-scrollbar { width: 6px; }
+    .dashboard-main::-webkit-scrollbar-track { background: transparent; }
+    .dashboard-main::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 6px; }
+
+    /* ── COUNT BADGE ─────────────────────────────────────── */
+    .count-badge {
+      display: inline-flex; align-items: center;
+      background: var(--primary-subtle); color: var(--primary-light);
+      border-radius: var(--radius-full); padding: 2px 10px;
+      font-size: 0.75rem; font-weight: 700; margin-left: 10px;
+    }
+
+    /* ── LOAD MORE ───────────────────────────────────────── */
+    .load-more-row {
+      display: flex; align-items: center; justify-content: center;
+      gap: 12px; margin-top: 28px; padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+    .load-more-text { font-size: 0.8rem; color: var(--text-tertiary); }
+
+    /* ── RESPONSIVE TWEAK ────────────────────────────────── */
+    @media (max-width: 1400px) {
+      .face-grid { grid-template-columns: repeat(5, 1fr); }
+      .ai-status-stats { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 1100px) {
+      .face-grid { grid-template-columns: repeat(4, 1fr); }
+    }
+  </style>
+</head>
+
+<body>
+<div class="dashboard-layout">
+
+  <!-- ══════════════ SIDEBAR ══════════════ -->
+  <aside class="sidebar">
+
+    <!-- Brand -->
+    <div class="sidebar-brand">
+      <div class="sidebar-logo">FP</div>
+      <div>
+        <div class="sidebar-brand-name">FastPic.ai</div>
+        <div class="sidebar-brand-sub">Professional</div>
+      </div>
+    </div>
+
+    <!-- User -->
+    <div class="sidebar-user-block">
+      <div class="sidebar-user-inner">
+        <div class="avatar avatar-md" style="background:linear-gradient(135deg,#6366F1,#22D3EE);color:white;">AK</div>
+        <div style="flex:1;min-width:0;">
+          <div class="sidebar-user-name">Akshay Mulani</div>
+          <div class="sidebar-user-sub">akshay@fastpic.ai</div>
+        </div>
+        <span class="badge badge-primary" style="font-size:0.62rem;padding:2px 7px;">Pro</span>
+      </div>
+    </div>
+
+    <!-- Nav -->
+    <nav class="sidebar-nav">
+
+      <div class="nav-section-label">Main</div>
+      <a href="dashboard.html" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-house"></i></span>
+        Dashboard
+      </a>
+      <a href="events.html" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-folder-open"></i></span>
+        Events
+        <span class="nav-badge">47</span>
+      </a>
+      <a href="gallery.html" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-images"></i></span>
+        Gallery
+      </a>
+      <a href="face-search.html" class="nav-item active">
+        <span class="nav-icon"><i class="fa-solid fa-user-group"></i></span>
+        Faces &amp; AI
+        <span class="nav-badge">2.8k</span>
+      </a>
+
+      <div class="nav-section-label">Tools</div>
+      <a href="search.html" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
+        Search
+      </a>
+      <a href="favorites.html" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-star"></i></span>
+        Favorites
+      </a>
+      <a href="downloads.html" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-download"></i></span>
+        Downloads
+      </a>
+
+      <div class="nav-section-label">Settings</div>
+      <a href="settings-branding.html" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-palette"></i></span>
+        Branding
+      </a>
+      <a href="settings-watermark.html" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-tag"></i></span>
+        Watermarks
+      </a>
+      <a href="settings-team.html" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-users"></i></span>
+        Team
+      </a>
+      <a href="settings-logs.html" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-scroll"></i></span>
+        Activity Logs
+      </a>
+      <a href="settings-billing.html" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-credit-card"></i></span>
+        Billing
+      </a>
+
+    </nav>
+
+    <!-- Storage -->
+    <div class="sidebar-footer" style="padding:0;">
+      <div class="storage-block">
+        <div class="storage-label">
+          <span style="color:var(--text-secondary)"><i class="fa-solid fa-hard-drive" style="margin-right:5px;"></i>Storage</span>
+          <span>340 / 500 GB</span>
+        </div>
+        <div class="progress-bar" style="margin-bottom:10px;">
+          <div class="progress-fill warning" style="width:68%;"></div>
+        </div>
+        <div style="font-size:0.7rem;color:var(--text-tertiary);margin-bottom:12px;">68% used · 160 GB remaining</div>
+        <a href="settings-billing.html" class="btn btn-primary btn-full btn-sm">
+          <i class="fa-solid fa-arrow-up"></i> Upgrade Plan
+        </a>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- ══════════════ MAIN ══════════════ -->
+  <div class="dashboard-main">
+
+    <!-- ── TOP BAR ─────────────────────────────────────── -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <div class="topbar-search">
+          <i class="fa-solid fa-magnifying-glass" style="color:var(--text-tertiary);font-size:0.85rem;"></i>
+          <input type="text" placeholder="Search events, people, photos..." />
+          <kbd style="font-size:0.65rem;color:var(--text-tertiary);background:var(--bg-elevated);border:1px solid var(--border);border-radius:4px;padding:2px 6px;font-family:var(--font-mono);">⌘K</kbd>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <button class="notif-btn" data-tooltip="Notifications">
+          <i class="fa-solid fa-bell"></i>
+          <span class="notif-badge">3</span>
+        </button>
+        <button class="btn btn-primary btn-sm">
+          <i class="fa-solid fa-cloud-arrow-up"></i>
+          Upload Photos
+        </button>
+        <div class="topbar-user">
+          <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#6366F1,#22D3EE);color:white;font-size:0.65rem;">AK</div>
+          <span class="topbar-user-name">Akshay</span>
+          <i class="fa-solid fa-chevron-down" style="font-size:0.65rem;color:var(--text-tertiary);"></i>
+        </div>
+      </div>
+    </header>
+
+    <!-- ── CONTENT ─────────────────────────────────────── -->
+    <main class="dashboard-content">
+
+      <!-- ①  PAGE HEADER ───────────────────────────────── -->
+      <div class="page-header" style="margin-bottom:28px;align-items:flex-start;">
+        <div>
+          <div class="page-title-main">🧠 AI Face Intelligence</div>
+          <div class="page-subtitle-main">Browse all recognized people across your events. Powered by <span style="color:var(--primary-light);font-weight:600;">ArcFace</span> + <span style="color:var(--accent);font-weight:600;">RetinaFace</span>.</div>
+        </div>
+        <div class="flex items-center gap-12" style="margin-top:4px;flex-shrink:0;">
+          <button class="btn btn-secondary btn-sm">
+            <i class="fa-solid fa-rotate"></i> Retrain Model
+          </button>
+          <div class="processing-status">
+            <span class="status-pulse"></span>
+            Processing Status: Active
+          </div>
+        </div>
+      </div>
+
+      <!-- ②  AI STATUS CARD ─────────────────────────────── -->
+      <div class="card" style="margin-bottom:28px;padding:24px 28px;">
+        <div class="card-header" style="margin-bottom:20px;">
+          <div class="card-header-icon" style="background:rgba(99,102,241,0.15);color:var(--primary-light);">
+            <i class="fa-solid fa-brain"></i>
+          </div>
+          <div>
+            <div class="card-header-title">AI Model Status</div>
+            <div class="card-header-sub">ArcFace v5.2 · RetinaFace v3.1 · Cluster DBSCAN</div>
+          </div>
+          <span class="badge badge-success badge-dot" style="margin-left:auto;">Online</span>
+        </div>
+
+        <div class="ai-status-stats">
+          <!-- Faces Indexed -->
+          <div class="ai-stat-col">
+            <div class="ai-stat-value cyan">2,841</div>
+            <div class="ai-stat-label"><i class="fa-solid fa-face-smile" style="margin-right:5px;color:var(--accent);"></i>Faces Indexed</div>
+          </div>
+          <!-- Unique Identities -->
+          <div class="ai-stat-col">
+            <div class="ai-stat-value indigo">384</div>
+            <div class="ai-stat-label"><i class="fa-solid fa-users" style="margin-right:5px;color:var(--primary-light);"></i>Unique Identities</div>
+          </div>
+          <!-- Last Processed -->
+          <div class="ai-stat-col">
+            <div class="ai-stat-value" style="font-size:1.3rem;color:var(--text-primary);">2 min ago</div>
+            <div class="ai-stat-label"><i class="fa-regular fa-clock" style="margin-right:5px;color:var(--text-tertiary);"></i>Last Processed</div>
+          </div>
+          <!-- Model Accuracy -->
+          <div class="ai-stat-col">
+            <div class="ai-stat-value green">99.2%</div>
+            <div class="ai-stat-label"><i class="fa-solid fa-bullseye" style="margin-right:5px;color:var(--success);"></i>Model Accuracy</div>
+          </div>
+        </div>
+
+        <!-- Processing Queue Bar -->
+        <div class="queue-row">
+          <span class="queue-label">
+            <i class="fa-solid fa-layer-group" style="color:var(--text-tertiary);"></i>
+            Processing Queue:
+          </span>
+          <span class="queue-pill">
+            <i class="fa-solid fa-check-circle"></i>
+            0 images
+          </span>
+          <div class="queue-bar-wrap">
+            <div class="queue-bar-fill"></div>
+          </div>
+          <span style="font-size:0.75rem;color:var(--text-tertiary);white-space:nowrap;">Queue empty</span>
+        </div>
+      </div>
+
+      <!-- ③  SEARCH BY FACE ──────────────────────────────── -->
+      <div class="card" style="margin-bottom:28px;padding:28px;">
+        <div class="section-header" style="margin-bottom:20px;">
+          <div>
+            <div class="section-title"><i class="fa-solid fa-magnifying-glass-location" style="color:var(--primary-light);margin-right:8px;"></i>Find Photos of a Person</div>
+            <div style="font-size:0.8rem;color:var(--text-tertiary);margin-top:3px;">Upload a selfie or reference photo to instantly find all matching photos</div>
+          </div>
+        </div>
+
+        <!-- Upload Zone -->
+        <div class="upload-zone" id="uploadZone" onclick="document.getElementById('faceFileInput').click()">
+          <input type="file" id="faceFileInput" accept="image/*" style="display:none;" />
+          <div class="upload-icon-ring">
+            <i class="fa-solid fa-camera-retro"></i>
+          </div>
+          <div class="upload-title">Drop a photo or click to upload</div>
+          <div class="upload-sub">Drag & drop a selfie or reference photo here</div>
+          <div class="upload-formats">
+            <i class="fa-solid fa-circle-info" style="margin-right:5px;color:var(--primary-light);"></i>
+            Supports: JPG, PNG, HEIC · Max 25 MB
+          </div>
+        </div>
+
+        <!-- Actions below upload -->
+        <div class="upload-actions">
+          <select class="upload-select">
+            <option>🌐 Search All Events</option>
+            <option>📂 Sharma Wedding</option>
+            <option>📂 Tech Conference 2026</option>
+            <option>📂 Aakash &amp; Priya Pre-wedding</option>
+            <option>📂 Kapoor Family Reunion</option>
+          </select>
+          <button class="btn btn-secondary btn-sm">
+            <i class="fa-solid fa-calendar-days"></i> Search This Event Only
+          </button>
+          <button class="btn btn-primary btn-sm">
+            <i class="fa-solid fa-wand-magic-sparkles"></i> Search Now
+          </button>
+        </div>
+      </div>
+
+      <!-- ④  ALL RECOGNIZED PEOPLE ──────────────────────── -->
+      <div style="margin-bottom:28px;">
+        <div class="section-header">
+          <div style="display:flex;align-items:center;">
+            <div class="section-title"><i class="fa-solid fa-user-group" style="color:var(--primary-light);margin-right:8px;"></i>All People Detected</div>
+            <span class="count-badge">384</span>
+          </div>
+          <a href="#" class="section-link" style="font-size:0.8rem;color:var(--primary-light);font-weight:500;display:flex;align-items:center;gap:4px;">
+            Export All <i class="fa-solid fa-arrow-right"></i>
+          </a>
+        </div>
+
+        <!-- Filter Row -->
+        <div class="filter-row">
+          <div class="filter-input-wrap">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" class="filter-input" placeholder="Filter by name or event..." />
+          </div>
+          <select class="filter-select">
+            <option>Most Photos</option>
+            <option>Recently Added</option>
+            <option>Alphabetical</option>
+            <option>Unknown First</option>
+            <option>Named Only</option>
+          </select>
+          <button class="btn btn-secondary btn-sm">
+            <i class="fa-solid fa-sliders"></i> Filters
+          </button>
+        </div>
+
+        <!-- Face Grid -->
+        <div class="face-grid" id="faceGrid">
+
+          <!-- Person 0 -->
+          <div class="face-card" onclick="openPanel('person0')">
+            <div class="face-avatar-wrap">
+              <img class="face-avatar" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=128&q=80" alt="Person 0" loading="lazy" />
+              <div class="face-verified-badge"><i class="fa-solid fa-check" style="font-size:0.4rem;"></i></div>
+            </div>
+            <div class="face-name">Person 0</div>
+            <div class="face-meta">3 events</div>
+            <div class="face-photo-count"><i class="fa-regular fa-image"></i> 47 photos</div>
+          </div>
+
+          <!-- Person 1 -->
+          <div class="face-card" onclick="openPanel('person1')">
+            <div class="face-avatar-wrap">
+              <img class="face-avatar" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=128&q=80" alt="Person 1" loading="lazy" />
+              <div class="face-verified-badge"><i class="fa-solid fa-check" style="font-size:0.4rem;"></i></div>
+            </div>
+            <div class="face-name">Person 1</div>
+            <div class="face-meta">5 events</div>
+            <div class="face-photo-count"><i class="fa-regular fa-image"></i> 128 photos</div>
+          </div>
+
+          <!-- Person 2 -->
+          <div class="face-card" onclick="openPanel('person2')">
+            <div class="face-avatar-wrap">
+              <img class="face-avatar" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=128&q=80" alt="Person 2" loading="lazy" />
+              <div class="face-verified-badge"><i class="fa-solid fa-check" style="font-size:0.4rem;"></i></div>
+            </div>
+            <div class="face-name">Person 2</div>
+            <div class="face-meta">2 events</div>
+            <div class="face-photo-count"><i class="fa-regular fa-image"></i> 89 photos</div>
+          </div>
+
+          <!-- Unknown_17 (grayed) -->
+          <div class="face-card unknown" onclick="openPanel('unknown17')">
+            <div class="face-avatar-wrap">
+              <div class="face-avatar-initials">?</div>
+            </div>
+            <div class="face-name" style="color:var(--text-tertiary);">Unknown_17</div>
+            <div class="face-meta">1 event</div>
+            <div class="face-photo-count" style="background:var(--bg-elevated);color:var(--text-tertiary);">
+              <i class="fa-regular fa-image"></i> 12 photos
+            </div>
+          </div>
+
+          <!-- Unknown_44 (grayed) -->
+          <div class="face-card unknown" onclick="openPanel('unknown44')">
+            <div class="face-avatar-wrap">
+              <div class="face-avatar-initials">?</div>
+            </div>
+            <div class="face-name" style="color:var(--text-tertiary);">Unknown_44</div>
+            <div class="face-meta">2 events</div>
+            <div class="face-photo-count" style="background:var(--bg-elevated);color:var(--text-tertiary);">
+              <i class="fa-regular fa-image"></i> 7 photos
+            </div>
+          </div>
+
+          <!-- Bride (labeled) -->
+          <div class="face-card" onclick="openPanel('bride')">
+            <span class="badge badge-primary face-labeled-badge" style="font-size:0.55rem;padding:2px 6px;">Labeled</span>
+            <div class="face-avatar-wrap">
+              <img class="face-avatar" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=128&q=80" alt="Bride" loading="lazy" />
+              <div class="face-verified-badge"><i class="fa-solid fa-check" style="font-size:0.4rem;"></i></div>
+            </div>
+            <div class="face-name">Bride</div>
+            <div class="face-meta">4 events</div>
+            <div class="face-photo-count"><i class="fa-regular fa-image"></i> 284 photos</div>
+          </div>
+
+          <!-- Groom (labeled) -->
+          <div class="face-card" onclick="openPanel('groom')">
+            <span class="badge badge-primary face-labeled-badge" style="font-size:0.55rem;padding:2px 6px;">Labeled</span>
+            <div class="face-avatar-wrap">
+              <img class="face-avatar" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=128&q=80" alt="Groom" loading="lazy" />
+              <div class="face-verified-badge"><i class="fa-solid fa-check" style="font-size:0.4rem;"></i></div>
+            </div>
+            <div class="face-name">Groom</div>
+            <div class="face-meta">4 events</div>
+            <div class="face-photo-count"><i class="fa-regular fa-image"></i> 271 photos</div>
+          </div>
+
+          <!-- Ravi Sharma -->
+          <div class="face-card" onclick="openPanel('ravi')">
+            <span class="badge badge-cyan face-labeled-badge" style="font-size:0.55rem;padding:2px 6px;">Named</span>
+            <div class="face-avatar-wrap">
+              <img class="face-avatar" src="https://images.unsplash.com/photo-1566492031773-4f4e44671857?w=128&q=80" alt="Ravi Sharma" loading="lazy" />
+              <div class="face-verified-badge"><i class="fa-solid fa-check" style="font-size:0.4rem;"></i></div>
+            </div>
+            <div class="face-name">Ravi Sharma</div>
+            <div class="face-meta">3 events</div>
+            <div class="face-photo-count"><i class="fa-regular fa-image"></i> 94 photos</div>
+          </div>
+
+          <!-- Person 3 -->
+          <div class="face-card" onclick="openPanel('person3')">
+            <div class="face-avatar-wrap">
+              <img class="face-avatar" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=128&q=80" alt="Person 3" loading="lazy" />
+            </div>
+            <div class="face-name">Person 3</div>
+            <div class="face-meta">2 events</div>
+            <div class="face-photo-count"><i class="fa-regular fa-image"></i> 56 photos</div>
+          </div>
+
+          <!-- Person 4 -->
+          <div class="face-card" onclick="openPanel('person4')">
+            <div class="face-avatar-wrap">
+              <img class="face-avatar" src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=128&q=80" alt="Person 4" loading="lazy" />
+            </div>
+            <div class="face-name">Person 4</div>
+            <div class="face-meta">1 event</div>
+            <div class="face-photo-count"><i class="fa-regular fa-image"></i> 33 photos</div>
+          </div>
+
+          <!-- Unknown_08 (grayed) -->
+          <div class="face-card unknown" onclick="openPanel('unknown08')">
+            <div class="face-avatar-wrap">
+              <div class="face-avatar-initials">?</div>
+            </div>
+            <div class="face-name" style="color:var(--text-tertiary);">Unknown_08</div>
+            <div class="face-meta">1 event</div>
+            <div class="face-photo-count" style="background:var(--bg-elevated);color:var(--text-tertiary);">
+              <i class="fa-regular fa-image"></i> 19 photos
+            </div>
+          </div>
+
+          <!-- Person 5 -->
+          <div class="face-card" onclick="openPanel('person5')">
+            <div class="face-avatar-wrap">
+              <img class="face-avatar" src="https://images.unsplash.com/photo-1521119989659-a83eee488004?w=128&q=80" alt="Person 5" loading="lazy" />
+            </div>
+            <div class="face-name">Person 5</div>
+            <div class="face-meta">3 events</div>
+            <div class="face-photo-count"><i class="fa-regular fa-image"></i> 71 photos</div>
+          </div>
+
+        </div><!-- /face-grid -->
+
+        <!-- Load more -->
+        <div class="load-more-row">
+          <span class="load-more-text">Showing 12 of 384 people</span>
+          <button class="btn btn-secondary btn-sm">
+            <i class="fa-solid fa-plus"></i> Load More
+          </button>
+        </div>
+      </div>
+
+      <!-- ⑥  AI PIPELINE STATUS ───────────────────────────── -->
+      <div class="card" style="margin-bottom:40px;padding:24px 28px;">
+        <div class="card-header">
+          <div class="card-header-icon" style="background:var(--primary-subtle);color:var(--primary-light);">
+            <i class="fa-solid fa-diagram-project"></i>
+          </div>
+          <div>
+            <div class="card-header-title">AI Processing Pipeline</div>
+            <div class="card-header-sub">Real-time status of the face indexing pipeline</div>
+          </div>
+          <div style="margin-left:auto;display:flex;align-items:center;gap:10px;">
+            <span class="badge badge-success badge-dot">All Systems Go</span>
+          </div>
+        </div>
+
+        <!-- Pipeline Track -->
+        <div class="pipeline-track">
+
+          <div class="pipeline-step done">
+            <div class="pipeline-dot done"><i class="fa-solid fa-check"></i></div>
+            <div class="pipeline-label">Upload</div>
+          </div>
+          <div class="pipeline-connector done"></div>
+
+          <div class="pipeline-step done">
+            <div class="pipeline-dot done"><i class="fa-solid fa-check"></i></div>
+            <div class="pipeline-label">Thumbnail Gen</div>
+          </div>
+          <div class="pipeline-connector done"></div>
+
+          <div class="pipeline-step done">
+            <div class="pipeline-dot done"><i class="fa-solid fa-check"></i></div>
+            <div class="pipeline-label">Preview Gen</div>
+          </div>
+          <div class="pipeline-connector done"></div>
+
+          <div class="pipeline-step done">
+            <div class="pipeline-dot done"><i class="fa-solid fa-check"></i></div>
+            <div class="pipeline-label">Face Detection</div>
+          </div>
+          <div class="pipeline-connector active"></div>
+
+          <div class="pipeline-step active">
+            <div class="pipeline-dot active"><i class="fa-solid fa-spinner fa-spin"></i></div>
+            <div class="pipeline-label">Embedding</div>
+          </div>
+          <div class="pipeline-connector"></div>
+
+          <div class="pipeline-step pending">
+            <div class="pipeline-dot pending"><i class="fa-solid fa-circle-nodes"></i></div>
+            <div class="pipeline-label">Clustering</div>
+          </div>
+          <div class="pipeline-connector"></div>
+
+          <div class="pipeline-step pending">
+            <div class="pipeline-dot pending"><i class="fa-solid fa-flag-checkered"></i></div>
+            <div class="pipeline-label">Done</div>
+          </div>
+
+        </div>
+
+        <!-- Pipeline Stats -->
+        <div class="pipeline-stats-row">
+          <div class="pipeline-stat">
+            <div class="val" style="color:var(--warning);">3</div>
+            <div class="lbl"><i class="fa-solid fa-layer-group" style="margin-right:4px;"></i>Images in Queue</div>
+          </div>
+          <div class="pipeline-stat">
+            <div class="val green">2.1s</div>
+            <div class="lbl"><i class="fa-regular fa-clock" style="margin-right:4px;"></i>Avg. per Image</div>
+          </div>
+          <div class="pipeline-stat">
+            <div class="val" style="color:var(--accent);">14,829</div>
+            <div class="lbl"><i class="fa-solid fa-circle-check" style="margin-right:4px;color:var(--accent);"></i>Total Processed</div>
+          </div>
+        </div>
+
+        <!-- Progress bar for current batch -->
+        <div style="margin-top:18px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+            <span style="font-size:0.75rem;color:var(--text-secondary);"><i class="fa-solid fa-microchip" style="margin-right:6px;color:var(--primary-light);"></i>Current Batch Progress</span>
+            <span style="font-size:0.75rem;color:var(--primary-light);font-weight:600;">73%</span>
+          </div>
+          <div class="progress-bar" style="height:8px;">
+            <div class="progress-fill" style="width:73%;"></div>
+          </div>
+          <div style="font-size:0.7rem;color:var(--text-tertiary);margin-top:6px;">2 of 3 images complete · ETA ~4 seconds</div>
+        </div>
+
+      </div><!-- /pipeline card -->
+
+    </main><!-- /dashboard-content -->
+  </div><!-- /dashboard-main -->
+</div><!-- /dashboard-layout -->
+
+<!-- ═══════════════════════════════════════════════════════
+     ⑤  FACE DETAIL SIDE PANEL
+     ═══════════════════════════════════════════════════════ -->
+<div class="side-panel-overlay" id="panelOverlay" onclick="closePanel()"></div>
+
+<div class="side-panel" id="sidePanel">
+
+  <div class="side-panel-header">
+    <div style="font-family:var(--font-display);font-size:0.9rem;font-weight:700;color:var(--text-primary);">
+      <i class="fa-solid fa-id-card" style="color:var(--primary-light);margin-right:8px;"></i>Identity Details
+    </div>
+    <button class="side-panel-close" onclick="closePanel()">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+
+  <div class="side-panel-body">
+
+    <!-- Identity Hero -->
+    <div class="identity-hero">
+      <div class="identity-avatar-wrap">
+        <div class="identity-avatar-ring"></div>
+        <img class="identity-avatar" id="panelAvatar"
+          src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=240&q=80"
+          alt="Person" />
+      </div>
+      <div class="identity-name-row">
+        <div class="identity-name" id="panelName">Person 0</div>
+        <button class="identity-edit" data-tooltip="Rename">
+          <i class="fa-solid fa-pencil"></i>
+        </button>
+      </div>
+      <div class="identity-stats" id="panelStats">
+        <i class="fa-regular fa-image" style="color:var(--primary-light);margin-right:4px;"></i>
+        <strong style="color:var(--text-primary);">47 photos</strong> across
+        <strong style="color:var(--text-primary);">3 events</strong>
+      </div>
+      <div style="margin-top:10px;display:flex;justify-content:center;gap:8px;">
+        <span class="badge badge-success badge-dot">Verified Identity</span>
+        <span class="badge badge-primary">Cluster #0042</span>
+      </div>
+    </div>
+
+    <div class="panel-divider"></div>
+
+    <!-- Events List -->
+    <div class="panel-section-label"><i class="fa-solid fa-folder-open" style="margin-right:5px;"></i>Appears in Events</div>
+    <div class="panel-event-list" id="panelEvents">
+      <div class="panel-event-item">
+        <div>
+          <div class="panel-event-name">Sharma Wedding</div>
+          <div class="panel-event-count">May 25, 2026</div>
+        </div>
+        <span class="badge badge-primary" style="font-size:0.65rem;">32 photos</span>
+      </div>
+      <div class="panel-event-item">
+        <div>
+          <div class="panel-event-name">Kapoor Family Reunion</div>
+          <div class="panel-event-count">May 10, 2026</div>
+        </div>
+        <span class="badge badge-primary" style="font-size:0.65rem;">15 photos</span>
+      </div>
+    </div>
+
+    <div class="panel-divider"></div>
+
+    <!-- Photo Thumbnails (3×3) -->
+    <div class="panel-section-label"><i class="fa-solid fa-images" style="margin-right:5px;"></i>Recent Photos</div>
+    <div class="panel-photo-grid">
+      <div class="panel-thumb">
+        <img src="https://images.unsplash.com/photo-1519741497674-611481863552?w=200&q=75" alt="" loading="lazy" />
+        <div class="panel-thumb-overlay"><i class="fa-solid fa-expand"></i></div>
+      </div>
+      <div class="panel-thumb">
+        <img src="https://images.unsplash.com/photo-1529636798458-92182e662485?w=200&q=75" alt="" loading="lazy" />
+        <div class="panel-thumb-overlay"><i class="fa-solid fa-expand"></i></div>
+      </div>
+      <div class="panel-thumb">
+        <img src="https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=200&q=75" alt="" loading="lazy" />
+        <div class="panel-thumb-overlay"><i class="fa-solid fa-expand"></i></div>
+      </div>
+      <div class="panel-thumb">
+        <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=200&q=75" alt="" loading="lazy" />
+        <div class="panel-thumb-overlay"><i class="fa-solid fa-expand"></i></div>
+      </div>
+      <div class="panel-thumb">
+        <img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=200&q=75" alt="" loading="lazy" />
+        <div class="panel-thumb-overlay"><i class="fa-solid fa-expand"></i></div>
+      </div>
+      <div class="panel-thumb">
+        <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=200&q=75" alt="" loading="lazy" />
+        <div class="panel-thumb-overlay"><i class="fa-solid fa-expand"></i></div>
+      </div>
+      <div class="panel-thumb">
+        <img src="https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=200&q=75" alt="" loading="lazy" />
+        <div class="panel-thumb-overlay"><i class="fa-solid fa-expand"></i></div>
+      </div>
+      <div class="panel-thumb">
+        <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=200&q=75" alt="" loading="lazy" />
+        <div class="panel-thumb-overlay"><i class="fa-solid fa-expand"></i></div>
+      </div>
+      <div class="panel-thumb" style="background:var(--bg-elevated);display:flex;align-items:center;justify-content:center;cursor:pointer;">
+        <div style="text-align:center;color:var(--text-tertiary);">
+          <i class="fa-solid fa-plus" style="font-size:1.2rem;display:block;margin-bottom:4px;"></i>
+          <span style="font-size:0.65rem;">+38 more</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-divider"></div>
+
+    <!-- Actions -->
+    <div class="panel-section-label"><i class="fa-solid fa-bolt" style="margin-right:5px;"></i>Actions</div>
+    <div class="panel-actions">
+      <button class="panel-action-btn">
+        <div class="panel-action-icon"><i class="fa-solid fa-file-export"></i></div>
+        <div>
+          <div style="font-size:0.82rem;font-weight:600;color:var(--text-primary);">Export Photos</div>
+          <div style="font-size:0.7rem;color:var(--text-tertiary);">Download all 47 photos as ZIP</div>
+        </div>
+        <i class="fa-solid fa-chevron-right" style="margin-left:auto;color:var(--text-tertiary);font-size:0.7rem;"></i>
+      </button>
+      <button class="panel-action-btn">
+        <div class="panel-action-icon"><i class="fa-solid fa-code-merge"></i></div>
+        <div>
+          <div style="font-size:0.82rem;font-weight:600;color:var(--text-primary);">Merge with...</div>
+          <div style="font-size:0.7rem;color:var(--text-tertiary);">Combine duplicate identities</div>
+        </div>
+        <i class="fa-solid fa-chevron-right" style="margin-left:auto;color:var(--text-tertiary);font-size:0.7rem;"></i>
+      </button>
+      <button class="panel-action-btn">
+        <div class="panel-action-icon"><i class="fa-solid fa-share-nodes"></i></div>
+        <div>
+          <div style="font-size:0.82rem;font-weight:600;color:var(--text-primary);">Share Gallery Link</div>
+          <div style="font-size:0.7rem;color:var(--text-tertiary);">Send private link to this person</div>
+        </div>
+        <i class="fa-solid fa-chevron-right" style="margin-left:auto;color:var(--text-tertiary);font-size:0.7rem;"></i>
+      </button>
+      <button class="panel-action-btn danger">
+        <div class="panel-action-icon"><i class="fa-solid fa-trash-can"></i></div>
+        <div>
+          <div style="font-size:0.82rem;font-weight:600;">Delete Identity</div>
+          <div style="font-size:0.7rem;color:var(--text-tertiary);">Remove from face index</div>
+        </div>
+        <i class="fa-solid fa-chevron-right" style="margin-left:auto;color:var(--text-tertiary);font-size:0.7rem;"></i>
+      </button>
+    </div>
+
+  </div><!-- /side-panel-body -->
+</div><!-- /side-panel -->
+
+
+<script>
+  /* ═══════════════════════════════════════════════
+     PERSON DATA
+     ═══════════════════════════════════════════════ */
+  const people = {
+    person0:   { name: 'Person 0',     photos: 47,  events: 3, avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=240&q=80', cluster: '0042' },
+    person1:   { name: 'Person 1',     photos: 128, events: 5, avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=240&q=80', cluster: '0017' },
+    person2:   { name: 'Person 2',     photos: 89,  events: 2, avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=240&q=80', cluster: '0093' },
+    unknown17: { name: 'Unknown_17',   photos: 12,  events: 1, avatar: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=240&q=80', cluster: '0217' },
+    unknown44: { name: 'Unknown_44',   photos: 7,   events: 2, avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=240&q=80', cluster: '0344' },
+    bride:     { name: 'Bride',        photos: 284, events: 4, avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=240&q=80', cluster: '0001' },
+    groom:     { name: 'Groom',        photos: 271, events: 4, avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=240&q=80', cluster: '0002' },
+    ravi:      { name: 'Ravi Sharma',  photos: 94,  events: 3, avatar: 'https://images.unsplash.com/photo-1566492031773-4f4e44671857?w=240&q=80', cluster: '0008' },
+    person3:   { name: 'Person 3',     photos: 56,  events: 2, avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=240&q=80', cluster: '0055' },
+    person4:   { name: 'Person 4',     photos: 33,  events: 1, avatar: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=240&q=80', cluster: '0061' },
+    unknown08: { name: 'Unknown_08',   photos: 19,  events: 1, avatar: 'https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=240&q=80', cluster: '0108' },
+    person5:   { name: 'Person 5',     photos: 71,  events: 3, avatar: 'https://images.unsplash.com/photo-1521119989659-a83eee488004?w=240&q=80', cluster: '0072' },
+  };
+
+  let currentCard = null;
+
+  /* ═══════════════════════════════════════════════
+     PANEL OPEN / CLOSE
+     ═══════════════════════════════════════════════ */
+  function openPanel(id) {
+    const p = people[id];
+    if (!p) return;
+
+    // Update avatar + name
+    document.getElementById('panelAvatar').src = p.avatar;
+    document.getElementById('panelName').textContent = p.name;
+    document.getElementById('panelStats').innerHTML =
+      `<i class="fa-regular fa-image" style="color:var(--primary-light);margin-right:4px;"></i>
+       <strong style="color:var(--text-primary);">${p.photos} photos</strong> across
+       <strong style="color:var(--text-primary);">${p.events} events</strong>`;
+
+    // Highlight active card
+    if (currentCard) currentCard.classList.remove('active');
+    currentCard = document.querySelector(`[onclick="openPanel('${id}')"]`);
+    if (currentCard) currentCard.classList.add('active');
+
+    // Show panel
+    document.getElementById('panelOverlay').classList.add('open');
+    document.getElementById('sidePanel').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closePanel() {
+    document.getElementById('panelOverlay').classList.remove('open');
+    document.getElementById('sidePanel').classList.remove('open');
+    document.body.style.overflow = '';
+    if (currentCard) { currentCard.classList.remove('active'); currentCard = null; }
+  }
+
+  // Close on Escape
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closePanel(); });
+
+  /* ═══════════════════════════════════════════════
+     DRAG & DROP UPLOAD ZONE
+     ═══════════════════════════════════════════════ */
+  const zone = document.getElementById('uploadZone');
+
+  zone.addEventListener('dragenter', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+  zone.addEventListener('dragover',  e => { e.preventDefault(); zone.classList.add('drag-over'); });
+  zone.addEventListener('dragleave', e => {
+    if (!zone.contains(e.relatedTarget)) zone.classList.remove('drag-over');
+  });
+  zone.addEventListener('drop', e => {
+    e.preventDefault();
+    zone.classList.remove('drag-over');
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('image/')) {
+      handleUploadedFile(file);
+    }
+  });
+
+  document.getElementById('faceFileInput').addEventListener('change', function () {
+    if (this.files[0]) handleUploadedFile(this.files[0]);
+  });
+
+  function handleUploadedFile(file) {
+    const reader = new FileReader();
+    reader.onload = ev => {
+      const icon = zone.querySelector('.upload-icon-ring');
+      icon.innerHTML = `<img src="${ev.target.result}" style="width:64px;height:64px;border-radius:50%;object-fit:cover;" alt="Preview" />`;
+      zone.querySelector('.upload-title').textContent = '✅ Photo ready — click "Search Now"';
+      zone.querySelector('.upload-sub').textContent = file.name;
+      zone.querySelector('.upload-formats').textContent = `${(file.size / 1024).toFixed(0)} KB`;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  /* ═══════════════════════════════════════════════
+     FILTER BAR — Live filter face cards
+     ═══════════════════════════════════════════════ */
+  document.querySelector('.filter-input').addEventListener('input', function () {
+    const q = this.value.toLowerCase();
+    document.querySelectorAll('.face-card').forEach(card => {
+      const name = card.querySelector('.face-name').textContent.toLowerCase();
+      card.style.display = name.includes(q) ? '' : 'none';
+    });
+  });
+</script>
+
+</body>
+</html>

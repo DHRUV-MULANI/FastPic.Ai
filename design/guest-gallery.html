@@ -1,0 +1,1484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sharma Wedding Ceremony — Delta Photography Studio | FastPic.AI</title>
+  <link rel="stylesheet" href="design-system.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <style>
+    /* ── PAGE TOKENS ────────────────────────────────────── */
+    :root {
+      --header-h: 72px;
+      --tabs-h: 60px;
+      --bar-total: calc(var(--header-h) + var(--tabs-h));
+    }
+
+    /* ══════════════════════════════════════════════════════
+       ENTRY MODAL (shown on first load)
+    ══════════════════════════════════════════════════════ */
+    .entry-overlay {
+      position: fixed; inset: 0; z-index: 9000;
+      display: flex; align-items: center; justify-content: center;
+      padding: 24px;
+    }
+    .entry-overlay-bg {
+      position: absolute; inset: 0;
+      background: rgba(4, 4, 10, 0.96);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+    }
+    .entry-modal {
+      position: relative; z-index: 1;
+      width: 100%; max-width: 480px;
+      background: linear-gradient(145deg, #13132a 0%, #0d0d1a 100%);
+      border: 1px solid var(--border-strong);
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.05);
+      animation: modalSlideIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
+    }
+    @keyframes modalSlideIn {
+      from { opacity:0; transform: scale(0.88) translateY(24px); }
+      to   { opacity:1; transform: scale(1) translateY(0); }
+    }
+
+    .entry-cover {
+      position: relative; height: 200px; overflow: hidden;
+    }
+    .entry-cover img {
+      width: 100%; height: 100%; object-fit: cover;
+    }
+    .entry-cover-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom, transparent 30%, rgba(13,13,26,0.95) 100%);
+    }
+    .entry-cover-badge {
+      position: absolute; top: 16px; left: 16px;
+      background: rgba(13,13,26,0.8);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border);
+      padding: 6px 12px;
+      border-radius: var(--radius-full);
+      font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--primary-light);
+      display: flex; align-items: center; gap: 6px;
+    }
+    .entry-cover-badge::before {
+      content: ''; width: 7px; height: 7px; border-radius: 50%;
+      background: var(--primary-light);
+      box-shadow: 0 0 8px var(--primary);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(0.8)} }
+
+    .entry-body { padding: 28px 28px 32px; }
+    .entry-studio-row {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 20px;
+    }
+    .entry-studio-logo {
+      width: 38px; height: 38px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 0.85rem; color: white;
+      font-family: var(--font-display);
+      flex-shrink: 0;
+    }
+
+    .entry-event-name {
+      font-family: var(--font-display);
+      font-size: 1.35rem; font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1.2; margin-bottom: 6px;
+    }
+    .entry-event-date {
+      font-size: 0.8rem; color: var(--text-tertiary);
+      display: flex; align-items: center; gap: 6px; margin-bottom: 24px;
+    }
+
+    .entry-question {
+      font-size: 0.8rem; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.06em; color: var(--text-tertiary); margin-bottom: 14px;
+    }
+
+    .entry-options { display: flex; flex-direction: column; gap: 12px; }
+    .entry-option {
+      display: flex; align-items: center; gap: 14px;
+      padding: 16px 18px;
+      border-radius: var(--radius-lg);
+      border: 1.5px solid var(--border);
+      cursor: pointer;
+      transition: var(--transition);
+      text-decoration: none; color: inherit;
+      background: rgba(255,255,255,0.025);
+      position: relative; overflow: hidden;
+    }
+    .entry-option::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 0% 50%, var(--primary-subtle), transparent);
+      opacity: 0; transition: var(--transition);
+    }
+    .entry-option:hover::before { opacity: 1; }
+    .entry-option:hover {
+      border-color: var(--border-primary);
+      transform: translateX(4px);
+      box-shadow: 0 4px 20px rgba(99,102,241,0.15);
+    }
+    .entry-option.primary-opt {
+      border-color: var(--primary);
+      background: linear-gradient(135deg, rgba(99,102,241,0.12), rgba(99,102,241,0.04));
+    }
+    .entry-option.primary-opt:hover {
+      border-color: var(--primary-light);
+      box-shadow: 0 4px 24px var(--primary-glow);
+    }
+    .entry-option-icon {
+      width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem;
+      background: var(--bg-elevated);
+    }
+    .primary-opt .entry-option-icon {
+      background: var(--primary-subtle);
+    }
+    .entry-option-text strong {
+      display: block; font-weight: 700; font-size: 0.95rem;
+      color: var(--text-primary);
+    }
+    .entry-option-text span {
+      font-size: 0.78rem; color: var(--text-secondary);
+    }
+    .entry-option-arrow {
+      margin-left: auto; color: var(--text-tertiary);
+      font-size: 0.75rem; transition: var(--transition);
+    }
+    .entry-option:hover .entry-option-arrow {
+      color: var(--primary-light); transform: translateX(3px);
+    }
+
+    .entry-footer {
+      margin-top: 20px; padding-top: 16px;
+      border-top: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .entry-footer a {
+      font-size: 0.78rem; color: var(--text-tertiary);
+      display: flex; align-items: center; gap: 5px;
+      transition: var(--transition);
+    }
+    .entry-footer a:hover { color: var(--text-secondary); }
+    .entry-footer-brand {
+      font-size: 0.72rem; color: var(--text-tertiary);
+      display: flex; align-items: center; gap: 5px;
+    }
+
+    /* ══════════════════════════════════════════════════════
+       MAIN GALLERY PAGE (hidden until modal dismissed)
+    ══════════════════════════════════════════════════════ */
+    .gallery-page {
+      display: none;
+      min-height: 100dvh;
+      flex-direction: column;
+    }
+    .gallery-page.active { display: flex; }
+
+    /* Studio Header */
+    .studio-header {
+      height: var(--header-h);
+      background: rgba(8,8,15,0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 24px;
+      position: sticky; top: 0; z-index: 500;
+    }
+    .studio-header-left {
+      display: flex; align-items: center; gap: 14px;
+    }
+    .studio-logo-circle {
+      width: 42px; height: 42px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 1rem; color: white;
+      font-family: var(--font-display);
+      box-shadow: 0 4px 14px var(--primary-glow);
+      flex-shrink: 0;
+    }
+    .studio-info-name {
+      font-family: var(--font-display);
+      font-weight: 700; font-size: 0.95rem; color: var(--text-primary);
+    }
+    .studio-info-event {
+      font-size: 0.76rem; color: var(--text-tertiary);
+      margin-top: 1px; display: flex; align-items: center; gap: 5px;
+    }
+
+    .studio-header-right {
+      display: flex; align-items: center; gap: 10px;
+    }
+
+    /* Favorites chip */
+    .fav-chip {
+      display: flex; align-items: center; gap: 7px;
+      padding: 7px 14px;
+      background: rgba(239,68,68,0.1);
+      border: 1px solid rgba(239,68,68,0.2);
+      border-radius: var(--radius-full);
+      font-size: 0.8rem; font-weight: 600; color: #f87171;
+      transition: var(--transition);
+    }
+    .fav-chip i { font-size: 0.85rem; }
+
+    /* ── TABS BAR ──────────────────────────────────────── */
+    .tabs-bar {
+      height: var(--tabs-h);
+      background: rgba(13,13,26,0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center;
+      padding: 0 24px;
+      gap: 6px;
+      position: sticky; top: var(--header-h); z-index: 400;
+    }
+    .tab-pill {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 8px 18px;
+      border-radius: var(--radius-full);
+      font-size: 0.82rem; font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: var(--transition);
+      border: 1.5px solid transparent;
+      white-space: nowrap;
+    }
+    .tab-pill:hover {
+      color: var(--text-primary);
+      background: var(--bg-glass);
+    }
+    .tab-pill.active {
+      background: var(--primary-subtle);
+      border-color: var(--border-primary);
+      color: var(--primary-light);
+    }
+    .tab-pill .tab-count {
+      background: rgba(99,102,241,0.2);
+      color: var(--primary-light);
+      padding: 1px 7px;
+      border-radius: var(--radius-full);
+      font-size: 0.7rem;
+      font-weight: 700;
+    }
+    .tab-pill:not(.active) .tab-count {
+      background: var(--bg-elevated);
+      color: var(--text-tertiary);
+    }
+
+    /* ── GALLERY CONTENT AREA ──────────────────────────── */
+    .gallery-content {
+      flex: 1;
+      padding: 24px;
+      max-width: 1400px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    /* AI Match Banner */
+    .ai-match-banner {
+      display: flex; align-items: center; gap: 14px;
+      padding: 14px 20px;
+      background: linear-gradient(135deg, rgba(16,185,129,0.12), rgba(16,185,129,0.04));
+      border: 1px solid rgba(16,185,129,0.25);
+      border-radius: var(--radius-lg);
+      margin-bottom: 24px;
+      animation: bannerSlide 0.5s ease both;
+    }
+    @keyframes bannerSlide {
+      from { opacity:0; transform:translateY(-8px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+    .ai-banner-icon {
+      width: 40px; height: 40px; border-radius: 10px; flex-shrink: 0;
+      background: rgba(16,185,129,0.15);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem;
+    }
+    .ai-banner-text strong {
+      display: block; font-weight: 700; font-size: 0.92rem;
+      color: var(--success);
+    }
+    .ai-banner-text span { font-size: 0.78rem; color: var(--text-secondary); }
+    .ai-banner-action {
+      margin-left: auto; flex-shrink: 0;
+    }
+
+    /* ── MASONRY PHOTO GRID (CSS Columns) ─────────────── */
+    .masonry-grid {
+      columns: 4 220px;
+      column-gap: 10px;
+    }
+    @supports (grid-template-rows: masonry) {
+      .masonry-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: masonry;
+        gap: 10px;
+        columns: unset;
+      }
+    }
+    .masonry-item {
+      break-inside: avoid;
+      margin-block-end: 10px;
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      cursor: pointer;
+      background: var(--bg-elevated);
+      display: block;
+    }
+    .masonry-item img {
+      width: 100%;
+      display: block;
+      transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
+    }
+    .masonry-item:hover img {
+      transform: scale(1.06);
+    }
+
+    /* Watermark overlay */
+    .watermark {
+      position: absolute;
+      bottom: 10px; right: 10px;
+      font-size: 0.65rem; font-weight: 700;
+      color: rgba(255,255,255,0.45);
+      font-family: var(--font-display);
+      letter-spacing: 0.04em;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    /* Photo hover overlay */
+    .masonry-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 50%);
+      opacity: 0;
+      transition: opacity 0.25s ease;
+      z-index: 1;
+    }
+    .masonry-item:hover .masonry-overlay { opacity: 1; }
+
+    .masonry-actions {
+      position: absolute; top: 10px; right: 10px;
+      display: flex; flex-direction: column; gap: 6px;
+      opacity: 0; transform: translateX(8px);
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      z-index: 3;
+    }
+    .masonry-item:hover .masonry-actions {
+      opacity: 1; transform: translateX(0);
+    }
+
+    .photo-btn {
+      width: 34px; height: 34px;
+      border-radius: 9px;
+      background: rgba(10,10,20,0.75);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.1);
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-size: 0.8rem;
+      transition: var(--transition);
+    }
+    .photo-btn:hover { background: var(--primary); border-color: var(--primary); }
+    .photo-btn.fav-btn.hearted { color: #f87171; }
+    .photo-btn.fav-btn.hearted:hover { background: rgba(239,68,68,0.8); border-color: #ef4444; }
+
+    /* ── FOLDER GRID (All Photos Tab) ─────────────────── */
+    .folder-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    .folder-card-guest {
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .folder-card-guest:hover {
+      border-color: var(--border-primary);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-lg), 0 0 20px rgba(99,102,241,0.1);
+    }
+    .folder-thumb-img {
+      width: 100%; aspect-ratio: 4/3; object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+    .folder-card-guest:hover .folder-thumb-img { transform: scale(1.05); }
+    .folder-card-guest .folder-thumb-wrap {
+      overflow: hidden; position: relative;
+    }
+    .folder-thumb-wrap-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 60%);
+    }
+    .folder-info {
+      padding: 14px 16px;
+    }
+    .folder-info-name {
+      font-family: var(--font-display);
+      font-weight: 700; font-size: 0.95rem;
+      color: var(--text-primary); margin-bottom: 4px;
+    }
+    .folder-info-meta {
+      font-size: 0.78rem; color: var(--text-secondary);
+      display: flex; align-items: center; gap: 6px;
+    }
+
+    /* Section heading */
+    .section-heading {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 20px; margin-top: 8px;
+    }
+    .section-heading h2 {
+      font-family: var(--font-display);
+      font-size: 1.1rem; font-weight: 700;
+      color: var(--text-primary);
+    }
+    .section-heading .back-btn {
+      display: flex; align-items: center; gap: 5px;
+      font-size: 0.8rem; color: var(--text-secondary);
+      cursor: pointer;
+      transition: var(--transition);
+      padding: 5px 10px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: var(--bg-glass);
+    }
+    .section-heading .back-btn:hover {
+      color: var(--text-primary); border-color: var(--border-strong);
+    }
+
+    /* ── TAB PANELS ──────────────────────────────────── */
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── HIGHLIGHTS PANEL ─────────────────────────────── */
+    .highlights-hero {
+      position: relative; border-radius: var(--radius-xl);
+      overflow: hidden; margin-bottom: 20px; height: 340px;
+    }
+    .highlights-hero img {
+      width: 100%; height: 100%; object-fit: cover;
+    }
+    .highlights-hero-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 50%);
+      display: flex; align-items: flex-end;
+      padding: 28px;
+    }
+    .highlights-hero-text h3 {
+      font-family: var(--font-display);
+      font-size: 1.6rem; font-weight: 800;
+      color: white; margin-bottom: 6px;
+    }
+    .highlights-hero-text p { font-size: 0.88rem; color: rgba(255,255,255,0.7); }
+
+    /* ── GUEST UPLOAD PANEL ───────────────────────────── */
+    .upload-drop-zone {
+      border: 2px dashed var(--border-strong);
+      border-radius: var(--radius-xl);
+      padding: 56px 32px;
+      text-align: center;
+      transition: var(--transition);
+      cursor: pointer;
+      background: rgba(255,255,255,0.02);
+      margin-bottom: 28px;
+    }
+    .upload-drop-zone.drag-over {
+      border-color: var(--primary);
+      background: var(--primary-subtle);
+    }
+    .upload-drop-zone:hover {
+      border-color: var(--border-primary);
+      background: rgba(99,102,241,0.04);
+    }
+    .upload-icon {
+      width: 72px; height: 72px;
+      background: var(--primary-subtle);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius-lg);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.8rem;
+      margin: 0 auto 20px;
+    }
+    .upload-drop-zone h3 {
+      font-family: var(--font-display);
+      font-size: 1.15rem; font-weight: 700;
+      color: var(--text-primary); margin-bottom: 8px;
+    }
+    .upload-drop-zone p {
+      font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 20px;
+    }
+
+    /* ── LIGHTBOX ──────────────────────────────────────── */
+    .lightbox {
+      position: fixed; inset: 0; z-index: 8000;
+      display: none;
+      background: rgba(0,0,0,0.97);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+    .lightbox.open { display: flex; flex-direction: column; }
+
+    .lightbox-header {
+      height: 60px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .lightbox-counter {
+      font-size: 0.8rem; color: rgba(255,255,255,0.5);
+      font-family: var(--font-mono);
+    }
+    .lightbox-header-actions {
+      display: flex; align-items: center; gap: 8px;
+    }
+    .lb-btn {
+      width: 38px; height: 38px; border-radius: 10px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.1);
+      display: flex; align-items: center; justify-content: center;
+      color: rgba(255,255,255,0.7);
+      font-size: 0.85rem;
+      transition: var(--transition); cursor: pointer;
+    }
+    .lb-btn:hover { background: rgba(255,255,255,0.14); color: white; }
+    .lb-btn.active { color: #f87171; }
+    .lb-close { width: auto; padding: 0 14px; gap: 6px; font-size: 0.78rem; }
+
+    .lightbox-stage {
+      flex: 1;
+      display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden;
+    }
+    .lightbox-img {
+      max-width: 100%; max-height: 100%;
+      object-fit: contain;
+      transition: opacity 0.2s ease;
+      border-radius: 4px;
+    }
+    .lb-nav-btn {
+      position: absolute;
+      top: 50%; transform: translateY(-50%);
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.12);
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-size: 1rem;
+      cursor: pointer; transition: var(--transition);
+      z-index: 2;
+    }
+    .lb-nav-btn:hover {
+      background: rgba(99,102,241,0.5);
+      border-color: var(--primary);
+      box-shadow: 0 0 20px var(--primary-glow);
+    }
+    .lb-nav-prev { left: 20px; }
+    .lb-nav-next { right: 20px; }
+
+    /* Watermark on lightbox */
+    .lb-watermark {
+      position: absolute; bottom: 20px; right: 28px;
+      font-size: 0.72rem; font-weight: 700;
+      color: rgba(255,255,255,0.3);
+      pointer-events: none; z-index: 3;
+      font-family: var(--font-display); letter-spacing: 0.04em;
+    }
+
+    .lightbox-footer {
+      height: 70px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      gap: 12px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 0 24px;
+    }
+
+    /* Thumbnail strip */
+    .lb-thumb-strip {
+      flex: 1;
+      display: flex; align-items: center; gap: 6px;
+      overflow-x: auto; scrollbar-width: none;
+    }
+    .lb-thumb-strip::-webkit-scrollbar { display: none; }
+    .lb-thumb {
+      width: 44px; height: 44px; flex-shrink: 0;
+      border-radius: 7px; overflow: hidden;
+      border: 2px solid transparent;
+      cursor: pointer; transition: var(--transition);
+      opacity: 0.55;
+    }
+    .lb-thumb img { width:100%; height:100%; object-fit:cover; }
+    .lb-thumb.active { border-color: var(--primary); opacity: 1; }
+    .lb-thumb:hover { opacity: 0.9; }
+
+    /* ── UPLOAD FLOATING BUTTON ──────────────────────── */
+    .fab-upload {
+      position: fixed; bottom: 28px; right: 28px; z-index: 300;
+      width: 58px; height: 58px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      box-shadow: 0 8px 28px var(--primary-glow), 0 4px 12px rgba(0,0,0,0.5);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem; color: white;
+      cursor: pointer;
+      transition: var(--transition);
+      border: none;
+    }
+    .fab-upload:hover {
+      transform: scale(1.1) rotate(90deg);
+      box-shadow: 0 12px 36px var(--primary-glow);
+    }
+
+    /* ── UPLOAD MODAL ─────────────────────────────────── */
+    .upload-modal-overlay {
+      position: fixed; inset: 0; z-index: 7000;
+      display: none;
+      align-items: flex-end; justify-content: center;
+      padding: 24px;
+    }
+    .upload-modal-overlay.open { display: flex; }
+    .upload-modal-bg {
+      position: absolute; inset: 0;
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      cursor: pointer;
+    }
+    .upload-modal {
+      position: relative; z-index: 1;
+      width: 100%; max-width: 520px;
+      background: #0f0f22;
+      border: 1px solid var(--border-strong);
+      border-radius: 28px;
+      padding: 28px;
+      animation: slideUp 0.35s cubic-bezier(0.34,1.3,0.64,1) both;
+      box-shadow: 0 -20px 60px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.04);
+    }
+    @keyframes slideUp {
+      from { opacity:0; transform:translateY(40px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+    .upload-modal-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .upload-modal-header h3 {
+      font-family: var(--font-display);
+      font-size: 1.05rem; font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    /* ── PAGE FOOTER ──────────────────────────────────── */
+    .gallery-footer {
+      padding: 20px 24px;
+      border-top: 1px solid var(--border);
+      background: rgba(8,8,15,0.6);
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 12px;
+    }
+    .footer-brand {
+      display: flex; align-items: center; gap: 7px;
+      font-size: 0.78rem; color: var(--text-tertiary);
+    }
+    .footer-brand span { color: var(--primary-light); font-weight: 600; }
+    .footer-studio {
+      font-size: 0.78rem; color: var(--text-tertiary);
+      display: flex; align-items: center; gap: 8px;
+    }
+
+    /* ── PIN MODAL (inside entry modal) ──────────────── */
+    .pin-modal {
+      display: none;
+      position: absolute; inset: 0;
+      background: #0d0d1a;
+      border-radius: 28px;
+      padding: 32px;
+      flex-direction: column;
+      justify-content: center;
+      z-index: 10;
+    }
+    .pin-modal.open { display: flex; }
+    .pin-inputs {
+      display: flex; gap: 10px; justify-content: center;
+      margin: 24px 0;
+    }
+    .pin-input {
+      width: 52px; height: 64px;
+      background: var(--bg-glass);
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      text-align: center;
+      font-size: 1.6rem; font-weight: 700;
+      color: var(--text-primary);
+      font-family: var(--font-mono);
+      outline: none;
+      transition: var(--transition);
+    }
+    .pin-input:focus {
+      border-color: var(--primary);
+      background: var(--primary-subtle);
+      box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
+    }
+
+    /* ── MISC HELPERS ─────────────────────────────────── */
+    .hidden { display: none !important; }
+    .fade-in { animation: fadeIn 0.3s ease both; }
+    @keyframes fadeIn { from{opacity:0}to{opacity:1} }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 4px; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .masonry-grid { columns: 2 150px; }
+      .folder-grid { grid-template-columns: repeat(2, 1fr); }
+      .studio-header { padding: 0 14px; }
+      .gallery-content { padding: 14px; }
+      .tabs-bar { padding: 0 10px; gap: 2px; overflow-x: auto; scrollbar-width: none; }
+      .tabs-bar::-webkit-scrollbar { display: none; }
+      .tab-pill { padding: 7px 13px; font-size: 0.78rem; }
+      .studio-info-event { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════════
+     GALLERY ENTRY MODAL
+══════════════════════════════════════════════════════════════ -->
+<div class="entry-overlay" id="entryOverlay">
+  <div class="entry-overlay-bg"></div>
+  <div class="entry-modal" id="entryModal">
+
+    <!-- Cover image -->
+    <div class="entry-cover">
+      <img src="https://images.unsplash.com/photo-1519741497674-611481863552?w=600&q=80" alt="Sharma Wedding" loading="eager" />
+      <div class="entry-cover-overlay"></div>
+      <div class="entry-cover-badge">
+        <i class="fa-solid fa-camera" style="font-size:.65rem"></i>
+        Live Gallery
+      </div>
+    </div>
+
+    <!-- Body -->
+    <div class="entry-body">
+      <div class="entry-studio-row">
+        <div class="entry-studio-logo">Δ</div>
+        <div>
+          <div style="font-size:.82rem;font-weight:700;color:var(--text-primary);font-family:var(--font-display)">Delta Photography Studio</div>
+          <div style="font-size:.72rem;color:var(--text-tertiary)">Premium Event Photography</div>
+        </div>
+      </div>
+
+      <div class="entry-event-name">Sharma Wedding Ceremony</div>
+      <div class="entry-event-date">
+        <i class="fa-regular fa-calendar"></i> May 25, 2026
+        <span style="color:var(--border-strong)">·</span>
+        <i class="fa-solid fa-images"></i> 847 photos
+      </div>
+
+      <div class="entry-question">How would you like to access this gallery?</div>
+
+      <div class="entry-options">
+        <!-- Find My Photos -->
+        <a href="gallery-entry.html" class="entry-option primary-opt">
+          <div class="entry-option-icon">🧠</div>
+          <div class="entry-option-text">
+            <strong>Find My Photos</strong>
+            <span>Upload a selfie — AI finds you in every shot</span>
+          </div>
+          <i class="fa-solid fa-chevron-right entry-option-arrow"></i>
+        </a>
+
+        <!-- Browse All Photos -->
+        <div class="entry-option" onclick="openGallery('all')">
+          <div class="entry-option-icon">🖼️</div>
+          <div class="entry-option-text">
+            <strong>Browse All Photos</strong>
+            <span>Explore the full gallery by category</span>
+          </div>
+          <i class="fa-solid fa-chevron-right entry-option-arrow"></i>
+        </div>
+
+        <!-- Enter PIN -->
+        <div class="entry-option" onclick="openPinModal()">
+          <div class="entry-option-icon">🔒</div>
+          <div class="entry-option-text">
+            <strong>Enter PIN</strong>
+            <span>Use an access code shared by the studio</span>
+          </div>
+          <i class="fa-solid fa-chevron-right entry-option-arrow"></i>
+        </div>
+      </div>
+
+      <div class="entry-footer">
+        <a href="events.html">
+          <i class="fa-solid fa-arrow-left"></i> Back to Events
+        </a>
+        <div class="entry-footer-brand">
+          Powered by <span>FastPic.ai</span>
+          <i class="fa-solid fa-bolt" style="color:var(--primary-light);font-size:.7rem"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- PIN sub-panel -->
+    <div class="pin-modal" id="pinModal">
+      <button onclick="closePinModal()" style="position:absolute;top:20px;left:20px;background:none;border:none;color:var(--text-secondary);cursor:pointer;font-size:.85rem;display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:var(--radius);transition:var(--transition);" onmouseover="this.style.background='var(--bg-glass)'" onmouseout="this.style.background='none'">
+        <i class="fa-solid fa-arrow-left"></i> Back
+      </button>
+      <div style="text-align:center">
+        <div style="width:56px;height:56px;background:var(--primary-subtle);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin:0 auto 16px">🔒</div>
+        <div style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;margin-bottom:6px">Enter Gallery PIN</div>
+        <div style="font-size:.82rem;color:var(--text-secondary)">Ask Delta Photography Studio for your access code</div>
+      </div>
+      <div class="pin-inputs">
+        <input type="text" maxlength="1" class="pin-input" oninput="pinNext(this,1)" inputmode="numeric" />
+        <input type="text" maxlength="1" class="pin-input" oninput="pinNext(this,2)" inputmode="numeric" />
+        <input type="text" maxlength="1" class="pin-input" oninput="pinNext(this,3)" inputmode="numeric" />
+        <input type="text" maxlength="1" class="pin-input" oninput="pinNext(this,4)" inputmode="numeric" />
+      </div>
+      <button class="btn btn-primary btn-full btn-lg" onclick="openGallery('myPhotos')">
+        <i class="fa-solid fa-unlock"></i> Access Gallery
+      </button>
+    </div>
+
+  </div><!-- /entry-modal -->
+</div><!-- /entry-overlay -->
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     MAIN GALLERY PAGE
+══════════════════════════════════════════════════════════════ -->
+<div class="gallery-page" id="galleryPage">
+
+  <!-- ── STUDIO HEADER ─────────────────────────────────────── -->
+  <header class="studio-header">
+    <div class="studio-header-left">
+      <div class="studio-logo-circle">Δ</div>
+      <div>
+        <div class="studio-info-name">Delta Photography Studio</div>
+        <div class="studio-info-event">
+          <i class="fa-solid fa-rings-wedding" style="color:var(--primary-light)"></i>
+          Sharma Wedding Ceremony — May 25, 2026
+        </div>
+      </div>
+    </div>
+    <div class="studio-header-right">
+      <div class="fav-chip" id="favChip">
+        <i class="fa-solid fa-heart"></i>
+        <span id="favCount">12</span> favorites
+      </div>
+      <button class="btn btn-secondary btn-sm" onclick="sharGallery()">
+        <i class="fa-solid fa-share-nodes"></i> Share
+      </button>
+      <button class="btn btn-primary btn-sm">
+        <i class="fa-solid fa-download"></i> Download All
+      </button>
+    </div>
+  </header>
+
+  <!-- ── TABS BAR ───────────────────────────────────────────── -->
+  <nav class="tabs-bar">
+    <button class="tab-pill active" onclick="switchTab('myPhotos',this)">
+      <i class="fa-solid fa-user-circle"></i> My Photos
+      <span class="tab-count">47</span>
+    </button>
+    <button class="tab-pill" onclick="switchTab('allPhotos',this)">
+      <i class="fa-solid fa-images"></i> All Photos
+      <span class="tab-count">847</span>
+    </button>
+    <button class="tab-pill" onclick="switchTab('highlights',this)">
+      <i class="fa-solid fa-star"></i> Highlights
+      <span class="tab-count">24</span>
+    </button>
+    <button class="tab-pill" onclick="switchTab('guestUploads',this)">
+      <i class="fa-solid fa-cloud-arrow-up"></i> Guest Uploads
+      <span class="tab-count">38</span>
+    </button>
+  </nav>
+
+  <!-- ── GALLERY CONTENT ────────────────────────────────────── -->
+  <main class="gallery-content">
+
+    <!-- ═══════ MY PHOTOS TAB ═══════ -->
+    <div class="tab-panel active" id="panel-myPhotos">
+
+      <!-- AI Match Banner -->
+      <div class="ai-match-banner">
+        <div class="ai-banner-icon">🧠</div>
+        <div class="ai-banner-text">
+          <strong>AI matched 47 photos containing your face</strong>
+          <span>Results updated in real-time as new photos are uploaded by the studio</span>
+        </div>
+        <div class="ai-banner-action">
+          <button class="btn btn-sm" style="background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.3);color:var(--success);font-size:.75rem;">
+            <i class="fa-solid fa-arrow-rotate-right"></i> Refresh
+          </button>
+        </div>
+      </div>
+
+      <!-- Masonry Grid -->
+      <div class="masonry-grid" id="myPhotoGrid">
+        <!-- JS renders photos here -->
+      </div>
+    </div>
+
+    <!-- ═══════ ALL PHOTOS TAB ═══════ -->
+    <div class="tab-panel" id="panel-allPhotos">
+      <div id="folderView">
+        <div class="section-heading">
+          <h2>Browse by Category</h2>
+          <span style="font-size:.8rem;color:var(--text-secondary)">847 total photos</span>
+        </div>
+        <div class="folder-grid">
+          <!-- Folder: Getting Ready -->
+          <div class="folder-card-guest" onclick="openFolder('getting-ready')">
+            <div class="folder-thumb-wrap">
+              <img class="folder-thumb-img" src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=400&q=80" alt="Getting Ready" loading="lazy" />
+              <div class="folder-thumb-wrap-overlay"></div>
+            </div>
+            <div class="folder-info">
+              <div class="folder-info-name"><i class="fa-solid fa-sparkles" style="color:var(--warning);font-size:.85rem"></i> Getting Ready</div>
+              <div class="folder-info-meta">
+                <i class="fa-solid fa-image"></i> 142 photos
+                <span>·</span>9:00 AM – 11:00 AM
+              </div>
+            </div>
+          </div>
+          <!-- Folder: Ceremony -->
+          <div class="folder-card-guest" onclick="openFolder('ceremony')">
+            <div class="folder-thumb-wrap">
+              <img class="folder-thumb-img" src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=400&q=80" alt="Ceremony" loading="lazy" />
+              <div class="folder-thumb-wrap-overlay"></div>
+            </div>
+            <div class="folder-info">
+              <div class="folder-info-name"><i class="fa-solid fa-rings-wedding" style="color:var(--primary-light);font-size:.85rem"></i> Ceremony</div>
+              <div class="folder-info-meta">
+                <i class="fa-solid fa-image"></i> 284 photos
+                <span>·</span>11:30 AM – 1:00 PM
+              </div>
+            </div>
+          </div>
+          <!-- Folder: Reception -->
+          <div class="folder-card-guest" onclick="openFolder('reception')">
+            <div class="folder-thumb-wrap">
+              <img class="folder-thumb-img" src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=400&q=80" alt="Reception" loading="lazy" />
+              <div class="folder-thumb-wrap-overlay"></div>
+            </div>
+            <div class="folder-info">
+              <div class="folder-info-name"><i class="fa-solid fa-champagne-glasses" style="color:var(--accent);font-size:.85rem"></i> Reception</div>
+              <div class="folder-info-meta">
+                <i class="fa-solid fa-image"></i> 311 photos
+                <span>·</span>2:00 PM – 8:00 PM
+              </div>
+            </div>
+          </div>
+          <!-- Folder: Portraits -->
+          <div class="folder-card-guest" onclick="openFolder('portraits')">
+            <div class="folder-thumb-wrap">
+              <img class="folder-thumb-img" src="https://images.unsplash.com/photo-1529634806980-85c3dd6d34ac?w=400&q=80" alt="Portraits" loading="lazy" />
+              <div class="folder-thumb-wrap-overlay"></div>
+            </div>
+            <div class="folder-info">
+              <div class="folder-info-name"><i class="fa-solid fa-camera-retro" style="color:#a78bfa;font-size:.85rem"></i> Portraits</div>
+              <div class="folder-info-meta">
+                <i class="fa-solid fa-image"></i> 110 photos
+                <span>·</span>Throughout the day
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Folder contents view (hidden until folder clicked) -->
+      <div id="folderContents" class="hidden">
+        <div class="section-heading">
+          <button class="back-btn" onclick="closeFolder()">
+            <i class="fa-solid fa-arrow-left"></i> All Albums
+          </button>
+          <h2 id="folderContentsTitle">Ceremony</h2>
+          <span style="font-size:.8rem;color:var(--text-secondary)" id="folderContentsCount">284 photos</span>
+        </div>
+        <div class="masonry-grid" id="folderPhotoGrid">
+          <!-- JS renders photos -->
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════ HIGHLIGHTS TAB ═══════ -->
+    <div class="tab-panel" id="panel-highlights">
+      <div class="highlights-hero">
+        <img src="https://images.unsplash.com/photo-1519741497674-611481863552?w=900&q=80" alt="Highlight" loading="lazy" />
+        <div class="highlights-hero-overlay">
+          <div class="highlights-hero-text">
+            <h3>✨ Best Moments</h3>
+            <p>24 photos hand-picked by the photographer</p>
+          </div>
+        </div>
+      </div>
+      <div class="masonry-grid" id="highlightGrid"></div>
+    </div>
+
+    <!-- ═══════ GUEST UPLOADS TAB ═══════ -->
+    <div class="tab-panel" id="panel-guestUploads">
+      <!-- Upload zone -->
+      <div class="upload-drop-zone" id="dropZone"
+        ondragover="handleDragOver(event)"
+        ondragleave="handleDragLeave(event)"
+        ondrop="handleDrop(event)"
+        onclick="document.getElementById('fileInput').click()">
+        <div class="upload-icon">📸</div>
+        <h3>Share your photos from this event</h3>
+        <p>Drag & drop photos here, or click to browse<br>
+          <span style="color:var(--text-tertiary);font-size:.78rem">JPG, PNG, HEIC — up to 25 MB each</span>
+        </p>
+        <button class="btn btn-primary" onclick="event.stopPropagation();document.getElementById('fileInput').click()">
+          <i class="fa-solid fa-plus"></i> Choose Photos
+        </button>
+        <input type="file" id="fileInput" accept="image/*" multiple style="display:none" onchange="handleFileSelect(this)" />
+      </div>
+
+      <div class="section-heading">
+        <h2><i class="fa-solid fa-users" style="color:var(--primary-light)"></i> Guest Contributions</h2>
+        <span style="font-size:.8rem;color:var(--text-secondary)">38 photos from 14 guests</span>
+      </div>
+      <div class="masonry-grid" id="guestGrid"></div>
+    </div>
+
+  </main>
+
+  <!-- ── FOOTER ─────────────────────────────────────────────── -->
+  <footer class="gallery-footer">
+    <div class="footer-brand">
+      Powered by <span>FastPic.ai</span>
+      <i class="fa-solid fa-bolt" style="color:var(--primary-light);font-size:.7rem"></i>
+    </div>
+    <div class="footer-studio">
+      <i class="fa-solid fa-envelope" style="color:var(--text-tertiary)"></i>
+      delta@deltaphotography.com
+      <span style="color:var(--border-strong)">·</span>
+      <i class="fa-solid fa-phone"></i> +91 98765 43210
+    </div>
+    <div style="display:flex;gap:10px">
+      <a href="dashboard.html" style="font-size:.76rem;color:var(--text-tertiary);display:flex;align-items:center;gap:4px;transition:var(--transition)" onmouseover="this.style.color='var(--text-secondary)'" onmouseout="this.style.color='var(--text-tertiary)'">
+        <i class="fa-solid fa-chart-line"></i> Studio Dashboard
+      </a>
+    </div>
+  </footer>
+
+</div><!-- /galleryPage -->
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     FAB UPLOAD BUTTON
+══════════════════════════════════════════════════════════════ -->
+<button class="fab-upload hidden" id="fabUpload" onclick="openUploadModal()" title="Share your photos">
+  <i class="fa-solid fa-plus"></i>
+</button>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     UPLOAD MODAL
+══════════════════════════════════════════════════════════════ -->
+<div class="upload-modal-overlay" id="uploadModalOverlay">
+  <div class="upload-modal-bg" onclick="closeUploadModal()"></div>
+  <div class="upload-modal">
+    <div class="upload-modal-header">
+      <h3>📸 Share Your Photos</h3>
+      <button class="lb-btn" onclick="closeUploadModal()">
+        <i class="fa-solid fa-times"></i>
+      </button>
+    </div>
+    <div class="upload-drop-zone" style="padding:32px 20px;margin-bottom:16px" onclick="document.getElementById('modalFileInput').click()">
+      <div class="upload-icon" style="width:52px;height:52px;font-size:1.4rem">📷</div>
+      <h3 style="font-size:1rem;margin-bottom:6px">Share your photos from this event</h3>
+      <p style="margin-bottom:14px">Drag & drop or click to browse</p>
+      <button class="btn btn-primary btn-sm">Choose Files</button>
+      <input type="file" id="modalFileInput" accept="image/*" multiple style="display:none" />
+    </div>
+    <button class="btn btn-primary btn-full" onclick="closeUploadModal()">
+      <i class="fa-solid fa-cloud-arrow-up"></i> Upload Photos
+    </button>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     PHOTO LIGHTBOX
+══════════════════════════════════════════════════════════════ -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer">
+  <div class="lightbox-header">
+    <div class="lightbox-counter" id="lbCounter">1 / 47</div>
+    <div class="lightbox-header-actions">
+      <button class="lb-btn" id="lbFavBtn" onclick="toggleLbFav()" title="Favorite">
+        <i class="fa-regular fa-heart"></i>
+      </button>
+      <button class="lb-btn" onclick="downloadPhoto()" title="Download">
+        <i class="fa-solid fa-download"></i>
+      </button>
+      <button class="lb-btn" onclick="sharGallery()" title="Share">
+        <i class="fa-solid fa-share-nodes"></i>
+      </button>
+      <button class="lb-btn lb-close" onclick="closeLightbox()" title="Close">
+        <i class="fa-solid fa-times"></i> <span style="font-size:.78rem">Close</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="lightbox-stage">
+    <button class="lb-nav-btn lb-nav-prev" onclick="lbNavigate(-1)">
+      <i class="fa-solid fa-chevron-left"></i>
+    </button>
+    <img class="lightbox-img" id="lbImg" src="" alt="Photo" />
+    <button class="lb-nav-btn lb-nav-next" onclick="lbNavigate(1)">
+      <i class="fa-solid fa-chevron-right"></i>
+    </button>
+    <div class="lb-watermark">© Delta Photography · FastPic.ai</div>
+  </div>
+
+  <div class="lightbox-footer">
+    <div class="lb-thumb-strip" id="lbThumbStrip"></div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     SHARE TOAST
+══════════════════════════════════════════════════════════════ -->
+<div id="shareToast" style="
+  position:fixed;bottom:100px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:#1a1a2e;border:1px solid var(--primary);border-radius:var(--radius-full);
+  padding:10px 20px;font-size:.82rem;color:var(--text-primary);
+  display:none;align-items:center;gap:8px;z-index:9999;
+  box-shadow:0 8px 24px rgba(99,102,241,0.3);
+  transition:all 0.3s ease;
+">
+  <i class="fa-solid fa-link" style="color:var(--primary-light)"></i>
+  Gallery link copied to clipboard!
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════════════════════════════ -->
+<script>
+  /* ── Photo Data ─────────────────────────────────────────── */
+  const PHOTOS = {
+    myPhotos: [
+      { id:1, src:'https://images.unsplash.com/photo-1519741497674-611481863552?w=600&q=80', h:'tall' },
+      { id:2, src:'https://images.unsplash.com/photo-1529634806980-85c3dd6d34ac?w=400&q=80', h:'normal' },
+      { id:3, src:'https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=400&q=80', h:'short' },
+      { id:4, src:'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=400&q=80', h:'normal' },
+      { id:5, src:'https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=400&q=80', h:'tall' },
+      { id:6, src:'https://images.unsplash.com/photo-1606800052052-a08af7148866?w=400&q=80', h:'normal' },
+      { id:7, src:'https://images.unsplash.com/photo-1591604466107-ec97de577aff?w=400&q=80', h:'short' },
+      { id:8, src:'https://images.unsplash.com/photo-1460978812857-470ed1c77af0?w=400&q=80', h:'normal' },
+      { id:9, src:'https://images.unsplash.com/photo-1537633552985-df8429e8048b?w=400&q=80', h:'tall' },
+      { id:10,src:'https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=400&q=80', h:'normal' },
+      { id:11,src:'https://images.unsplash.com/photo-1519741497674-611481863552?w=400&q=80', h:'short' },
+      { id:12,src:'https://images.unsplash.com/photo-1529634806980-85c3dd6d34ac?w=400&q=80', h:'tall' },
+    ],
+    ceremony: [
+      { id:13,src:'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=400&q=80', h:'tall' },
+      { id:14,src:'https://images.unsplash.com/photo-1606800052052-a08af7148866?w=400&q=80', h:'normal' },
+      { id:15,src:'https://images.unsplash.com/photo-1519741497674-611481863552?w=400&q=80', h:'short' },
+      { id:16,src:'https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=400&q=80', h:'normal' },
+      { id:17,src:'https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=400&q=80', h:'tall' },
+      { id:18,src:'https://images.unsplash.com/photo-1529634806980-85c3dd6d34ac?w=400&q=80', h:'normal' },
+    ],
+    highlights: [
+      { id:19,src:'https://images.unsplash.com/photo-1519741497674-611481863552?w=600&q=80', h:'tall' },
+      { id:20,src:'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=400&q=80', h:'normal' },
+      { id:21,src:'https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=400&q=80', h:'short' },
+      { id:22,src:'https://images.unsplash.com/photo-1529634806980-85c3dd6d34ac?w=400&q=80', h:'tall' },
+      { id:23,src:'https://images.unsplash.com/photo-1606800052052-a08af7148866?w=400&q=80', h:'normal' },
+      { id:24,src:'https://images.unsplash.com/photo-1537633552985-df8429e8048b?w=400&q=80', h:'short' },
+    ],
+    guests: [
+      { id:25,src:'https://images.unsplash.com/photo-1460978812857-470ed1c77af0?w=400&q=80', h:'tall' },
+      { id:26,src:'https://images.unsplash.com/photo-1591604466107-ec97de577aff?w=400&q=80', h:'normal' },
+      { id:27,src:'https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=400&q=80', h:'short' },
+      { id:28,src:'https://images.unsplash.com/photo-1537633552985-df8429e8048b?w=400&q=80', h:'normal' },
+      { id:29,src:'https://images.unsplash.com/photo-1519741497674-611481863552?w=400&q=80', h:'tall' },
+    ]
+  };
+
+  const favs = new Set([1,5,9]); // pre-liked photos
+  let favTotal = 12;
+  let lbPhotos = [];
+  let lbIndex = 0;
+
+  /* ── Photo Grid Renderer ─────────────────────────────────── */
+  function renderGrid(containerId, photos) {
+    const grid = document.getElementById(containerId);
+    grid.innerHTML = photos.map((p, i) =>
+      `<div class="masonry-item" onclick="openLightbox(${JSON.stringify(photos)}, ${i})" data-id="${p.id}">
+        <img src="${p.src}" alt="Event photo ${p.id}" loading="lazy"
+          style="${p.h === 'tall' ? 'aspect-ratio:3/4' : p.h === 'short' ? 'aspect-ratio:4/3' : 'aspect-ratio:1'}" />
+        <div class="masonry-overlay"></div>
+        <div class="masonry-actions">
+          <button class="photo-btn fav-btn ${favs.has(p.id) ? 'hearted' : ''}" onclick="toggleFav(event, ${p.id})" title="Favorite">
+            <i class="${favs.has(p.id) ? 'fa-solid' : 'fa-regular'} fa-heart"></i>
+          </button>
+          <button class="photo-btn" onclick="event.stopPropagation();downloadPhoto()" title="Download">
+            <i class="fa-solid fa-download"></i>
+          </button>
+        </div>
+        <div class="watermark">© Delta · FastPic.ai</div>
+      </div>`
+    ).join('');
+  }
+
+  /* ── Favourite Toggle ─────────────────────────────────────── */
+  function toggleFav(e, photoId) {
+    e.stopPropagation();
+    const btn = e.currentTarget;
+    const icon = btn.querySelector('i');
+    if (favs.has(photoId)) {
+      favs.delete(photoId);
+      btn.classList.remove('hearted');
+      icon.className = 'fa-regular fa-heart';
+      favTotal = Math.max(0, favTotal - 1);
+    } else {
+      favs.add(photoId);
+      btn.classList.add('hearted');
+      icon.className = 'fa-solid fa-heart';
+      favTotal++;
+      // heart burst micro-animation
+      btn.style.transform = 'scale(1.4)';
+      setTimeout(() => btn.style.transform = '', 200);
+    }
+    document.getElementById('favCount').textContent = favTotal;
+  }
+
+  /* ── Lightbox ─────────────────────────────────────────────── */
+  function openLightbox(photos, index) {
+    lbPhotos = photos;
+    lbIndex = index;
+    document.getElementById('lightbox').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    renderLightbox();
+  }
+
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function renderLightbox() {
+    const p = lbPhotos[lbIndex];
+    const img = document.getElementById('lbImg');
+    img.style.opacity = '0';
+    setTimeout(() => {
+      img.src = p.src.replace('w=400', 'w=1400');
+      img.style.opacity = '1';
+    }, 100);
+    document.getElementById('lbCounter').textContent = `${lbIndex + 1} / ${lbPhotos.length}`;
+
+    const lbFavBtn = document.getElementById('lbFavBtn');
+    if (favs.has(p.id)) {
+      lbFavBtn.classList.add('active');
+      lbFavBtn.innerHTML = '<i class="fa-solid fa-heart"></i>';
+    } else {
+      lbFavBtn.classList.remove('active');
+      lbFavBtn.innerHTML = '<i class="fa-regular fa-heart"></i>';
+    }
+
+    // Thumb strip
+    const strip = document.getElementById('lbThumbStrip');
+    strip.innerHTML = lbPhotos.map((ph, i) =>
+      `<div class="lb-thumb ${i === lbIndex ? 'active' : ''}" onclick="lbGoTo(${i})">
+        <img src="${ph.src}" alt="" loading="lazy" />
+      </div>`
+    ).join('');
+
+    // Scroll active thumb into view
+    setTimeout(() => {
+      const active = strip.querySelector('.active');
+      if (active) active.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    }, 50);
+  }
+
+  function lbNavigate(dir) {
+    lbIndex = (lbIndex + dir + lbPhotos.length) % lbPhotos.length;
+    renderLightbox();
+  }
+
+  function lbGoTo(i) {
+    lbIndex = i;
+    renderLightbox();
+  }
+
+  function toggleLbFav() {
+    const p = lbPhotos[lbIndex];
+    if (!p) return;
+    // Simulate a click on the corresponding grid button
+    if (favs.has(p.id)) {
+      favs.delete(p.id);
+      favTotal = Math.max(0, favTotal - 1);
+    } else {
+      favs.add(p.id);
+      favTotal++;
+    }
+    document.getElementById('favCount').textContent = favTotal;
+    renderLightbox();
+  }
+
+  function downloadPhoto() {
+    // In production: trigger actual download
+    const toast = document.getElementById('shareToast');
+    toast.innerHTML = '<i class="fa-solid fa-check" style="color:var(--success)"></i> Download started!';
+    showToast();
+    setTimeout(() => {
+      toast.innerHTML = '<i class="fa-solid fa-link" style="color:var(--primary-light)"></i> Gallery link copied!';
+    }, 3000);
+  }
+
+  /* ── Keyboard Nav ─────────────────────────────────────────── */
+  document.addEventListener('keydown', e => {
+    const lb = document.getElementById('lightbox');
+    if (!lb.classList.contains('open')) return;
+    if (e.key === 'ArrowLeft') lbNavigate(-1);
+    if (e.key === 'ArrowRight') lbNavigate(1);
+    if (e.key === 'Escape') closeLightbox();
+  });
+
+  /* ── Tab Switching ───────────────────────────────────────── */
+  function switchTab(tabId, btn) {
+    document.querySelectorAll('.tab-pill').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    const panel = document.getElementById(`panel-${tabId}`);
+    if (panel) { panel.classList.add('active'); panel.classList.add('fade-in'); }
+  }
+
+  /* ── Folder navigation ───────────────────────────────────── */
+  const FOLDER_META = {
+    'getting-ready': { name:'Getting Ready', count:'142 photos', photos: PHOTOS.myPhotos },
+    'ceremony':      { name:'Ceremony',      count:'284 photos', photos: PHOTOS.ceremony },
+    'reception':     { name:'Reception',     count:'311 photos', photos: PHOTOS.highlights },
+    'portraits':     { name:'Portraits',     count:'110 photos', photos: PHOTOS.guests },
+  };
+
+  function openFolder(slug) {
+    const meta = FOLDER_META[slug];
+    document.getElementById('folderView').classList.add('hidden');
+    const fc = document.getElementById('folderContents');
+    fc.classList.remove('hidden');
+    fc.classList.add('fade-in');
+    document.getElementById('folderContentsTitle').textContent = meta.name;
+    document.getElementById('folderContentsCount').textContent = meta.count;
+    renderGrid('folderPhotoGrid', meta.photos);
+  }
+
+  function closeFolder() {
+    document.getElementById('folderContents').classList.add('hidden');
+    document.getElementById('folderView').classList.remove('hidden');
+  }
+
+  /* ── Entry modal flow ────────────────────────────────────── */
+  function openGallery(defaultTab) {
+    document.getElementById('entryOverlay').style.display = 'none';
+    const page = document.getElementById('galleryPage');
+    page.classList.add('active');
+    document.getElementById('fabUpload').classList.remove('hidden');
+
+    // Render grids
+    renderGrid('myPhotoGrid', PHOTOS.myPhotos);
+    renderGrid('highlightGrid', PHOTOS.highlights);
+    renderGrid('guestGrid', PHOTOS.guests);
+
+    // Switch to requested tab
+    const tabs = document.querySelectorAll('.tab-pill');
+    const tabMap = { myPhotos:0, all:1, highlights:2, guestUploads:3 };
+    const idx = tabMap[defaultTab] ?? 0;
+    switchTab(['myPhotos','allPhotos','highlights','guestUploads'][idx], tabs[idx]);
+  }
+
+  /* ── PIN Modal ─────────────────────────────────────────────── */
+  function openPinModal() {
+    document.getElementById('pinModal').classList.add('open');
+    document.querySelectorAll('.pin-input')[0].focus();
+  }
+
+  function closePinModal() {
+    document.getElementById('pinModal').classList.remove('open');
+  }
+
+  function pinNext(el, pos) {
+    const inputs = document.querySelectorAll('.pin-input');
+    if (el.value && pos < 4) inputs[pos].focus();
+  }
+
+  /* ── Upload drag & drop ─────────────────────────────────── */
+  function handleDragOver(e) {
+    e.preventDefault();
+    document.getElementById('dropZone').classList.add('drag-over');
+  }
+  function handleDragLeave(e) {
+    document.getElementById('dropZone').classList.remove('drag-over');
+  }
+  function handleDrop(e) {
+    e.preventDefault();
+    document.getElementById('dropZone').classList.remove('drag-over');
+    showToast('📸 Photos queued for upload!', true);
+  }
+  function handleFileSelect(input) {
+    if (input.files.length) showToast('📸 ' + input.files.length + ' photos ready to upload!', true);
+  }
+
+  /* ── Upload Modal ─────────────────────────────────────────── */
+  function openUploadModal() {
+    document.getElementById('uploadModalOverlay').classList.add('open');
+  }
+  function closeUploadModal() {
+    document.getElementById('uploadModalOverlay').classList.remove('open');
+  }
+
+  /* ── Share ────────────────────────────────────────────────── */
+  function sharGallery() {
+    navigator.clipboard?.writeText(location.href).catch(() => {});
+    showToast();
+  }
+
+  /* ── Toast ───────────────────────────────────────────────── */
+  function showToast(msg, isSuccess) {
+    const t = document.getElementById('shareToast');
+    if (msg) {
+      t.innerHTML = `<i class="fa-solid fa-check" style="color:${isSuccess?'var(--success)':'var(--primary-light)'}"></i> ${msg}`;
+    }
+    t.style.display = 'flex';
+    t.style.transform = 'translateX(-50%) translateY(0)';
+    t.style.opacity = '1';
+    setTimeout(() => {
+      t.style.opacity = '0';
+      t.style.transform = 'translateX(-50%) translateY(10px)';
+      setTimeout(() => { t.style.display = 'none'; t.style.transform = 'translateX(-50%) translateY(20px)'; }, 300);
+    }, 3000);
+  }
+</script>
+</body>
+</html>

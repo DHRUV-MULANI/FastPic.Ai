@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sharma Wedding Gallery — FastPic.AI</title>
+  <link rel="stylesheet" href="design-system.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <style>
+    /* ── FULL-PAGE BACKGROUND ── */
+    .entry-bg {
+      position: fixed;
+      inset: 0;
+      background: #08080F;
+      overflow: hidden;
+      z-index: 0;
+    }
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.25;
+      animation: orbFloat 12s ease-in-out infinite alternate;
+    }
+    .orb-1 {
+      width: 520px; height: 520px;
+      background: radial-gradient(circle, #6366F1, #4F46E5);
+      top: -180px; left: -120px;
+      animation-delay: 0s;
+    }
+    .orb-2 {
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, #22D3EE, #0EA5E9);
+      bottom: -100px; right: -80px;
+      animation-delay: 3s;
+    }
+    .orb-3 {
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, #A78BFA, #7C3AED);
+      top: 40%; left: 55%;
+      animation-delay: 6s;
+    }
+    @keyframes orbFloat {
+      0%   { transform: translate(0, 0) scale(1); }
+      50%  { transform: translate(30px, -20px) scale(1.05); }
+      100% { transform: translate(-15px, 30px) scale(0.97); }
+    }
+
+    /* ── PAGE WRAPPER ── */
+    .entry-page {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── HEADER ── */
+    .entry-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 32px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      background: rgba(8,8,15,0.6);
+      backdrop-filter: blur(16px);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .studio-logo-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .studio-logo-circle {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6366F1, #22D3EE);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800;
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      color: white;
+      box-shadow: 0 4px 14px rgba(99,102,241,0.4);
+      flex-shrink: 0;
+    }
+    .studio-name {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--text-primary);
+    }
+    .help-link {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--border);
+      background: var(--bg-glass);
+      transition: var(--transition);
+    }
+    .help-link:hover {
+      background: var(--bg-glass-hover);
+      color: var(--text-primary);
+      border-color: var(--border-strong);
+    }
+
+    /* ── CENTER CONTENT ── */
+    .entry-center {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 44px 16px 60px;
+    }
+
+    /* ── EVENT HERO CARD ── */
+    .event-hero-card {
+      width: 100%;
+      max-width: 480px;
+      background: rgba(13,13,26,0.85);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 24px;
+      overflow: hidden;
+      backdrop-filter: blur(24px);
+      box-shadow: 0 24px 64px rgba(0,0,0,0.6), 0 0 0 1px rgba(99,102,241,0.15);
+      animation: cardReveal 0.6s cubic-bezier(0.4,0,0.2,1) both;
+    }
+    @keyframes cardReveal {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .event-cover {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      display: block;
+    }
+    .event-cover-overlay {
+      position: relative;
+    }
+    .event-cover-overlay::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 60px;
+      background: linear-gradient(to bottom, transparent, rgba(13,13,26,0.95));
+    }
+    .event-body {
+      padding: 22px 24px 24px;
+    }
+
+    /* Live Gallery Badge */
+    .live-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(16,185,129,0.12);
+      border: 1px solid rgba(16,185,129,0.3);
+      border-radius: var(--radius-full);
+      padding: 4px 12px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #10B981;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    .live-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: #10B981;
+      box-shadow: 0 0 0 0 rgba(16,185,129,0.4);
+      animation: livePulse 2s ease-in-out infinite;
+    }
+    @keyframes livePulse {
+      0%   { box-shadow: 0 0 0 0 rgba(16,185,129,0.5); }
+      50%  { box-shadow: 0 0 0 6px rgba(16,185,129,0); }
+      100% { box-shadow: 0 0 0 0 rgba(16,185,129,0); }
+    }
+
+    .event-name {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1.2;
+      margin-bottom: 8px;
+    }
+    .event-meta {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.83rem;
+      color: var(--text-secondary);
+      margin-bottom: 14px;
+    }
+    .event-meta i { color: var(--text-tertiary); font-size: 0.75rem; }
+    .event-stats {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .event-stat-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+    .event-stat-item i { color: var(--primary-light); font-size: 0.75rem; }
+
+    /* ── ACCESS OPTIONS ── */
+    .access-options {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 4px;
+    }
+    .access-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 16px;
+      padding: 18px 20px;
+      transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+      cursor: pointer;
+    }
+    .access-card:hover {
+      background: rgba(255,255,255,0.06);
+      border-color: rgba(255,255,255,0.15);
+      transform: translateY(-1px);
+    }
+
+    /* Primary AI option with glow border */
+    .access-card.primary-option {
+      background: rgba(99,102,241,0.07);
+      border: 1px solid rgba(99,102,241,0.35);
+      box-shadow: 0 0 30px rgba(99,102,241,0.1), inset 0 1px 0 rgba(99,102,241,0.15);
+      position: relative;
+      overflow: hidden;
+    }
+    .access-card.primary-option::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(99,102,241,0.6), rgba(34,211,238,0.4), transparent);
+    }
+    .access-card.primary-option:hover {
+      border-color: rgba(99,102,241,0.55);
+      box-shadow: 0 0 50px rgba(99,102,241,0.18), inset 0 1px 0 rgba(99,102,241,0.2);
+    }
+
+    .ac-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .ac-title-wrap { display: flex; align-items: center; gap: 10px; }
+    .ac-icon {
+      width: 40px; height: 40px;
+      border-radius: 12px;
+      background: var(--primary-subtle);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.15rem;
+      flex-shrink: 0;
+    }
+    .primary-option .ac-icon {
+      background: rgba(99,102,241,0.2);
+      box-shadow: 0 4px 12px rgba(99,102,241,0.25);
+    }
+    .ac-title {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .ac-subtitle {
+      font-size: 0.815rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin-bottom: 14px;
+    }
+    .ac-badge {
+      background: linear-gradient(135deg, rgba(99,102,241,0.25), rgba(34,211,238,0.18));
+      border: 1px solid rgba(99,102,241,0.35);
+      border-radius: var(--radius-full);
+      padding: 3px 10px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: #a5b4fc;
+      white-space: nowrap;
+      letter-spacing: 0.03em;
+    }
+
+    /* PIN Input Group */
+    .pin-group {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 14px;
+    }
+    .pin-digit {
+      width: 44px;
+      height: 52px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 10px;
+      text-align: center;
+      font-size: 1.25rem;
+      font-weight: 700;
+      font-family: var(--font-mono);
+      color: var(--text-primary);
+      outline: none;
+      transition: all 0.2s ease;
+      caret-color: var(--primary);
+    }
+    .pin-digit:focus {
+      border-color: var(--primary);
+      background: rgba(99,102,241,0.1);
+      box-shadow: 0 0 0 3px rgba(99,102,241,0.2);
+    }
+    .pin-digit::selection { background: var(--primary); }
+
+    /* ── FOOTER BELOW CARD ── */
+    .entry-footer-links {
+      margin-top: 24px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    .powered-by {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 0.8rem;
+      color: var(--text-tertiary);
+    }
+    .powered-by-logo {
+      width: 20px; height: 20px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      border-radius: 5px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.55rem;
+      font-weight: 800;
+      color: white;
+    }
+    .powered-by a {
+      color: var(--primary-light);
+      font-weight: 600;
+      transition: var(--transition);
+    }
+    .powered-by a:hover { color: var(--accent); }
+    .privacy-note {
+      font-size: 0.75rem;
+      color: var(--text-tertiary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .privacy-note i { color: var(--success); font-size: 0.7rem; }
+
+    /* ── SELFIE MODAL ── */
+    .selfie-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0);
+      backdrop-filter: blur(0px);
+      z-index: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+    }
+    .selfie-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(10px);
+    }
+    .selfie-modal {
+      background: #0D0D1A;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 24px;
+      padding: 32px;
+      max-width: 440px;
+      width: 100%;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(99,102,241,0.2);
+      transform: scale(0.93) translateY(16px);
+      transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+      position: relative;
+    }
+    .selfie-overlay.open .selfie-modal {
+      transform: scale(1) translateY(0);
+    }
+    .modal-title {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+    .modal-subtitle {
+      font-size: 0.83rem;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+    }
+
+    /* Upload Zone */
+    .upload-zone {
+      border: 2px dashed rgba(99,102,241,0.35);
+      border-radius: 16px;
+      padding: 36px 20px;
+      text-align: center;
+      background: rgba(99,102,241,0.04);
+      transition: all 0.25s ease;
+      cursor: pointer;
+      position: relative;
+      margin-bottom: 16px;
+    }
+    .upload-zone:hover,
+    .upload-zone.dragover {
+      border-color: rgba(99,102,241,0.65);
+      background: rgba(99,102,241,0.08);
+    }
+    .upload-zone input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+    }
+    .upload-icon {
+      width: 60px; height: 60px;
+      background: rgba(99,102,241,0.15);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 14px;
+      font-size: 1.5rem;
+      color: var(--primary-light);
+    }
+    .upload-label {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+    .upload-sub {
+      font-size: 0.78rem;
+      color: var(--text-tertiary);
+    }
+
+    /* Preview */
+    .preview-area {
+      display: none;
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+    .preview-area.has-image { display: block; }
+    .preview-area img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      display: block;
+    }
+    .preview-change {
+      position: absolute;
+      bottom: 10px; right: 10px;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 8px;
+      padding: 5px 10px;
+      font-size: 0.75rem;
+      color: white;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .preview-change:hover { background: rgba(99,102,241,0.5); }
+
+    /* Modal instructions */
+    .modal-instructions {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 20px;
+    }
+    .modal-instr-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+    }
+    .modal-instr-item i {
+      color: var(--success);
+      font-size: 0.7rem;
+      width: 14px;
+      text-align: center;
+    }
+
+    .modal-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .modal-cancel {
+      text-align: center;
+      font-size: 0.82rem;
+      color: var(--text-tertiary);
+      cursor: pointer;
+      transition: var(--transition);
+      padding: 6px;
+    }
+    .modal-cancel:hover { color: var(--text-secondary); }
+
+    /* ── DIVIDER WITH TEXT ── */
+    .divider-text {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .divider-text::before,
+    .divider-text::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+    .divider-text span {
+      font-size: 0.75rem;
+      color: var(--text-tertiary);
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+
+<!-- BACKGROUND ORBS -->
+<div class="entry-bg">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+
+<!-- PAGE WRAPPER -->
+<div class="entry-page">
+
+  <!-- ── TOP HEADER ── -->
+  <header class="entry-header">
+    <div class="studio-logo-wrap">
+      <div class="studio-logo-circle">Δ</div>
+      <span class="studio-name">Delta Photography Studio</span>
+    </div>
+    <a href="#" class="help-link">
+      <i class="fa-regular fa-circle-question"></i>
+      Need help?
+    </a>
+  </header>
+
+  <!-- ── CENTERED CONTENT ── -->
+  <div class="entry-center">
+
+    <!-- EVENT HERO CARD -->
+    <div class="event-hero-card">
+
+      <!-- Cover Photo -->
+      <div class="event-cover-overlay">
+        <img
+          class="event-cover"
+          src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=800&q=80"
+          alt="Sharma Wedding"
+          fetchpriority="high"
+        />
+      </div>
+
+      <!-- Event Info Body -->
+      <div class="event-body">
+
+        <!-- Live Badge -->
+        <div class="live-badge">
+          <div class="live-dot"></div>
+          Live Gallery
+        </div>
+
+        <!-- Event Name -->
+        <div class="event-name">Sharma Wedding Ceremony</div>
+
+        <!-- Date + Location -->
+        <div class="event-meta">
+          <i class="fa-regular fa-calendar"></i>
+          May 25, 2026
+          <span style="color:var(--text-tertiary);">·</span>
+          <i class="fa-solid fa-location-dot"></i>
+          The Grand Rajmahal, Jaipur
+        </div>
+
+        <!-- Photo Count -->
+        <div class="event-stats">
+          <div class="event-stat-item">
+            <i class="fa-solid fa-images"></i>
+            847 photos
+          </div>
+          <div style="width:1px;height:14px;background:var(--border);"></div>
+          <div class="event-stat-item">
+            <i class="fa-solid fa-folder"></i>
+            3 folders
+          </div>
+        </div>
+
+        <!-- Divider -->
+        <div class="divider-text">
+          <span>How would you like to access?</span>
+        </div>
+
+        <!-- ── ACCESS OPTIONS ── -->
+        <div class="access-options">
+
+          <!-- Option 1: AI Face Search (Primary, Recommended) -->
+          <div class="access-card primary-option">
+            <div class="ac-header">
+              <div class="ac-title-wrap">
+                <div class="ac-icon">🧠</div>
+                <div>
+                  <div class="ac-title">Find My Photos</div>
+                </div>
+              </div>
+              <span class="ac-badge">AI Powered · Most Used</span>
+            </div>
+            <div class="ac-subtitle">Upload a selfie — AI instantly finds all photos with your face</div>
+            <button class="btn btn-primary btn-full" onclick="openSelfieModal()">
+              <i class="fa-solid fa-camera"></i>
+              Upload Selfie to Search →
+            </button>
+          </div>
+
+          <!-- Option 2: Browse All -->
+          <div class="access-card">
+            <div class="ac-header">
+              <div class="ac-title-wrap">
+                <div class="ac-icon" style="background:rgba(34,211,238,0.12);">🖼️</div>
+                <div>
+                  <div class="ac-title">Browse All Photos</div>
+                </div>
+              </div>
+            </div>
+            <div class="ac-subtitle">View the complete gallery — all folders and photos</div>
+            <a href="guest-gallery.html" class="btn btn-secondary btn-full">
+              <i class="fa-solid fa-grid-2"></i>
+              Browse Gallery →
+            </a>
+          </div>
+
+          <!-- Option 3: PIN Access -->
+          <div class="access-card">
+            <div class="ac-header">
+              <div class="ac-title-wrap">
+                <div class="ac-icon" style="background:rgba(245,158,11,0.12);">🔒</div>
+                <div>
+                  <div class="ac-title">Enter Access PIN</div>
+                </div>
+              </div>
+            </div>
+            <div class="ac-subtitle">Have a 6-digit PIN from the photographer?</div>
+            <div class="pin-group" id="pinGroup">
+              <input class="pin-digit" type="text" inputmode="numeric" maxlength="1" autocomplete="off" data-index="0" />
+              <input class="pin-digit" type="text" inputmode="numeric" maxlength="1" autocomplete="off" data-index="1" />
+              <input class="pin-digit" type="text" inputmode="numeric" maxlength="1" autocomplete="off" data-index="2" />
+              <input class="pin-digit" type="text" inputmode="numeric" maxlength="1" autocomplete="off" data-index="3" />
+              <input class="pin-digit" type="text" inputmode="numeric" maxlength="1" autocomplete="off" data-index="4" />
+              <input class="pin-digit" type="text" inputmode="numeric" maxlength="1" autocomplete="off" data-index="5" />
+            </div>
+            <a href="guest-gallery.html" class="btn btn-secondary btn-full" id="unlockBtn">
+              <i class="fa-solid fa-unlock"></i>
+              Unlock Gallery →
+            </a>
+          </div>
+
+        </div>
+        <!-- end access options -->
+
+      </div>
+      <!-- end event-body -->
+    </div>
+    <!-- end event-hero-card -->
+
+    <!-- Footer below card -->
+    <div class="entry-footer-links">
+      <div class="powered-by">
+        <div class="powered-by-logo">FP</div>
+        Powered by <a href="index.html">FastPic.ai</a>
+      </div>
+      <div class="privacy-note">
+        <i class="fa-solid fa-shield-halved"></i>
+        Privacy: Your selfie is processed locally and never stored
+      </div>
+    </div>
+
+  </div>
+  <!-- end entry-center -->
+
+</div>
+<!-- end entry-page -->
+
+
+<!-- ══════════════════ SELFIE MODAL ══════════════════ -->
+<div class="selfie-overlay" id="selfieOverlay" onclick="handleOverlayClick(event)">
+  <div class="selfie-modal" id="selfieModal">
+
+    <div class="modal-title">📸 Upload Your Selfie</div>
+    <div class="modal-subtitle">Our AI will scan the gallery and find every photo of you in seconds.</div>
+
+    <!-- Upload Zone -->
+    <div class="upload-zone" id="uploadZone">
+      <input type="file" id="selfieInput" accept="image/*" onchange="handleSelfieUpload(event)" />
+      <div class="upload-icon">
+        <i class="fa-solid fa-camera"></i>
+      </div>
+      <div class="upload-label">Drop your photo or click to browse</div>
+      <div class="upload-sub">JPG, PNG, HEIC supported · Max 10MB</div>
+    </div>
+
+    <!-- Preview Area (hidden until image selected) -->
+    <div class="preview-area" id="previewArea">
+      <img id="previewImg" src="" alt="Selfie preview" />
+      <div class="preview-change" onclick="resetUpload()">
+        <i class="fa-solid fa-arrows-rotate"></i> Change photo
+      </div>
+    </div>
+
+    <!-- Instructions -->
+    <div class="modal-instructions">
+      <div class="modal-instr-item">
+        <i class="fa-solid fa-check"></i>
+        Make sure your face is clearly visible
+      </div>
+      <div class="modal-instr-item">
+        <i class="fa-solid fa-check"></i>
+        Well lit — avoid heavy shadows or backlighting
+      </div>
+      <div class="modal-instr-item">
+        <i class="fa-solid fa-check"></i>
+        Looking forward — front-facing for best results
+      </div>
+    </div>
+
+    <!-- Modal Actions -->
+    <div class="modal-actions">
+      <a href="guest-gallery.html" class="btn btn-primary btn-full btn-lg">
+        <i class="fa-solid fa-brain"></i>
+        Start AI Search →
+      </a>
+      <div class="modal-cancel" onclick="closeSelfieModal()">
+        Cancel — I'll browse manually
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<script>
+  /* ── PIN INPUT AUTO-CHAIN ── */
+  const pinInputs = document.querySelectorAll('.pin-digit');
+
+  pinInputs.forEach((input, i) => {
+    input.addEventListener('input', (e) => {
+      // Keep only digits
+      e.target.value = e.target.value.replace(/\D/g, '').slice(-1);
+      // Auto-advance
+      if (e.target.value && i < pinInputs.length - 1) {
+        pinInputs[i + 1].focus();
+      }
+    });
+
+    input.addEventListener('keydown', (e) => {
+      // Go back on Backspace if current is empty
+      if (e.key === 'Backspace' && !e.target.value && i > 0) {
+        pinInputs[i - 1].focus();
+        pinInputs[i - 1].value = '';
+      }
+      // Paste: distribute across inputs
+      if (e.key === 'v' && (e.ctrlKey || e.metaKey)) return;
+    });
+
+    input.addEventListener('paste', (e) => {
+      e.preventDefault();
+      const pasted = (e.clipboardData || window.clipboardData)
+        .getData('text')
+        .replace(/\D/g, '')
+        .slice(0, 6);
+      pasted.split('').forEach((ch, j) => {
+        if (pinInputs[i + j]) pinInputs[i + j].value = ch;
+      });
+      const nextEmpty = Math.min(i + pasted.length, pinInputs.length - 1);
+      pinInputs[nextEmpty].focus();
+    });
+  });
+
+
+  /* ── SELFIE MODAL ── */
+  function openSelfieModal() {
+    document.getElementById('selfieOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeSelfieModal() {
+    document.getElementById('selfieOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function handleOverlayClick(e) {
+    if (e.target === document.getElementById('selfieOverlay')) {
+      closeSelfieModal();
+    }
+  }
+
+  /* Escape key to close */
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeSelfieModal();
+  });
+
+
+  /* ── SELFIE UPLOAD PREVIEW ── */
+  function handleSelfieUpload(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const previewImg = document.getElementById('previewImg');
+      const previewArea = document.getElementById('previewArea');
+      const uploadZone = document.getElementById('uploadZone');
+
+      previewImg.src = ev.target.result;
+      previewArea.classList.add('has-image');
+      uploadZone.style.display = 'none';
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function resetUpload() {
+    document.getElementById('selfieInput').value = '';
+    document.getElementById('previewArea').classList.remove('has-image');
+    document.getElementById('previewImg').src = '';
+    document.getElementById('uploadZone').style.display = '';
+  }
+
+
+  /* ── DRAG & DROP VISUAL ── */
+  const uploadZone = document.getElementById('uploadZone');
+  uploadZone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    uploadZone.classList.add('dragover');
+  });
+  uploadZone.addEventListener('dragleave', () => {
+    uploadZone.classList.remove('dragover');
+  });
+  uploadZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadZone.classList.remove('dragover');
+    const file = e.dataTransfer?.files[0];
+    if (file && file.type.startsWith('image/')) {
+      // Simulate file input
+      const dt = new DataTransfer();
+      dt.items.add(file);
+      document.getElementById('selfieInput').files = dt.files;
+      handleSelfieUpload({ target: { files: [file] } });
+    }
+  });
+</script>
+
+</body>
+</html>

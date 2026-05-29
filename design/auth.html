@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In — FastPic.ai</title>
+  <meta name="description" content="Sign in to FastPic.ai — AI-Powered Photography Platform for professional photographers.">
+  <link rel="stylesheet" href="design-system.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body { overflow: hidden; }
+    .auth-page {
+      display: grid;
+      grid-template-columns: 42% 58%;
+      min-height: 100vh;
+    }
+    /* LEFT PANEL */
+    .auth-left {
+      background: linear-gradient(145deg, #080814 0%, #1a0d40 40%, #0a1a3a 70%, #080814 100%);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      padding: 40px;
+    }
+    .auth-left-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(70px);
+      pointer-events: none;
+    }
+    .auth-orb-1 {
+      width: 350px; height: 350px;
+      top: -100px; left: -100px;
+      background: radial-gradient(circle, rgba(99,102,241,0.5) 0%, transparent 70%);
+      animation: orbFloat1 8s ease-in-out infinite;
+    }
+    .auth-orb-2 {
+      width: 300px; height: 300px;
+      bottom: -80px; right: -80px;
+      background: radial-gradient(circle, rgba(34,211,238,0.4) 0%, transparent 70%);
+      animation: orbFloat2 10s ease-in-out infinite;
+    }
+    .auth-orb-3 {
+      width: 200px; height: 200px;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(circle, rgba(167,139,250,0.3) 0%, transparent 70%);
+      animation: orbFloat3 12s ease-in-out infinite;
+    }
+    @keyframes orbFloat1 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(30px,-20px)} }
+    @keyframes orbFloat2 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-20px,30px)} }
+    @keyframes orbFloat3 { 0%,100%{transform:translate(-50%,-50%) scale(1)} 50%{transform:translate(-50%,-50%) scale(1.2)} }
+
+    .auth-left-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      position: relative;
+      z-index: 2;
+    }
+    .auth-left-logo-icon {
+      width: 44px; height: 44px;
+      background: linear-gradient(135deg, #6366F1, #22D3EE);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1.1rem; color: white;
+      box-shadow: 0 8px 24px rgba(99,102,241,0.4);
+    }
+    .auth-left-logo-name {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 800; font-size: 1.25rem;
+      color: white;
+    }
+
+    .auth-left-center {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      z-index: 2;
+      text-align: center;
+    }
+    .auth-left-icon-ring {
+      width: 100px; height: 100px;
+      background: linear-gradient(135deg, rgba(99,102,241,0.2), rgba(34,211,238,0.2));
+      border: 1px solid rgba(99,102,241,0.4);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.5rem;
+      margin: 0 auto 28px;
+      animation: slowPulse 4s ease-in-out infinite;
+    }
+    @keyframes slowPulse { 0%,100%{box-shadow:0 0 0 0 rgba(99,102,241,0.2)} 50%{box-shadow:0 0 0 20px rgba(99,102,241,0)} }
+    .auth-left-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: white;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+    .auth-left-sub {
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.6);
+      line-height: 1.7;
+      max-width: 300px;
+    }
+    .auth-feature-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 32px;
+    }
+    .auth-pill {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 9999px;
+      padding: 7px 16px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: rgba(255,255,255,0.8);
+      display: flex; align-items: center; gap: 6px;
+    }
+
+    .auth-left-quote {
+      position: relative;
+      z-index: 2;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 20px 24px;
+    }
+    .auth-left-quote p {
+      font-size: 0.875rem;
+      color: rgba(255,255,255,0.75);
+      font-style: italic;
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+    .auth-left-quote-author {
+      display: flex; align-items: center; gap: 10px;
+    }
+    .auth-left-quote-author .avatar-sm {
+      background: linear-gradient(135deg, #F59E0B, #EF4444);
+      color: white; font-size: 0.7rem;
+    }
+    .auth-left-quote-name { font-size: 0.8rem; font-weight: 600; color: rgba(255,255,255,0.9); }
+    .auth-left-quote-studio { font-size: 0.72rem; color: rgba(255,255,255,0.5); }
+    .stars { color: #F59E0B; font-size: 0.7rem; margin-bottom: 2px; }
+
+    /* RIGHT PANEL */
+    .auth-right {
+      background: var(--bg-base);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+      overflow-y: auto;
+      position: relative;
+    }
+    .auth-right-top {
+      position: absolute;
+      top: 24px; right: 24px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .auth-form-card {
+      width: 100%;
+      max-width: 440px;
+    }
+    .auth-tabs {
+      display: flex;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 4px;
+      margin-bottom: 32px;
+    }
+    .auth-tab {
+      flex: 1;
+      padding: 9px;
+      border-radius: var(--radius);
+      font-size: 0.875rem;
+      font-weight: 600;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition);
+      color: var(--text-tertiary);
+    }
+    .auth-tab.active {
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 2px 8px var(--primary-glow);
+    }
+    .auth-form-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+    .auth-form-sub {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      margin-bottom: 28px;
+    }
+
+    .oauth-btn {
+      display: flex; align-items: center; justify-content: center;
+      gap: 12px;
+      width: 100%;
+      padding: 12px;
+      background: white;
+      color: #1a1a1a;
+      border: 1px solid rgba(0,0,0,0.1);
+      border-radius: var(--radius);
+      font-size: 0.9rem;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    }
+    .oauth-btn:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.3); transform: translateY(-1px); }
+    .oauth-btn img { width: 20px; height: 20px; }
+
+    .auth-divider {
+      display: flex; align-items: center; gap: 12px;
+      margin: 24px 0;
+    }
+    .auth-divider::before, .auth-divider::after {
+      content: ''; flex: 1; height: 1px; background: var(--border);
+    }
+    .auth-divider span { font-size: 0.75rem; color: var(--text-tertiary); white-space: nowrap; }
+
+    .input-wrapper {
+      position: relative;
+    }
+    .input-icon {
+      position: absolute;
+      left: 12px; top: 50%; transform: translateY(-50%);
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+    }
+    .input-icon ~ .form-input { padding-left: 38px; }
+    .input-suffix {
+      position: absolute;
+      right: 12px; top: 50%; transform: translateY(-50%);
+      color: var(--text-tertiary);
+      cursor: pointer;
+      font-size: 0.875rem;
+      transition: var(--transition);
+    }
+    .input-suffix:hover { color: var(--text-primary); }
+
+    .password-strength { margin-top: 8px; }
+    .strength-bar {
+      display: flex; gap: 4px; margin-bottom: 4px;
+    }
+    .strength-segment {
+      flex: 1; height: 3px;
+      background: var(--bg-elevated);
+      border-radius: 2px;
+      transition: var(--transition);
+    }
+    .strength-segment.active-1 { background: var(--danger); }
+    .strength-segment.active-2 { background: var(--warning); }
+    .strength-segment.active-3 { background: #84CC16; }
+    .strength-segment.active-4 { background: var(--success); }
+    .strength-label { font-size: 0.72rem; color: var(--text-tertiary); }
+
+    .auth-checkbox {
+      display: flex; align-items: flex-start; gap: 10px;
+      cursor: pointer;
+    }
+    .auth-checkbox input[type="checkbox"] {
+      width: 16px; height: 16px; margin-top: 2px;
+      accent-color: var(--primary); cursor: pointer; flex-shrink: 0;
+    }
+    .auth-checkbox-label { font-size: 0.825rem; color: var(--text-secondary); }
+    .auth-checkbox-label a { color: var(--primary-light); }
+
+    .forgot-link {
+      font-size: 0.8rem;
+      color: var(--primary-light);
+      text-decoration: none;
+      transition: var(--transition);
+    }
+    .forgot-link:hover { opacity: 0.8; }
+
+    .auth-switch {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+    .auth-switch a { color: var(--primary-light); font-weight: 600; }
+
+    /* Form panels */
+    .form-panel { display: none; }
+    .form-panel.active { display: block; }
+
+    /* Grid utilities for spacing */
+    .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  </style>
+</head>
+<body>
+  <div class="auth-page">
+    <!-- LEFT PANEL -->
+    <div class="auth-left">
+      <div class="auth-left-orb auth-orb-1"></div>
+      <div class="auth-left-orb auth-orb-2"></div>
+      <div class="auth-left-orb auth-orb-3"></div>
+
+      <div class="auth-left-logo">
+        <div class="auth-left-logo-icon">FP</div>
+        <div>
+          <div class="auth-left-logo-name">FastPic.ai</div>
+          <div style="font-size:0.7rem;color:rgba(255,255,255,0.5);">Photography OS</div>
+        </div>
+      </div>
+
+      <div class="auth-left-center">
+        <div class="auth-left-icon-ring">📸</div>
+        <h2 class="auth-left-title">The Photography<br>Operating System</h2>
+        <p class="auth-left-sub">AI-powered storage, instant face recognition, and premium delivery — all in one platform.</p>
+
+        <div class="auth-feature-pills">
+          <span class="auth-pill">🧠 AI Face Recognition</span>
+          <span class="auth-pill">⚡ &lt;100ms Delivery</span>
+          <span class="auth-pill">🔒 Enterprise Security</span>
+          <span class="auth-pill">🎨 Dual Watermarks</span>
+          <span class="auth-pill">👥 Team Management</span>
+        </div>
+
+        <div style="display:flex;gap:24px;margin-top:36px;">
+          <div style="text-align:center;">
+            <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:1.5rem;font-weight:800;color:white;">50M+</div>
+            <div style="font-size:0.72rem;color:rgba(255,255,255,0.5);">Photos Stored</div>
+          </div>
+          <div style="width:1px;background:rgba(255,255,255,0.1);"></div>
+          <div style="text-align:center;">
+            <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:1.5rem;font-weight:800;color:white;">1,200+</div>
+            <div style="font-size:0.72rem;color:rgba(255,255,255,0.5);">Studios</div>
+          </div>
+          <div style="width:1px;background:rgba(255,255,255,0.1);"></div>
+          <div style="text-align:center;">
+            <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:1.5rem;font-weight:800;color:white;">99.9%</div>
+            <div style="font-size:0.72rem;color:rgba(255,255,255,0.5);">Uptime</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="auth-left-quote">
+        <div class="stars">★★★★★</div>
+        <p>"FastPic transformed how we deliver wedding galleries. Our clients love the face-recognition feature — they find their photos instantly."</p>
+        <div class="auth-left-quote-author">
+          <div class="avatar avatar-sm">AK</div>
+          <div>
+            <div class="auth-left-quote-name">Arjun Kapoor</div>
+            <div class="auth-left-quote-studio">Kapoor Photography, Mumbai</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="auth-right">
+      <div class="auth-right-top">
+        <span style="font-size:0.875rem;color:var(--text-tertiary);">Need help?</span>
+        <a href="#" style="font-size:0.875rem;color:var(--primary-light);font-weight:500;">Contact Support</a>
+      </div>
+
+      <div class="auth-form-card">
+        <!-- Tab switcher -->
+        <div class="auth-tabs">
+          <div class="auth-tab active" data-tab="signin" onclick="switchTab('signin')">Sign In</div>
+          <div class="auth-tab" data-tab="signup" onclick="switchTab('signup')">Create Account</div>
+        </div>
+
+        <!-- SIGN IN FORM -->
+        <div class="form-panel active" id="panel-signin">
+          <h1 class="auth-form-title">Welcome back 👋</h1>
+          <p class="auth-form-sub">Sign in to your FastPic.ai account</p>
+
+          <!-- Google OAuth -->
+          <button class="oauth-btn" onclick="window.location.href='dashboard.html'">
+            <svg width="20" height="20" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+            Continue with Google
+          </button>
+
+          <div class="auth-divider"><span>or continue with email</span></div>
+
+          <div style="display:flex;flex-direction:column;gap:16px;">
+            <div class="form-group">
+              <label class="form-label">Email address</label>
+              <div class="input-wrapper">
+                <i class="fa fa-envelope input-icon"></i>
+                <input type="email" class="form-input" placeholder="you@studio.com" style="padding-left:38px;">
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="flex justify-between items-center">
+                <label class="form-label">Password</label>
+                <a href="#" class="forgot-link">Forgot password?</a>
+              </div>
+              <div class="input-wrapper">
+                <i class="fa fa-lock input-icon"></i>
+                <input type="password" class="form-input" id="signin-pass" placeholder="••••••••" style="padding-left:38px;padding-right:38px;">
+                <span class="input-suffix" onclick="togglePass('signin-pass',this)">
+                  <i class="fa fa-eye"></i>
+                </span>
+              </div>
+            </div>
+            <button class="btn btn-primary btn-full btn-lg" onclick="window.location.href='dashboard.html'" style="margin-top:4px;">
+              <i class="fa fa-arrow-right-to-bracket"></i> Sign In
+            </button>
+          </div>
+
+          <p class="auth-switch">
+            Don't have an account? <a href="#" onclick="switchTab('signup')">Create one free</a>
+          </p>
+        </div>
+
+        <!-- SIGN UP FORM -->
+        <div class="form-panel" id="panel-signup">
+          <h1 class="auth-form-title">Create account ✨</h1>
+          <p class="auth-form-sub">Start your 14-day free trial. No credit card required.</p>
+
+          <button class="oauth-btn" onclick="window.location.href='dashboard.html'">
+            <svg width="20" height="20" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+            Sign up with Google
+          </button>
+
+          <div class="auth-divider"><span>or sign up with email</span></div>
+
+          <div style="display:flex;flex-direction:column;gap:14px;">
+            <div class="form-row-2">
+              <div class="form-group">
+                <label class="form-label">First Name</label>
+                <div class="input-wrapper">
+                  <i class="fa fa-user input-icon"></i>
+                  <input type="text" class="form-input" placeholder="Akshay" style="padding-left:38px;">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Last Name</label>
+                <input type="text" class="form-input" placeholder="Mulani">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Studio / Business Name</label>
+              <div class="input-wrapper">
+                <i class="fa fa-camera input-icon"></i>
+                <input type="text" class="form-input" placeholder="Delta Photography Studio" style="padding-left:38px;">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email address</label>
+              <div class="input-wrapper">
+                <i class="fa fa-envelope input-icon"></i>
+                <input type="email" class="form-input" placeholder="you@studio.com" style="padding-left:38px;">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Password</label>
+              <div class="input-wrapper">
+                <i class="fa fa-lock input-icon"></i>
+                <input type="password" class="form-input" id="signup-pass" placeholder="Min. 8 characters"
+                  style="padding-left:38px;padding-right:38px;" oninput="checkStrength(this.value)">
+                <span class="input-suffix" onclick="togglePass('signup-pass',this)">
+                  <i class="fa fa-eye"></i>
+                </span>
+              </div>
+              <div class="password-strength">
+                <div class="strength-bar">
+                  <div class="strength-segment" id="s1"></div>
+                  <div class="strength-segment" id="s2"></div>
+                  <div class="strength-segment" id="s3"></div>
+                  <div class="strength-segment" id="s4"></div>
+                </div>
+                <div class="strength-label" id="strength-label">Password strength</div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Confirm Password</label>
+              <div class="input-wrapper">
+                <i class="fa fa-lock input-icon"></i>
+                <input type="password" class="form-input" placeholder="••••••••" style="padding-left:38px;">
+              </div>
+            </div>
+            <label class="auth-checkbox">
+              <input type="checkbox">
+              <span class="auth-checkbox-label">
+                I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+              </span>
+            </label>
+            <button class="btn btn-primary btn-full btn-lg" onclick="window.location.href='dashboard.html'" style="margin-top:4px;">
+              <i class="fa fa-sparkles"></i> Create Free Account
+            </button>
+          </div>
+
+          <p class="auth-switch">
+            Already have an account? <a href="#" onclick="switchTab('signin')">Sign in</a>
+          </p>
+        </div>
+      </div>
+
+      <!-- Back to home -->
+      <div style="position:absolute;bottom:24px;left:50%;transform:translateX(-50%);">
+        <a href="index.html" style="font-size:0.8rem;color:var(--text-tertiary);display:flex;align-items:center;gap:6px;">
+          <i class="fa fa-arrow-left" style="font-size:0.7rem;"></i> Back to FastPic.ai
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function switchTab(tab) {
+      document.querySelectorAll('.auth-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
+      document.querySelectorAll('.form-panel').forEach(p => p.classList.remove('active'));
+      document.getElementById('panel-' + tab).classList.add('active');
+    }
+
+    function togglePass(id, btn) {
+      const inp = document.getElementById(id);
+      const icon = btn.querySelector('i');
+      if (inp.type === 'password') {
+        inp.type = 'text';
+        icon.className = 'fa fa-eye-slash';
+      } else {
+        inp.type = 'password';
+        icon.className = 'fa fa-eye';
+      }
+    }
+
+    function checkStrength(val) {
+      let score = 0;
+      if (val.length >= 8) score++;
+      if (/[A-Z]/.test(val)) score++;
+      if (/[0-9]/.test(val)) score++;
+      if (/[^A-Za-z0-9]/.test(val)) score++;
+      const labels = ['', 'Weak', 'Fair', 'Good', 'Strong'];
+      const colors = ['', 'active-1', 'active-2', 'active-3', 'active-4'];
+      for (let i = 1; i <= 4; i++) {
+        const seg = document.getElementById('s' + i);
+        seg.className = 'strength-segment' + (i <= score ? ' ' + colors[score] : '');
+      }
+      document.getElementById('strength-label').textContent = labels[score] || 'Password strength';
+    }
+  </script>
+</body>
+</html>

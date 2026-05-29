@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Billing &amp; Storage — FastPic.AI</title>
+  <link rel="stylesheet" href="design-system.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <style>
+    /* ── TOP BAR COMPONENTS ── */
+    .notif-btn {
+      position: relative;
+      width: 38px; height: 38px;
+      border-radius: var(--radius);
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-secondary);
+      font-size: 1rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .notif-btn:hover { background: var(--bg-glass-hover); color: var(--text-primary); }
+    .notif-badge {
+      position: absolute; top: -4px; right: -4px;
+      background: var(--danger); color: white;
+      font-size: 0.6rem; font-weight: 700;
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      border: 2px solid var(--bg-base);
+    }
+    .topbar-user {
+      display: flex; align-items: center; gap: 8px;
+      padding: 4px 10px 4px 4px;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--border);
+      background: var(--bg-glass);
+      cursor: pointer; transition: var(--transition);
+    }
+    .topbar-user:hover { background: var(--bg-glass-hover); border-color: var(--border-strong); }
+    .topbar-user-name { font-size: 0.8rem; font-weight: 500; color: var(--text-secondary); }
+
+    /* ── SIDEBAR USER ── */
+    .sidebar-user-block { padding: 12px 16px 16px; border-bottom: 1px solid var(--border); }
+    .sidebar-user-inner {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px; border-radius: var(--radius);
+      transition: var(--transition); cursor: pointer;
+    }
+    .sidebar-user-inner:hover { background: var(--bg-glass-hover); }
+    .sidebar-user-name { font-size: 0.85rem; font-weight: 600; color: var(--text-primary); line-height: 1.2; }
+    .sidebar-user-sub  { font-size: 0.7rem; color: var(--text-tertiary); }
+    .storage-block { padding: 14px 16px; }
+    .storage-label {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 8px;
+    }
+    .storage-label span { color: var(--warning); font-weight: 600; }
+
+    /* ── SETTINGS SECTION LABEL ── */
+    .settings-section-label {
+      font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--text-tertiary);
+      padding: 4px 12px; margin-bottom: 4px; margin-top: 12px;
+    }
+
+    /* ── CARD HEADERS ── */
+    .card-hdr {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .card-hdr-left { display: flex; align-items: center; gap: 12px; }
+    .card-hdr-icon {
+      width: 38px; height: 38px;
+      border-radius: var(--radius);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+    }
+    .card-hdr-title {
+      font-family: var(--font-display); font-size: 1rem;
+      font-weight: 700; color: var(--text-primary);
+    }
+    .card-hdr-sub { font-size: 0.75rem; color: var(--text-tertiary); margin-top: 1px; }
+
+    /* ── CURRENT PLAN SECTION ── */
+    .plan-section {
+      display: grid;
+      grid-template-columns: 1fr 240px;
+      gap: 24px;
+      align-items: start;
+    }
+    @media (max-width: 768px) { .plan-section { grid-template-columns: 1fr; } }
+
+    .plan-gradient-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(135deg, rgba(99,102,241,0.2), rgba(34,211,238,0.15));
+      border: 1px solid rgba(99,102,241,0.4);
+      border-radius: var(--radius-full);
+      padding: 5px 14px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--primary-light);
+      margin-bottom: 16px;
+      letter-spacing: 0.02em;
+    }
+    .plan-title {
+      font-family: var(--font-display);
+      font-size: 1.85rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+    .plan-meta {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      margin-bottom: 14px;
+    }
+    .plan-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+    .plan-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    /* ── STORAGE RING ── */
+    .ring-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+    .ring-svg-wrap {
+      position: relative;
+      width: 160px; height: 160px;
+    }
+    .ring-svg {
+      transform: rotate(-90deg);
+      width: 160px; height: 160px;
+    }
+    .ring-track { fill: none; stroke: rgba(255,255,255,0.07); stroke-width: 10; }
+    .ring-fill {
+      fill: none;
+      stroke-width: 10;
+      stroke: url(#ringGrad);
+      stroke-linecap: round;
+      stroke-dasharray: 408;
+      stroke-dashoffset: 408; /* starts empty, animated to 68% = 408 * 0.32 = ~131 offset */
+      transition: stroke-dashoffset 1.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .ring-center {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .ring-used {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1;
+    }
+    .ring-pct {
+      font-size: 0.72rem;
+      color: var(--text-tertiary);
+      margin-top: 2px;
+    }
+    .ring-remaining {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      text-align: center;
+    }
+
+    /* Mini storage bars */
+    .mini-storage-bars {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .msb-row {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .msb-label-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+    }
+    .msb-label { color: var(--text-secondary); }
+    .msb-val { color: var(--text-primary); font-weight: 600; }
+    .msb-bar {
+      height: 4px;
+      background: var(--bg-elevated);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .msb-fill {
+      height: 100%;
+      border-radius: 2px;
+      transition: width 1s cubic-bezier(0.4,0,0.2,1) 0.3s;
+    }
+
+    /* ── PRICING TOGGLE ── */
+    .billing-toggle-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+    .billing-toggle-label {
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: var(--transition);
+    }
+    .billing-toggle-label.active { color: var(--text-primary); }
+    .billing-toggle-label.inactive { color: var(--text-tertiary); }
+    .save-badge {
+      background: rgba(16,185,129,0.12);
+      border: 1px solid rgba(16,185,129,0.3);
+      color: var(--success);
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      font-size: 0.68rem;
+      font-weight: 700;
+    }
+
+    /* ── PRICING CARDS ── */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+    @media (max-width: 640px) { .pricing-grid { grid-template-columns: 1fr; } }
+
+    .pricing-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 18px;
+      padding: 24px;
+      transition: all 0.25s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .pricing-card:hover {
+      border-color: rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.05);
+      transform: translateY(-2px);
+    }
+    .pricing-card.featured {
+      background: rgba(99,102,241,0.08);
+      border-color: rgba(99,102,241,0.4);
+      box-shadow: 0 0 40px rgba(99,102,241,0.12), inset 0 1px 0 rgba(99,102,241,0.15);
+    }
+    .pricing-card.featured::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(99,102,241,0.7), rgba(34,211,238,0.5), transparent);
+    }
+    .pricing-card.featured:hover {
+      box-shadow: 0 0 60px rgba(99,102,241,0.2), inset 0 1px 0 rgba(99,102,241,0.2);
+    }
+
+    .pc-plan-name {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      margin-bottom: 8px;
+    }
+    .pc-price {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .pc-price span { font-size: 1rem; font-weight: 500; color: var(--text-tertiary); }
+    .pc-storage {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+    }
+    .pc-features {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-bottom: 20px;
+    }
+    .pc-feature {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+    .pc-feature i { color: var(--success); font-size: 0.7rem; width: 14px; }
+    .current-plan-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: linear-gradient(135deg, rgba(99,102,241,0.25), rgba(34,211,238,0.15));
+      border: 1px solid rgba(99,102,241,0.4);
+      border-radius: var(--radius-full);
+      padding: 6px 14px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--primary-light);
+      width: 100%;
+      justify-content: center;
+    }
+
+    /* ── BILLING TABLE ── */
+    .billing-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .billing-table thead tr { background: var(--bg-elevated); }
+    .billing-table thead th {
+      padding: 11px 16px;
+      text-align: left;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      border-bottom: 1px solid var(--border);
+    }
+    .billing-table tbody tr {
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      transition: var(--transition);
+    }
+    .billing-table tbody tr:last-child { border-bottom: none; }
+    .billing-table tbody tr:hover { background: var(--bg-glass-hover); }
+    .billing-table td {
+      padding: 14px 16px;
+      font-size: 0.84rem;
+      color: var(--text-secondary);
+      vertical-align: middle;
+    }
+
+    /* ── PAYMENT METHOD CARD ── */
+    .payment-method-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 18px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      transition: var(--transition);
+      margin-bottom: 10px;
+    }
+    .payment-method-card:hover {
+      border-color: var(--border-strong);
+      background: var(--bg-glass-hover);
+    }
+    .pm-icon {
+      width: 44px; height: 30px;
+      background: white;
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      font-size: 0.65rem;
+      font-weight: 800;
+      color: #1A1F71;
+      letter-spacing: 0.02em;
+    }
+    .pm-info { flex: 1; }
+    .pm-name { font-weight: 600; color: var(--text-primary); font-size: 0.875rem; }
+    .pm-sub  { font-size: 0.75rem; color: var(--text-tertiary); margin-top: 2px; }
+    .pm-default {
+      background: var(--success-subtle);
+      color: var(--success);
+      border: 1px solid rgba(16,185,129,0.25);
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      font-size: 0.68rem;
+      font-weight: 700;
+    }
+
+    /* UPI icon */
+    .pm-upi-icon {
+      width: 44px; height: 30px;
+      background: linear-gradient(135deg, #6750A4, #9C27B0);
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.62rem;
+      font-weight: 900;
+      color: white;
+      letter-spacing: 0.02em;
+    }
+
+    /* ── DANGER ZONE ── */
+    .danger-zone-card {
+      background: rgba(239,68,68,0.04);
+      border: 1px solid rgba(239,68,68,0.25);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+    }
+    .danger-zone-title {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--danger);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .danger-zone-desc {
+      font-size: 0.83rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    .delete-confirm-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .delete-confirm-label {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+    .delete-confirm-label strong { color: var(--text-primary); font-family: var(--font-mono); }
+    .delete-input-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .delete-input-row .form-input {
+      max-width: 240px;
+      font-family: var(--font-mono);
+      font-size: 0.875rem;
+      letter-spacing: 0.04em;
+    }
+    .delete-input-row .form-input:focus {
+      border-color: var(--danger);
+      box-shadow: 0 0 0 3px rgba(239,68,68,0.12);
+    }
+    .btn-danger-solid {
+      background: var(--danger);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: var(--radius);
+      font-weight: 600;
+      font-size: 0.875rem;
+      font-family: var(--font-body);
+      cursor: pointer;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+      box-shadow: 0 4px 14px rgba(239,68,68,0.3);
+    }
+    .btn-danger-solid:hover:not(:disabled) {
+      filter: brightness(1.1);
+      box-shadow: 0 6px 20px rgba(239,68,68,0.4);
+    }
+    .btn-danger-solid:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    /* ── PRICE DISPLAY ── */
+    .price-monthly, .price-annual { transition: all 0.3s ease; }
+  </style>
+</head>
+<body>
+<div class="dashboard-layout">
+
+  <!-- ══════════════════ SIDEBAR ══════════════════ -->
+  <aside class="sidebar">
+
+    <!-- Brand -->
+    <div class="sidebar-brand">
+      <div class="sidebar-logo">FP</div>
+      <div>
+        <div class="sidebar-brand-name">FastPic.ai</div>
+        <div class="sidebar-brand-sub">Professional</div>
+      </div>
+    </div>
+
+    <!-- User Profile -->
+    <div class="sidebar-user-block">
+      <div class="sidebar-user-inner">
+        <div class="avatar avatar-md" style="background:linear-gradient(135deg,#6366F1,#22D3EE);color:white;">AK</div>
+        <div style="flex:1;min-width:0;">
+          <div class="sidebar-user-name">Akshay Mulani</div>
+          <div class="sidebar-user-sub">akshay@fastpic.ai</div>
+        </div>
+        <span class="badge badge-primary" style="font-size:0.62rem;padding:2px 7px;">Pro</span>
+      </div>
+    </div>
+
+    <!-- Nav -->
+    <nav class="sidebar-nav">
+
+      <div class="nav-section-label">Main</div>
+      <a href="dashboard.html" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-house"></i></span>
+        Dashboard
+      </a>
+      <a href="events.html" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-folder-open"></i></span>
+        Events
+        <span class="nav-badge">47</span>
+      </a>
+      <a href="event-gallery.html" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-images"></i></span>
+        Gallery
+      </a>
+      <a href="face-search.html" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-user-group"></i></span>
+        Faces &amp; AI
+        <span class="nav-badge">2.8k</span>
+      </a>
+
+      <div class="nav-section-label">Tools</div>
+      <a href="#" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
+        Search
+      </a>
+      <a href="#" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-star"></i></span>
+        Favorites
+      </a>
+      <a href="#" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-download"></i></span>
+        Downloads
+      </a>
+
+      <div class="nav-section-label">Settings</div>
+      <a href="settings-branding.html" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-palette"></i></span>
+        Branding
+      </a>
+      <a href="settings-watermark.html" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-tag"></i></span>
+        Watermarks
+      </a>
+      <a href="settings-team.html" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-users"></i></span>
+        Team
+      </a>
+      <a href="settings-logs.html" class="nav-item">
+        <span class="nav-icon"><i class="fa-solid fa-scroll"></i></span>
+        Activity Logs
+      </a>
+      <a href="settings-billing.html" class="nav-item active">
+        <span class="nav-icon"><i class="fa-solid fa-credit-card"></i></span>
+        Billing
+      </a>
+
+    </nav>
+
+    <!-- Storage + Upgrade -->
+    <div class="sidebar-footer" style="padding:0;">
+      <div class="storage-block">
+        <div class="storage-label">
+          <span style="color:var(--text-secondary)"><i class="fa-solid fa-hard-drive" style="margin-right:5px;"></i>Storage</span>
+          <span>340 / 500 GB</span>
+        </div>
+        <div class="progress-bar" style="margin-bottom:10px;">
+          <div class="progress-fill warning" style="width:68%;"></div>
+        </div>
+        <div style="font-size:0.7rem;color:var(--text-tertiary);margin-bottom:12px;">68% used · 160 GB remaining</div>
+        <button class="btn btn-primary btn-full btn-sm">
+          <i class="fa-solid fa-arrow-up"></i> Upgrade Plan
+        </button>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- ══════════════════ MAIN ══════════════════ -->
+  <div class="dashboard-main">
+
+    <!-- TOP BAR -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <div class="topbar-search">
+          <i class="fa-solid fa-magnifying-glass" style="color:var(--text-tertiary);font-size:0.85rem;"></i>
+          <input type="text" placeholder="Search billing, invoices..." />
+          <kbd style="font-size:0.65rem;color:var(--text-tertiary);background:var(--bg-elevated);border:1px solid var(--border);border-radius:4px;padding:2px 6px;font-family:var(--font-mono);">⌘K</kbd>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <button class="notif-btn" data-tooltip="Notifications">
+          <i class="fa-solid fa-bell"></i>
+          <span class="notif-badge">3</span>
+        </button>
+        <div class="topbar-user">
+          <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#6366F1,#22D3EE);color:white;font-size:0.65rem;">AK</div>
+          <span class="topbar-user-name">Akshay</span>
+          <i class="fa-solid fa-chevron-down" style="font-size:0.65rem;color:var(--text-tertiary);"></i>
+        </div>
+      </div>
+    </header>
+
+    <!-- CONTENT -->
+    <main class="dashboard-content">
+
+      <!-- PAGE HEADER -->
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">💳 Billing &amp; Storage</h1>
+          <p class="page-subtitle">Manage your storage plan. Pay only for what you use.</p>
+        </div>
+      </div>
+
+      <!-- Settings Layout -->
+      <div class="settings-layout">
+
+        <!-- Settings Sidebar -->
+        <aside class="settings-sidebar">
+          <div class="settings-section-label">Account</div>
+          <a href="#" class="settings-nav-item">
+            <i class="fa-solid fa-user" style="width:16px;text-align:center;"></i> Profile
+          </a>
+          <a href="#" class="settings-nav-item">
+            <i class="fa-solid fa-shield-halved" style="width:16px;text-align:center;"></i> Security
+          </a>
+          <a href="#" class="settings-nav-item">
+            <i class="fa-solid fa-bell" style="width:16px;text-align:center;"></i> Notifications
+          </a>
+
+          <div class="settings-section-label" style="margin-top:16px;">Studio</div>
+          <a href="settings-branding.html" class="settings-nav-item">
+            <i class="fa-solid fa-palette" style="width:16px;text-align:center;"></i> Branding
+          </a>
+          <a href="settings-watermark.html" class="settings-nav-item">
+            <i class="fa-solid fa-tag" style="width:16px;text-align:center;"></i> Watermarks
+          </a>
+          <a href="settings-team.html" class="settings-nav-item">
+            <i class="fa-solid fa-users" style="width:16px;text-align:center;"></i> Team Management
+          </a>
+          <a href="settings-logs.html" class="settings-nav-item">
+            <i class="fa-solid fa-scroll" style="width:16px;text-align:center;"></i> Activity Logs
+          </a>
+
+          <div class="settings-section-label" style="margin-top:16px;">Billing</div>
+          <a href="settings-billing.html" class="settings-nav-item active">
+            <i class="fa-solid fa-credit-card" style="width:16px;text-align:center;"></i> Plan &amp; Billing
+          </a>
+          <a href="#" class="settings-nav-item">
+            <i class="fa-solid fa-file-invoice" style="width:16px;text-align:center;"></i> Invoices
+          </a>
+        </aside>
+
+        <!-- Settings Content -->
+        <div class="settings-content" style="display:flex;flex-direction:column;gap:24px;">
+
+          <!-- ── CURRENT PLAN CARD ── -->
+          <div class="card" style="padding:28px;">
+            <div class="card-hdr" style="margin-bottom:24px;">
+              <div class="card-hdr-left">
+                <div class="card-hdr-icon" style="background:var(--primary-subtle);color:var(--primary-light);">
+                  <i class="fa-solid fa-bolt"></i>
+                </div>
+                <div>
+                  <div class="card-hdr-title">Current Plan</div>
+                  <div class="card-hdr-sub">Your active subscription</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="plan-section">
+
+              <!-- Left: Plan Info -->
+              <div>
+                <div class="plan-gradient-badge">
+                  <i class="fa-solid fa-star" style="font-size:0.7rem;"></i>
+                  Professional Plan
+                </div>
+                <div class="plan-title">500 GB Storage</div>
+                <div class="plan-meta">
+                  <i class="fa-solid fa-rotate" style="margin-right:5px;color:var(--text-tertiary);"></i>
+                  ₹2,499 / month · Auto-renews June 29, 2026
+                </div>
+                <div class="plan-status">
+                  <div class="pulse-dot"></div>
+                  <span class="badge badge-success">
+                    <i class="fa-solid fa-check" style="font-size:0.6rem;"></i>
+                    Active
+                  </span>
+                  <span style="font-size:0.8rem;color:var(--text-tertiary);">Since March 1, 2025</span>
+                </div>
+                <div class="plan-actions">
+                  <button class="btn btn-primary" onclick="scrollToPlans()">
+                    <i class="fa-solid fa-arrows-up-down"></i>
+                    Change Plan
+                  </button>
+                  <button class="btn btn-danger" onclick="document.querySelector('.danger-zone-card').scrollIntoView({behavior:'smooth'})">
+                    <i class="fa-solid fa-ban"></i>
+                    Cancel Subscription
+                  </button>
+                </div>
+              </div>
+
+              <!-- Right: Storage Ring -->
+              <div class="ring-wrap">
+                <div class="ring-svg-wrap">
+                  <svg class="ring-svg" viewBox="0 0 160 160" id="storageRingSvg">
+                    <defs>
+                      <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#6366F1"/>
+                        <stop offset="50%" stop-color="#818CF8"/>
+                        <stop offset="100%" stop-color="#22D3EE"/>
+                      </linearGradient>
+                    </defs>
+                    <circle class="ring-track" cx="80" cy="80" r="65" />
+                    <circle class="ring-fill" id="ringFill" cx="80" cy="80" r="65" />
+                  </svg>
+                  <div class="ring-center">
+                    <div class="ring-used">340 GB</div>
+                    <div class="ring-pct">used of 500 GB</div>
+                  </div>
+                </div>
+                <div class="ring-remaining">
+                  <span style="color:var(--primary-light);font-weight:700;">160 GB</span> remaining
+                </div>
+
+                <!-- Mini bars -->
+                <div class="mini-storage-bars" style="width:100%;max-width:200px;">
+                  <div class="msb-row">
+                    <div class="msb-label-row">
+                      <span class="msb-label"><i class="fa-solid fa-images" style="margin-right:5px;color:var(--primary-light);font-size:0.7rem;"></i>Master Vault Photos</span>
+                      <span class="msb-val">280 GB</span>
+                    </div>
+                    <div class="msb-bar">
+                      <div class="msb-fill" id="bar1" style="background:linear-gradient(90deg,var(--primary),var(--primary-light));width:0%;"></div>
+                    </div>
+                  </div>
+                  <div class="msb-row">
+                    <div class="msb-label-row">
+                      <span class="msb-label"><i class="fa-solid fa-wand-sparkles" style="margin-right:5px;color:var(--accent);font-size:0.7rem;"></i>Smart Previews</span>
+                      <span class="msb-val">42 GB</span>
+                    </div>
+                    <div class="msb-bar">
+                      <div class="msb-fill" id="bar2" style="background:linear-gradient(90deg,var(--accent),#0EA5E9);width:0%;"></div>
+                    </div>
+                  </div>
+                  <div class="msb-row">
+                    <div class="msb-label-row">
+                      <span class="msb-label"><i class="fa-solid fa-image" style="margin-right:5px;color:var(--success);font-size:0.7rem;"></i>Thumbnails</span>
+                      <span class="msb-val">18 GB</span>
+                    </div>
+                    <div class="msb-bar">
+                      <div class="msb-fill" id="bar3" style="background:linear-gradient(90deg,var(--success),#22D3EE);width:0%;"></div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+              <!-- end ring wrap -->
+            </div>
+            <!-- end plan-section -->
+          </div>
+
+
+          <!-- ── PLAN COMPARISON ── -->
+          <div class="card" style="padding:28px;" id="plansCard">
+            <div class="card-hdr">
+              <div class="card-hdr-left">
+                <div class="card-hdr-icon" style="background:rgba(34,211,238,0.12);color:var(--accent);">
+                  <i class="fa-solid fa-table-columns"></i>
+                </div>
+                <div>
+                  <div class="card-hdr-title">Available Plans</div>
+                  <div class="card-hdr-sub">Choose the right storage for your studio</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Monthly / Annual Toggle -->
+            <div class="billing-toggle-wrap">
+              <span class="billing-toggle-label active" id="monthlyLabel">Monthly</span>
+              <label class="toggle">
+                <input type="checkbox" id="billingToggle" onchange="toggleBilling()" />
+                <span class="toggle-track"></span>
+              </label>
+              <span class="billing-toggle-label inactive" id="annualLabel">
+                Annual
+                <span class="save-badge">Save 20%</span>
+              </span>
+            </div>
+
+            <!-- 2x2 Pricing Grid -->
+            <div class="pricing-grid">
+
+              <!-- Starter -->
+              <div class="pricing-card">
+                <div class="pc-plan-name">Starter</div>
+                <div class="pc-price">
+                  <span>₹</span><span class="price-val" data-monthly="799" data-annual="639">799</span>
+                  <span style="font-size:0.85rem;">/mo</span>
+                </div>
+                <div class="pc-storage">
+                  <i class="fa-solid fa-hard-drive" style="margin-right:5px;color:var(--text-tertiary);"></i>
+                  100 GB Storage
+                </div>
+                <div class="pc-features">
+                  <div class="pc-feature"><i class="fa-solid fa-check"></i> Up to 10 events</div>
+                  <div class="pc-feature"><i class="fa-solid fa-check"></i> AI Face Search</div>
+                  <div class="pc-feature"><i class="fa-solid fa-check"></i> Guest gallery sharing</div>
+                  <div class="pc-feature"><i class="fa-solid fa-check"></i> 2 team members</div>
+                </div>
+                <button class="btn btn-secondary btn-full">
+                  <i class="fa-solid fa-arrow-down"></i>
+                  Downgrade to Starter
+                </button>
+              </div>
+
+              <!-- Professional (Current) -->
+              <div class="pricing-card featured">
+                <div style="position:absolute;top:16px;right:16px;">
+                  <span class="badge badge-primary" style="font-size:0.65rem;">
+                    <i class="fa-solid fa-check" style="font-size:0.55rem;"></i>
+                    Current
+                  </span>
+                </div>
+                <div class="pc-plan-name" style="color:var(--primary-light);">Professional</div>
+                <div class="pc-price">
+                  <span>₹</span><span class="price-val" data-monthly="2499" data-annual="1999">2,499</span>
+                  <span style="font-size:0.85rem;">/mo</span>
+                </div>
+                <div class="pc-storage">
+                  <i class="fa-solid fa-hard-drive" style="margin-right:5px;color:var(--primary-light);"></i>
+                  500 GB Storage
+                </div>
+                <div class="pc-features">
+                  <div class="pc-feature"><i class="fa-solid fa-check"></i> Unlimited events</div>
+                  <div class="pc-feature"><i class="fa-solid fa-check"></i> Advanced AI Face Search</div>
+                  <div class="pc-feature"><i class="fa-solid fa-check"></i> Custom branding + watermarks</div>
+                  <div class="pc-feature"><i class="fa-solid fa-check"></i> 10 team members</div>
+                  <div class="pc-feature"><i class="fa-solid fa-check"></i> Priority support</div>
+                  <div class="pc-feature"><i class="fa-solid fa-check"></i> Activity audit logs</div>
+                </div>
+                <div class="current-plan-badge">
+                  <i class="fa-solid fa-star" style="font-size:0.7rem;"></i>
+                  Your Current Plan
+                </div>
+              </div>
+
+              <!-- Studio -->
+              <div class="pricing-card">
+                <div class="pc-plan-name">Studio</div>
+                <div class="pc-price">
+                  <span>₹</span><span class="price-val" data-monthly="3999" data-annual="3199">3,999</span>
+                  <span style="font-size:0.85rem;">/mo</span>
+                </div>
+                <div class="pc-storage">
+                  <i class="fa-solid fa-hard-drive" style="margin-right:5px;color:var(--text-tertiary);"></i>
+                  1 TB Storage
+                </div>
+                <div class="pc-features">
+                  <div class="pc-feature"><i class="fa-solid fa-check"></i> Everything in Professional</div>
+                  <div class="pc-feature"><i class="fa-solid fa-check"></i> Multi-studio management</div>
+                  <div class="pc-feature"><i class="fa-solid fa-check"></i> API access</div>
+                  <div class="pc-feature"><i class="fa-solid fa-check"></i> 25 team members</div>
+                  <div class="pc-feature"><i class="fa-solid fa-check"></i> Dedicated account manager</div>
+                  <div class="pc-feature"><i class="fa-solid fa-check"></i> 99.9% SLA uptime</div>
+                </div>
+                <button class="btn btn-secondary btn-full">
+                  <i class="fa-solid fa-arrow-up"></i>
+                  Upgrade to Studio
+                </button>
+              </div>
+
+              <!-- Enterprise -->
+              <div class="pricing-card" style="background:rgba(168,85,247,0.05);border-color:rgba(168,85,247,0.2);">
+                <div class="pc-plan-name" style="color:#c084fc;">Enterprise</div>
+                <div class="pc-price" style="font-size:1.5rem;padding-top:4px;margin-bottom:8px;">
+                  Custom Pricing
+                </div>
+                <div class="pc-storage" style="margin-bottom:8px;">
+                  <i class="fa-solid fa-infinity" style="margin-right:5px;color:#c084fc;"></i>
+                  Custom Storage
+                </div>
+                <div class="pc-features">
+                  <div class="pc-feature"><i class="fa-solid fa-check"></i> Everything in Studio</div>
+                  <div class="pc-feature"><i class="fa-solid fa-check"></i> On-premise deployment</div>
+                  <div class="pc-feature"><i class="fa-solid fa-check"></i> Custom SLA &amp; contracts</div>
+                  <div class="pc-feature"><i class="fa-solid fa-check"></i> Unlimited team members</div>
+                </div>
+                <a href="mailto:sales@fastpic.ai" class="btn btn-secondary btn-full" style="border-color:rgba(168,85,247,0.35);color:#c084fc;">
+                  <i class="fa-solid fa-envelope"></i>
+                  Contact Sales
+                </a>
+              </div>
+
+            </div>
+            <!-- end pricing-grid -->
+          </div>
+
+
+          <!-- ── BILLING HISTORY ── -->
+          <div class="card" style="padding:0;overflow:hidden;">
+            <div style="padding:20px 24px 0;">
+              <div class="card-hdr">
+                <div class="card-hdr-left">
+                  <div class="card-hdr-icon" style="background:var(--success-subtle);color:var(--success);">
+                    <i class="fa-solid fa-file-invoice"></i>
+                  </div>
+                  <div>
+                    <div class="card-hdr-title">Billing History</div>
+                    <div class="card-hdr-sub">Download past invoices</div>
+                  </div>
+                </div>
+                <button class="btn btn-secondary btn-sm">
+                  <i class="fa-solid fa-download"></i>
+                  Download All
+                </button>
+              </div>
+            </div>
+            <div style="overflow-x:auto;">
+              <table class="billing-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Invoice #</th>
+                    <th>Description</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>PDF</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style="color:var(--text-primary);">May 1, 2026</td>
+                    <td style="font-family:var(--font-mono);font-size:0.78rem;color:var(--text-tertiary);">INV-2026-05</td>
+                    <td>Professional Plan — 500 GB</td>
+                    <td style="color:var(--text-primary);font-weight:600;">₹2,499</td>
+                    <td><span class="badge badge-success"><i class="fa-solid fa-check" style="font-size:0.6rem;"></i> Paid</span></td>
+                    <td>
+                      <button class="btn btn-secondary btn-sm" onclick="downloadInvoice('INV-2026-05')">
+                        <i class="fa-solid fa-file-pdf"></i> PDF
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="color:var(--text-primary);">Apr 1, 2026</td>
+                    <td style="font-family:var(--font-mono);font-size:0.78rem;color:var(--text-tertiary);">INV-2026-04</td>
+                    <td>Professional Plan — 500 GB</td>
+                    <td style="color:var(--text-primary);font-weight:600;">₹2,499</td>
+                    <td><span class="badge badge-success"><i class="fa-solid fa-check" style="font-size:0.6rem;"></i> Paid</span></td>
+                    <td>
+                      <button class="btn btn-secondary btn-sm" onclick="downloadInvoice('INV-2026-04')">
+                        <i class="fa-solid fa-file-pdf"></i> PDF
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="color:var(--text-primary);">Mar 1, 2026</td>
+                    <td style="font-family:var(--font-mono);font-size:0.78rem;color:var(--text-tertiary);">INV-2026-03</td>
+                    <td>Upgrade: 100 GB → 500 GB (Pro-rated)</td>
+                    <td style="color:var(--text-primary);font-weight:600;">₹3,148</td>
+                    <td><span class="badge badge-success"><i class="fa-solid fa-check" style="font-size:0.6rem;"></i> Paid</span></td>
+                    <td>
+                      <button class="btn btn-secondary btn-sm" onclick="downloadInvoice('INV-2026-03')">
+                        <i class="fa-solid fa-file-pdf"></i> PDF
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="color:var(--text-primary);">Feb 1, 2026</td>
+                    <td style="font-family:var(--font-mono);font-size:0.78rem;color:var(--text-tertiary);">INV-2026-02</td>
+                    <td>Starter Plan — 100 GB</td>
+                    <td style="color:var(--text-primary);font-weight:600;">₹799</td>
+                    <td><span class="badge badge-success"><i class="fa-solid fa-check" style="font-size:0.6rem;"></i> Paid</span></td>
+                    <td>
+                      <button class="btn btn-secondary btn-sm" onclick="downloadInvoice('INV-2026-02')">
+                        <i class="fa-solid fa-file-pdf"></i> PDF
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="color:var(--text-primary);">Jan 1, 2026</td>
+                    <td style="font-family:var(--font-mono);font-size:0.78rem;color:var(--text-tertiary);">INV-2026-01</td>
+                    <td>Starter Plan — 100 GB</td>
+                    <td style="color:var(--text-primary);font-weight:600;">₹799</td>
+                    <td><span class="badge badge-success"><i class="fa-solid fa-check" style="font-size:0.6rem;"></i> Paid</span></td>
+                    <td>
+                      <button class="btn btn-secondary btn-sm" onclick="downloadInvoice('INV-2026-01')">
+                        <i class="fa-solid fa-file-pdf"></i> PDF
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+
+          <!-- ── PAYMENT METHOD ── -->
+          <div class="card" style="padding:24px;">
+            <div class="card-hdr">
+              <div class="card-hdr-left">
+                <div class="card-hdr-icon" style="background:rgba(34,211,238,0.12);color:var(--accent);">
+                  <i class="fa-solid fa-wallet"></i>
+                </div>
+                <div>
+                  <div class="card-hdr-title">Payment Methods</div>
+                  <div class="card-hdr-sub">Manage your saved payment options</div>
+                </div>
+              </div>
+              <button class="btn btn-secondary btn-sm">
+                <i class="fa-solid fa-plus"></i>
+                Add Method
+              </button>
+            </div>
+
+            <!-- Visa Card -->
+            <div class="payment-method-card">
+              <div class="pm-icon">VISA</div>
+              <div class="pm-info">
+                <div class="pm-name">Visa ending in 4242</div>
+                <div class="pm-sub">Expires 08/2028 · Added Jan 2026</div>
+              </div>
+              <span class="pm-default">Default</span>
+            </div>
+
+            <!-- UPI -->
+            <div class="payment-method-card">
+              <div class="pm-upi-icon">UPI</div>
+              <div class="pm-info">
+                <div class="pm-name">akshay@okhdfc</div>
+                <div class="pm-sub">HDFC Bank UPI · Added Feb 2026</div>
+              </div>
+            </div>
+
+            <button class="btn btn-secondary btn-sm" style="margin-top:8px;">
+              <i class="fa-solid fa-pen-to-square"></i>
+              Update Payment Method
+            </button>
+          </div>
+
+
+          <!-- ── DANGER ZONE ── -->
+          <div class="danger-zone-card">
+            <div class="danger-zone-title">
+              <i class="fa-solid fa-triangle-exclamation"></i>
+              Danger Zone
+            </div>
+            <div class="danger-zone-desc">
+              Cancelling your subscription will immediately downgrade your account to the free tier.
+              Your data will be retained for <strong>30 days</strong>, after which it will be permanently deleted.
+              This action <strong>cannot be undone</strong>. All team members will lose access.
+            </div>
+            <div class="delete-confirm-wrap">
+              <div class="delete-confirm-label">
+                To confirm, type <strong>DELETE</strong> in the box below:
+              </div>
+              <div class="delete-input-row">
+                <input
+                  type="text"
+                  class="form-input"
+                  id="deleteConfirmInput"
+                  placeholder="Type DELETE to confirm"
+                  oninput="validateDeleteInput()"
+                  autocomplete="off"
+                  spellcheck="false"
+                />
+                <button
+                  class="btn-danger-solid"
+                  id="cancelSubBtn"
+                  disabled
+                >
+                  <i class="fa-solid fa-ban"></i>
+                  Cancel Subscription
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <!-- end settings-content -->
+
+      </div>
+      <!-- end settings-layout -->
+
+    </main>
+  </div>
+</div>
+
+
+<script>
+  /* ── SVG RING ANIMATION ── */
+  window.addEventListener('load', () => {
+    const ringFill = document.getElementById('ringFill');
+    const circumference = 2 * Math.PI * 65; // ~408.41
+    ringFill.style.strokeDasharray = circumference;
+    ringFill.style.strokeDashoffset = circumference;
+
+    // 68% used → offset = circumference * (1 - 0.68)
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        ringFill.style.strokeDashoffset = circumference * (1 - 0.68);
+      }, 200);
+    });
+
+    // Mini bars animation
+    setTimeout(() => {
+      document.getElementById('bar1').style.width = '82%';
+      document.getElementById('bar2').style.width = '12%';
+      document.getElementById('bar3').style.width = '5%';
+    }, 400);
+  });
+
+
+  /* ── BILLING TOGGLE ── */
+  const prices = {
+    starter:      { monthly: 799,  annual: 639  },
+    professional: { monthly: 2499, annual: 1999 },
+    studio:       { monthly: 3999, annual: 3199 },
+  };
+
+  function toggleBilling() {
+    const isAnnual = document.getElementById('billingToggle').checked;
+    const monthlyLabel = document.getElementById('monthlyLabel');
+    const annualLabel  = document.getElementById('annualLabel');
+    monthlyLabel.classList.toggle('active', !isAnnual);
+    monthlyLabel.classList.toggle('inactive', isAnnual);
+    annualLabel.classList.toggle('active', isAnnual);
+    annualLabel.classList.toggle('inactive', !isAnnual);
+
+    document.querySelectorAll('.price-val').forEach(el => {
+      const monthly = parseInt(el.dataset.monthly);
+      const annual  = parseInt(el.dataset.annual);
+      if (monthly && annual) {
+        const val = isAnnual ? annual : monthly;
+        el.textContent = val.toLocaleString('en-IN');
+      }
+    });
+  }
+
+
+  /* ── DELETE CONFIRM INPUT ── */
+  function validateDeleteInput() {
+    const val = document.getElementById('deleteConfirmInput').value;
+    const btn = document.getElementById('cancelSubBtn');
+    btn.disabled = (val !== 'DELETE');
+  }
+
+
+  /* ── SCROLL TO PLANS ── */
+  function scrollToPlans() {
+    document.getElementById('plansCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+
+  /* ── INVOICE DOWNLOAD (cosmetic) ── */
+  function downloadInvoice(id) {
+    // In production, this would trigger a PDF download
+    console.log('Downloading invoice:', id);
+    const btn = event.target.closest('button');
+    const orig = btn.innerHTML;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Downloading…';
+    setTimeout(() => { btn.innerHTML = orig; }, 1400);
+  }
+</script>
+
+</body>
+</html>
